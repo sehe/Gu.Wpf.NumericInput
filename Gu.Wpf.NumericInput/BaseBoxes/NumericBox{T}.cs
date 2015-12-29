@@ -1,7 +1,6 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
     using System;
-    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
     using Gu.Wpf.NumericInput.Validation;
@@ -29,14 +28,17 @@
         {
             this.add = add;
             this.subtract = subtract;
-            this.validator = new Validator<T>(
-                this,
-                new DataErrorValidationRule(),
-                new ExceptionValidationRule(),
-                new CanParse<T>(this.CanParse),
-                new IsMatch(() => this.RegexPattern),
-                new IsGreaterThan<T>(this.Parse, () => this.MinValue),
-                new IsLessThan<T>(this.Parse, () => this.MaxValue));
+            this.SetupValidation();
+            this.BindValue();
+            //this.validator = new Validator<T>(
+            //    this,
+            //    new DataErrorValidationRule(),
+            //    new ExceptionValidationRule(),
+            //    new CanParse<T>(this.CanParse),
+            //    new IsMatch(() => this.RegexPattern),
+            //    IsGreaterThan<T>.Default);/*,
+            //    new IsLessThan<T>(this.Parse, () => this.MaxValue));
+            //    */
             this.MaxLimit = TypeMax;
             this.MinLimit = TypeMin;
         }
@@ -52,15 +54,40 @@
         /// <summary>
         /// Gets the current value. Will throw if bad format
         /// </summary>
-        internal T CurrentValue => this.Parse(this.Text);
+        internal T? CurrentValue => this.Parse(this.Text);
 
         internal T MaxLimit { get; private set; }
 
         internal T MinLimit { get; private set; }
 
-        public abstract bool CanParse(string text);
+        public bool CanParse(string text)
+        {
+            if (this.CanValueBeNull && string.IsNullOrEmpty(text))
+            {
+                return true;
+            }
 
-        public abstract T Parse(string text);
+            T temp;
+            return this.TryParse(text, out temp);
+        }
+
+        public abstract bool TryParse(string text, out T result);
+
+        public T? Parse(string text)
+        {
+            if (this.CanValueBeNull && string.IsNullOrEmpty(text))
+            {
+                return null;
+            }
+
+            T result;
+            if (this.TryParse(text, out result))
+            {
+                return result;
+            }
+
+            throw new FormatException($"Could not parse {text} to an instance of {typeof(T)}");
+        }
 
         IFormattable INumericBox.Parse(string text)
         {
@@ -79,17 +106,18 @@
 
         protected override bool CanIncrease(object parameter)
         {
-            if (!this.CanParse(this.Text))
-            {
-                return false;
-            }
+            throw new NotImplementedException();
+            //if (!this.CanParse(this.Text))
+            //{
+            //    return false;
+            //}
 
-            if (Comparer<T>.Default.Compare(this.CurrentValue, this.MaxLimit) >= 0)
-            {
-                return false;
-            }
+            //if (Comparer<T>.Default.Compare(this.CurrentValue, this.MaxLimit) >= 0)
+            //{
+            //    return false;
+            //}
 
-            return base.CanIncrease(parameter);
+            //return base.CanIncrease(parameter);
         }
 
         protected override void Increase(object parameter)
@@ -106,17 +134,18 @@
 
         protected override bool CanDecrease(object parameter)
         {
-            if (!this.CanParse(this.Text))
-            {
-                return false;
-            }
+            throw new NotImplementedException();
+            //if (!this.CanParse(this.Text))
+            //{
+            //    return false;
+            //}
 
-            if (Comparer<T>.Default.Compare(this.CurrentValue, this.MinLimit) <= 0)
-            {
-                return false;
-            }
+            //if (Comparer<T>.Default.Compare(this.CurrentValue, this.MinLimit) <= 0)
+            //{
+            //    return false;
+            //}
 
-            return base.CanDecrease(parameter);
+            //return base.CanDecrease(parameter);
         }
 
         protected override void Decrease(object parameter)
@@ -158,26 +187,28 @@
 
         private T AddIncrement()
         {
-            var min = this.MaxLimit.CompareTo(TypeMax) < 0
-                ? this.MaxLimit
-                : TypeMax;
-            var incremented = this.subtract(min, this.Increment);
-            var currentValue = this.CurrentValue;
-            return currentValue.CompareTo(incremented) < 0
-                            ? this.add(currentValue, this.Increment)
-                            : min;
+            throw new NotImplementedException();
+            //var min = this.MaxLimit.CompareTo(TypeMax) < 0
+            //    ? this.MaxLimit
+            //    : TypeMax;
+            //var incremented = this.subtract(min, this.Increment);
+            //var currentValue = this.CurrentValue;
+            //return currentValue.CompareTo(incremented) < 0
+            //                ? this.add(currentValue, this.Increment)
+            //                : min;
         }
 
         private T SubtractIncrement()
         {
-            var max = this.MinLimit.CompareTo(TypeMin) > 0
-                                ? this.MinLimit
-                                : TypeMin;
-            var incremented = this.add(max, this.Increment);
-            var currentValue = this.CurrentValue;
-            return currentValue.CompareTo(incremented) > 0
-                            ? this.subtract(currentValue, this.Increment)
-                            : max;
+            throw new NotImplementedException();
+            //var max = this.MinLimit.CompareTo(TypeMin) > 0
+            //                    ? this.MinLimit
+            //                    : TypeMin;
+            //var incremented = this.add(max, this.Increment);
+            //var currentValue = this.CurrentValue;
+            //return currentValue.CompareTo(incremented) > 0
+            //                ? this.subtract(currentValue, this.Increment)
+            //                : max;
         }
     }
 }

@@ -3,9 +3,9 @@
     using System;
     using System.Windows.Controls;
 
-    public class IsGreaterThanValidationResult : ValidationResult
+    public class IsLessThanMinValidationResult : ValidationResult
     {
-        public IsGreaterThanValidationResult(IFormattable value, IFormattable min, bool isValid, object errorContent)
+        public IsLessThanMinValidationResult(IFormattable value, IFormattable min, bool isValid, object errorContent)
             : base(isValid, errorContent)
         {
             this.Value = value;

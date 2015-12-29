@@ -246,6 +246,28 @@
             }
 
             [Test]
+            public void Pattern()
+            {
+                using (var app = Application.AttachOrLaunch(Info.ProcessStartInfo))
+                {
+                    var window = app.GetWindow(AutomationIds.MainWindow, InitializeOption.NoCache);
+                    var page = window.Get<TabPage>(AutomationIds.DebugTab);
+                    page.Select();
+                    var groupBox = window.Get<GroupBox>(AutomationIds.DoubleBoxGroupBox);
+                    var inputBox = groupBox.Get<TextBox>(AutomationIds.InputBox);
+                    var patternBox = groupBox.Get<TextBox>(AutomationIds.RegexPatternBox);
+                    inputBox.Enter("1.2");
+                    patternBox.Enter(@"2\.+");
+                    inputBox.Click();
+                    Assert.AreEqual(true, inputBox.HasValidationError());
+
+                    patternBox.Enter(@"1\.+");
+                    inputBox.Click();
+                    Assert.AreEqual(false, inputBox.HasValidationError());
+                }
+            }
+
+            [Test]
             public void Focus()
             {
                 using (var app = Application.AttachOrLaunch(Info.ProcessStartInfo))

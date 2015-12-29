@@ -17,15 +17,15 @@
         [SetUp]
         public void SetUp()
         {
-            this.dummy = new Dummy();
-            var binding = new Binding("Value")
-            {
-                Source = this.dummy,
-                Mode = BindingMode.OneWayToSource,
-                UpdateSourceTrigger = UpdateSourceTrigger.Explicit
-            };
-            binding.ValidationRules.Add(new CanParse<double>(this.dummy.CanParse));
-            this.bindingExpression = BindingOperations.SetBinding(this.dummy, Dummy.TextProxyProperty, binding);
+            //this.dummy = new Dummy();
+            //var binding = new Binding("Value")
+            //{
+            //    Source = this.dummy,
+            //    Mode = BindingMode.OneWayToSource,
+            //    UpdateSourceTrigger = UpdateSourceTrigger.Explicit
+            //};
+            //binding.ValidationRules.Add(new CanParseRule<double>(this.dummy.CanParse));
+            //this.bindingExpression = BindingOperations.SetBinding(this.dummy, Dummy.TextProxyProperty, binding);
         }
 
         [Test]

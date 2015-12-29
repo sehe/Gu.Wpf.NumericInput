@@ -19,6 +19,11 @@
                 null,
                 false,
                 UpdateSourceTrigger.LostFocus));
+        public static readonly DependencyProperty CanValueBeNullProperty = DependencyProperty.Register(
+            "CanValueBeNull",
+            typeof(bool),
+            typeof(NumericBox<T>),
+            new PropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty MinValueProperty = DependencyProperty.Register(
             "MinValue",
@@ -70,6 +75,14 @@
         {
             get { return (T)this.GetValue(ValueProperty); }
             set { this.SetValue(ValueProperty, value); }
+        }
+
+        [Category("NumericBox")]
+        [Browsable(true)]
+        public bool CanValueBeNull
+        {
+            get { return (bool)GetValue(CanValueBeNullProperty); }
+            set { SetValue(CanValueBeNullProperty, value); }
         }
 
         [Category("NumericBox")]

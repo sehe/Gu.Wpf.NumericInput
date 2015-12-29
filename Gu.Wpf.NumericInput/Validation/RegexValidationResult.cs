@@ -2,9 +2,9 @@ namespace Gu.Wpf.NumericInput.Validation
 {
     using System.Windows.Controls;
 
-    public class IsMatchValidationResult : ValidationResult
+    public class RegexValidationResult : ValidationResult
     {
-        public IsMatchValidationResult(string text, string pattern, bool isValid, object errorContent)
+        public RegexValidationResult(string text, string pattern, bool isValid, object errorContent)
             : base(isValid, errorContent)
         {
             this.Text = text;
