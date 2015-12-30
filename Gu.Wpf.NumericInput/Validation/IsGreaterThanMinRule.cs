@@ -30,13 +30,7 @@ namespace Gu.Wpf.NumericInput.Validation
                 return new IsLessThanMinValidationResult(null, min, false, $"null < min ({min})");
             }
 
-            if (!(value is T?))
-            {
-                throw new NotImplementedException("Not sure what to return here or if it gets here");
-            }
-
             var typedValue = (T)value;
-
             if (typedValue.CompareTo(min) < 0)
             {
                 return new IsLessThanMinValidationResult(typedValue, min, false, $"{typedValue} < min ({min})");

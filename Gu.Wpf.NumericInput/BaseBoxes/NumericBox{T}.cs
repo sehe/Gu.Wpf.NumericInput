@@ -17,7 +17,6 @@
         private static readonly T TypeMax = (T)typeof(T).GetField("MaxValue").GetValue(null);
         private readonly Func<T, T, T> add;
         private readonly Func<T, T, T> subtract;
-        private readonly Validator<T> validator; // Keep this alive
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NumericBox{T}"/> class.
@@ -25,20 +24,10 @@
         /// <param name="add">How to add two values (x, y) => x + y</param>
         /// <param name="subtract">How to subtract two values (x, y) => x - y</param>
         protected NumericBox(Func<T, T, T> add, Func<T, T, T> subtract)
+            : this()
         {
             this.add = add;
             this.subtract = subtract;
-            this.SetupValidation();
-            this.BindValue();
-            //this.validator = new Validator<T>(
-            //    this,
-            //    new DataErrorValidationRule(),
-            //    new ExceptionValidationRule(),
-            //    new CanParse<T>(this.CanParse),
-            //    new IsMatch(() => this.RegexPattern),
-            //    IsGreaterThan<T>.Default);/*,
-            //    new IsLessThan<T>(this.Parse, () => this.MaxValue));
-            //    */
             this.MaxLimit = TypeMax;
             this.MinLimit = TypeMin;
         }
