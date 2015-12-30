@@ -57,13 +57,11 @@
     <Compile Include="BaseBoxes\NumericBox{T}.Bindings.cs" />
     <Compile Include="BaseBoxes\NumericBox{T}.DependencyProperties.cs" />
     <Compile Include="BaseBoxes\NumericBox{T}.Events.cs" />
-    <Compile Include="BaseBoxes\NumericBox{T}.Validation.cs" />
     <Compile Include="Internals\BindingHelper.cs" />
     <Compile Include="Internals\BooleanBoxes.cs" />
     <Compile Include="Converters\DecimalDigitsToStringFormatConverter.cs" />
     <Compile Include="Internals\DependencyPropertyExt.cs" />
-    <Compile Include="Converters\ToStringConverter.cs" />
-    <Compile Include="Converters\FromStringConverter.cs" />
+    <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\IsNullOrEmptyConverter.cs" />
     <Compile Include="BaseBoxes\NumericBox.Keys.cs" />
     <Compile Include="BaseBoxes\NumericBox.AttachedProperties.cs" />
@@ -92,7 +90,7 @@
       <SubType>Code</SubType>
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Validation\IsGreaterThanMinRule.cs" />
+    <Compile Include="Validation\IsGreaterThanOrEqualToMinRule.cs" />
     <Compile Include="Validation\IsLessThan.cs" />
     <Compile Include="Validation\CanParseRule.cs" />
     <Compile Include="Validation\Validator.cs" />

@@ -11,7 +11,7 @@
         public static readonly RegexRule Default = new RegexRule();
 
         private RegexRule()
-            : base(ValidationStep.RawProposedValue, true)
+            : base(ValidationStep.RawProposedValue, false)
         {
         }
 

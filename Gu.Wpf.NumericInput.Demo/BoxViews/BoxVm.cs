@@ -7,7 +7,7 @@
     using JetBrains.Annotations;
 
     public abstract class BoxVm<TBox, TValue> : IDataErrorInfo, INotifyPropertyChanged
-        where TBox : NumericBox<TValue> 
+        where TBox : NumericBox<TValue>
         where TValue : struct, IComparable<TValue>, IFormattable, IConvertible, IEquatable<TValue>
     {
         private TValue value;
@@ -24,16 +24,16 @@
 
         protected BoxVm()
         {
-            this.min = DefaultValue(x => x.MinValue);
-            this.max = DefaultValue(x => x.MaxValue);
-            this.culture = DefaultValue(x => x.Culture);
-            this.numberStyles = DefaultValue(x => x.NumberStyles);
-            this.decimalDigits = DefaultValue(x => (x as DecimalDigitsBox<TValue>)?.DecimalDigits);
-            this.allowSpinners = DefaultValue(x => x.AllowSpinners);
-            this.isReadOnly = DefaultValue(x => x.IsReadOnly);
-            this.increment = DefaultValue(x => x.Increment);
-            this.suffix = DefaultValue(x => x.Suffix);
-            this.regexPattern = DefaultValue(x => x.RegexPattern);
+            this.min = DefaultValue<TBox>.For(x => x.MinValue);
+            this.max = DefaultValue<TBox>.For(x => x.MaxValue);
+            this.culture = DefaultValue<TBox>.For(x => x.Culture);
+            this.numberStyles = DefaultValue<TBox>.For(x => x.NumberStyles);
+            this.decimalDigits = null;
+            this.allowSpinners = DefaultValue<TBox>.For(x => x.AllowSpinners);
+            this.isReadOnly = DefaultValue<TBox>.For(x => x.IsReadOnly);
+            this.increment = DefaultValue<TBox>.For(x => x.Increment);
+            this.suffix = DefaultValue<TBox>.For(x => x.Suffix);
+            this.regexPattern = DefaultValue<TBox>.For(x => x.RegexPattern);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -341,12 +341,6 @@
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private static T DefaultValue<T>(Func<TBox, T> property)
-        {
-            var instance = Activator.CreateInstance<TBox>();
-            return property(instance);
         }
     }
 }

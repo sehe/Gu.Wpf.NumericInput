@@ -4,12 +4,12 @@
     using System.Globalization;
     using System.Windows.Data;
 
-    internal class FromStringConverter<T> : IValueConverter
+    internal class StringConverter<T> : IValueConverter
         where T : struct, IComparable<T>, IFormattable, IConvertible, IEquatable<T>
     {
-        public static readonly FromStringConverter<T> Default = new FromStringConverter<T>();
+        public static readonly StringConverter<T> Default = new StringConverter<T>();
 
-        private FromStringConverter()
+        private StringConverter()
         {
         }
 
@@ -38,7 +38,14 @@
 
         public object ConvertBack(object value, Type targetTypes, object parameter, CultureInfo culture)
         {
-            throw new NotSupportedException("Use Mode = \"OneWay\"");
+            var box = (NumericBox<T>)parameter;
+            var formattable = (IFormattable)value;
+            if (formattable == null)
+            {
+                return string.Empty;
+            }
+
+            return formattable.ToString(box.StringFormat, box.Culture);
         }
     }
 }

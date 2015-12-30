@@ -19,6 +19,7 @@
                 null,
                 false,
                 UpdateSourceTrigger.LostFocus));
+
         public static readonly DependencyProperty CanValueBeNullProperty = DependencyProperty.Register(
             "CanValueBeNull",
             typeof(bool),

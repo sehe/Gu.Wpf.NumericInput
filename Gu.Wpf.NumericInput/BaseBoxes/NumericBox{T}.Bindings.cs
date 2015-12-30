@@ -12,6 +12,12 @@
             typeof(NumericBox<T>),
             new PropertyMetadata(null, OnTextProxyChanged));
 
+        private static readonly DependencyProperty RawTextProperty = DependencyProperty.Register(
+            "RawText",
+            typeof(string),
+            typeof(NumericBox<T>),
+            new PropertyMetadata(null, OnRawTextChanged));
+
         private static readonly DependencyProperty ValueProxyProperty = DependencyProperty.Register(
             "ValueProxy",
             typeof(T?),
@@ -20,16 +26,20 @@
 
         private NumericBox()
         {
-            var textBinding = this.CreateSelfBinding(TextProperty);
-            textBinding.ValidationRules.Add(CanParseRule<T>.Default);
-            textBinding.ValidationRules.Add(RegexRule.Default);
-            textBinding.ValidationRules.Add(IsGreaterThanMinRule<T>.Default);
-            textBinding.Converter = FromStringConverter<T>.Default;
-            BindingOperations.SetBinding(this, ValueProxyProperty, textBinding);
+            var proxyBinding = this.CreateSelfBinding(TextProxyProperty, BindingMode.TwoWay);
+            proxyBinding.NotifyOnValidationError = true;
+            proxyBinding.ConverterParameter = this;
+            proxyBinding.Converter = StringConverter<T>.Default;
+            proxyBinding.ValidationRules.Add(CanParseRule<T>.Default);
+            proxyBinding.ValidationRules.Add(RegexRule.Default);
+            proxyBinding.ValidationRules.Add(IsGreaterThanOrEqualToMinRule<T>.Default);
+            BindingOperations.SetBinding(this, ValueProxyProperty, proxyBinding);
 
-            var valueBinding = this.CreateSelfBinding(ValueProperty);
-            valueBinding.Converter = ToStringConverter<T>.Default;
-            BindingOperations.SetBinding(this, TextProxyProperty, valueBinding);
+            var textBinding = this.CreateSelfBinding(TextProperty, BindingMode.OneWay);
+            BindingOperations.SetBinding(this, RawTextProperty, textBinding);
+            //var valueBinding = this.CreateSelfBinding(ValueProperty);
+            //valueBinding.Converter = ToStringConverter<T>.Default;
+            //BindingOperations.SetBinding(this, TextProxyProperty, valueBinding);
         }
 
         internal T? ValueProxy
@@ -40,23 +50,25 @@
 
         private static void OnValueProxyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            d.SetValue(ValueProperty, e.NewValue);
+        }
+
+        private static void OnRawTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            d.SetCurrentValue(TextProxyProperty, e.NewValue);
         }
 
         private static void OnTextProxyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            d.SetValue(TextProperty, e.NewValue);
         }
 
-        private Binding CreateSelfBinding(DependencyProperty property)
+        private Binding CreateSelfBinding(DependencyProperty property, BindingMode mode)
         {
             return new Binding
             {
                 Path = BindingHelper.GetPath(property),
                 Source = this,
-                Mode = BindingMode.OneWay,
+                Mode = mode,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                ConverterParameter = this
             };
         }
     }

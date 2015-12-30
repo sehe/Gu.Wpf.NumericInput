@@ -62,6 +62,7 @@
     <Compile Include="BoxViews\DecimalBoxVm.cs">
       <DependentUpon>DecimalBoxView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BoxViews\DefaultValue.cs" />
     <Compile Include="BoxViews\DoubleBoxView.xaml.cs">
       <DependentUpon>DoubleBoxView.xaml</DependentUpon>
     </Compile>

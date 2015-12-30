@@ -5,12 +5,12 @@ namespace Gu.Wpf.NumericInput.Validation
     using System.Windows.Controls;
     using System.Windows.Data;
 
-    public class IsGreaterThanMinRule<T> : ValidationRule
+    public class IsGreaterThanOrEqualToMinRule<T> : ValidationRule
         where T : struct, IComparable<T>, IFormattable, IConvertible, IEquatable<T>
     {
-        public static readonly IsGreaterThanMinRule<T> Default = new IsGreaterThanMinRule<T>();
+        public static readonly IsGreaterThanOrEqualToMinRule<T> Default = new IsGreaterThanOrEqualToMinRule<T>();
 
-        private IsGreaterThanMinRule()
+        private IsGreaterThanOrEqualToMinRule()
             : base(ValidationStep.ConvertedProposedValue, false)
         {
         }
