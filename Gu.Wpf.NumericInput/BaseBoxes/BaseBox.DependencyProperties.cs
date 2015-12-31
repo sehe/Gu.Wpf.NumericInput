@@ -13,6 +13,26 @@ namespace Gu.Wpf.NumericInput
     /// </summary>
     public abstract partial class BaseBox : TextBox
     {
+        private static readonly DependencyPropertyKey IsValidationDirtyPropertyKey = DependencyProperty.RegisterReadOnly(
+            "IsValidationDirty",
+            typeof(bool),
+            typeof(BaseBox),
+            new PropertyMetadata(
+                BooleanBoxes.False,
+                OnIsValidationDirtyChanged));
+
+        public static readonly DependencyProperty IsValidationDirtyProperty = IsValidationDirtyPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey IsFormattingDirtyPropertyKey = DependencyProperty.RegisterReadOnly(
+            "IsFormattingDirty",
+            typeof(bool),
+            typeof(BaseBox),
+            new PropertyMetadata(
+                BooleanBoxes.False,
+                OnIsFormattingDirtyChanged));
+
+        public static readonly DependencyProperty IsFormattingDirtyProperty = IsFormattingDirtyPropertyKey.DependencyProperty;
+
         public static readonly DependencyProperty SuffixProperty = DependencyProperty.Register(
             "Suffix",
             typeof(string),
@@ -97,6 +117,18 @@ namespace Gu.Wpf.NumericInput
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BaseBox), new FrameworkPropertyMetadata(typeof(BaseBox)));
         }
 
+        public bool IsFormattingDirty
+        {
+            get { return (bool)this.GetValue(IsFormattingDirtyProperty); }
+            protected set { this.SetValue(IsFormattingDirtyPropertyKey, value ? BooleanBoxes.True : BooleanBoxes.False); }
+        }
+
+        public bool IsValidationDirty
+        {
+            get { return (bool)this.GetValue(IsValidationDirtyProperty); }
+            protected set { this.SetValue(IsValidationDirtyPropertyKey, value ? BooleanBoxes.True : BooleanBoxes.False); }
+        }
+
         [Category(nameof(NumericBox))]
         [Browsable(true)]
         public string Suffix
@@ -168,24 +200,40 @@ namespace Gu.Wpf.NumericInput
             private set { this.SetValue(DecreaseCommandPropertyKey, value); }
         }
 
+        private static void OnIsValidationDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (Equals(e.NewValue, BooleanBoxes.True))
+            {
+                ((BaseBox)d).RaiseEvent(ValidationDirtyEventArgs);
+            }
+        }
+
+        private static void OnIsFormattingDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (Equals(e.NewValue, BooleanBoxes.True))
+            {
+                ((BaseBox)d).RaiseEvent(FormatDirtyEventArgs);
+            }
+        }
+
         private static void OnStringFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
-            box.RaiseEvent(FormatDirtyEventArgs);
-            box.RaiseEvent(ValidationDirtyEventArgs);
+            box.IsFormattingDirty = true;
+            box.IsValidationDirty = true;
         }
 
         private static void OnCultureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
-            box.RaiseEvent(FormatDirtyEventArgs);
-            box.RaiseEvent(ValidationDirtyEventArgs);
+            box.IsFormattingDirty = true;
+            box.IsValidationDirty = true;
         }
 
         private static void OnPatternChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
-            box.RaiseEvent(ValidationDirtyEventArgs);
+            box.IsValidationDirty = true;
         }
 
         private static void OnSuffixChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -206,7 +254,11 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnTextProxyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            d.SetCurrentValue(TextBindableProperty, e.NewValue);
+            var baseBox = (BaseBox)d;
+            if (!baseBox.IsFormatting)
+            {
+                d.SetCurrentValue(TextBindableProperty, e.NewValue);
+            }
         }
 
         private static void OnTextBindableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

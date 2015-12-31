@@ -22,7 +22,8 @@
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.GetValue((NumericBox<T>)parameter);
+            var box = (NumericBox<T>)parameter;
+            return this.GetValue(box);
         }
 
         internal string GetFormattedText(NumericBox<T> box)

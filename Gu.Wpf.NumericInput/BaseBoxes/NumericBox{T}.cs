@@ -18,8 +18,9 @@
         private static readonly T TypeMax = (T)typeof(T).GetField("MaxValue").GetValue(null);
         private readonly Func<T, T, T> add;
         private readonly Func<T, T, T> subtract;
-
-        private readonly Validator<T> validator; // Keep this alive
+        private static readonly EventHandler<ValidationErrorEventArgs> ValidationErrorHandler = OnValidationError;
+        private static readonly RoutedEventHandler FormatDirtyHandler = OnFormatDirty;
+        private static readonly RoutedEventHandler ValidationDirtyHandler = OnValidationDirty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NumericBox{T}"/> class.
@@ -31,29 +32,24 @@
             this.add = add;
             this.subtract = subtract;
 
-            //var binding = new Binding
-            //{
-            //    Path = BindingHelper.GetPath(ValueProperty),
-            //    Source = this,
-            //    Mode = BindingMode.OneWayToSource,
-            //    UpdateSourceTrigger = UpdateSourceTrigger.Explicit,
-            //    NotifyOnValidationError = true,
-            //    Converter = StringFormatConverter<T>.Default,
-            //    ConverterParameter = this,
-            //};
+            var binding = new Binding
+            {
+                Path = BindingHelper.GetPath(ValueProperty),
+                Source = this,
+                Mode = BindingMode.TwoWay,
+                NotifyOnValidationError = true,
+                Converter = StringFormatConverter<T>.Default,
+                ConverterParameter = this,
+            };
 
-            //binding.ValidationRules.Add(CanParse<T>.Default);
-            //binding.ValidationRules.Add(IsMatch.Default);
-            //binding.ValidationRules.Add(IsGreaterThanOrEqualToMinRule<T>.Default);
-            //binding.ValidationRules.Add(IsLessThanOrEqualToMaxRule<T>.Default);
-
-            //BindingOperations.SetBinding(this, TextBindableProperty, binding);
-            this.validator = new Validator<T>(
-                this,
-                CanParse<T>.Default,
-                IsMatch.Default,
-                IsGreaterThanOrEqualToMinRule<T>.Default,
-                IsLessThanOrEqualToMaxRule<T>.Default);
+            binding.ValidationRules.Add(CanParse<T>.Default);
+            binding.ValidationRules.Add(IsMatch.Default);
+            binding.ValidationRules.Add(IsGreaterThanOrEqualToMinRule<T>.Default);
+            binding.ValidationRules.Add(IsLessThanOrEqualToMaxRule<T>.Default);
+            BindingOperations.SetBinding(this, TextBindableProperty, binding);
+            this.AddHandler(System.Windows.Controls.Validation.ErrorEvent, ValidationErrorHandler);
+            this.AddHandler(FormatDirtyEvent, FormatDirtyHandler);
+            this.AddHandler(ValidationDirtyEvent, ValidationDirtyHandler);
         }
 
         /// <summary>
@@ -92,6 +88,33 @@
             }
 
             throw new FormatException($"Could not parse {text} to an instance of {typeof(T)}");
+        }
+
+        public void UpdateFormat()
+        {
+            this.IsFormatting = true;
+            if (System.Windows.Controls.Validation.GetHasError(this))
+            {
+                T result;
+                if (this.TryParse(this.Text, out result))
+                {
+                    this.Text = result.ToString(this.StringFormat, this.Culture);
+                }
+            }
+            else
+            {
+                this.Text = StringFormatConverter<T>.Default.GetFormattedText(this);
+            }
+
+            this.IsFormatting = false;
+            this.IsFormattingDirty = false;
+        }
+
+        public void UpdateValidation()
+        {
+            var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
+            bindingExpression.ValidateWithoutUpdate();
+            this.IsValidationDirty = false;
         }
 
         protected virtual void OnValueChanged(object newValue, object oldValue)
@@ -185,6 +208,35 @@
         {
             this.CheckSpinners();
             base.OnTextChanged(e);
+        }
+
+        private static void OnValidationError(object sender, ValidationErrorEventArgs e)
+        {
+            var box = (NumericBox<T>)sender;
+            var bindingExpression = BindingOperations.GetBindingExpression(box, TextBindableProperty);
+            if (bindingExpression != null)
+            {
+                box.IsUpdatingValue = true;
+                bindingExpression.UpdateTarget(); // Reset Value to value from from vm binding.
+                box.IsUpdatingValue = false;
+            }
+        }
+
+        private static void OnFormatDirty(object sender, RoutedEventArgs e)
+        {
+            var box = (NumericBox<T>)sender;
+            if (box.IsFocused || box.IsKeyboardFocusWithin)
+            {
+                return;
+            }
+
+            box.UpdateFormat();
+        }
+
+        private static void OnValidationDirty(object sender, RoutedEventArgs e)
+        {
+            var box = (NumericBox<T>)sender;
+            box.UpdateValidation();
         }
 
         private T AddIncrement()

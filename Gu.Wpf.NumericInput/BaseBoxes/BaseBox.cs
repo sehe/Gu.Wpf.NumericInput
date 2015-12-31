@@ -14,6 +14,10 @@
             this.Bind(TextProxyProperty).OneWayTo(this, TextProperty);
         }
 
+        internal bool IsUpdatingValue { get; set; }
+
+        internal bool IsFormatting { get; set; }
+
         /// <summary>
         /// Invoked when IncreaseCommand.CanExecute() is executed
         /// </summary>

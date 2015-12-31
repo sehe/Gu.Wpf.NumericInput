@@ -67,6 +67,7 @@
             }
         }
 
+        [Obsolete("Done")]
         private void OnValidationError(object sender, ValidationErrorEventArgs e)
         {
             var expression = this.ValueBinding;
