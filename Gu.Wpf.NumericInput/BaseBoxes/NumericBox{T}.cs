@@ -2,10 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
-    using Gu.Wpf.NumericInput.Validation;
 
     /// <summary>
     /// Baseclass with common functionality for numeric textboxes
@@ -16,6 +16,7 @@
     {
         private static readonly T TypeMin = (T)typeof(T).GetField("MinValue").GetValue(null);
         private static readonly T TypeMax = (T)typeof(T).GetField("MaxValue").GetValue(null);
+        private static readonly PropertyInfo NeedsValidationProperty = typeof(BindingExpression).GetProperty("NeedsValidation", BindingFlags.Instance | BindingFlags.NonPublic);
         private readonly Func<T, T, T> add;
         private readonly Func<T, T, T> subtract;
         private static readonly EventHandler<ValidationErrorEventArgs> ValidationErrorHandler = OnValidationError;
@@ -93,7 +94,9 @@
         public void UpdateFormat()
         {
             this.IsFormatting = true;
-            if (System.Windows.Controls.Validation.GetHasError(this))
+            var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
+
+            if (bindingExpression.HasValidationError)
             {
                 T result;
                 if (this.TryParse(this.Text, out result))
@@ -113,6 +116,7 @@
         public void UpdateValidation()
         {
             var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
+            NeedsValidationProperty?.SetValue(bindingExpression, BooleanBoxes.True); // using reflection here. The alternatives means bloat.
             bindingExpression.ValidateWithoutUpdate();
             this.IsValidationDirty = false;
         }

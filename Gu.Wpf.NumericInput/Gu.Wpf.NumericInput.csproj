@@ -57,6 +57,7 @@
     <Compile Include="BaseBoxes\DecimalDigitsBox{T}.cs" />
     <Compile Include="BaseBoxes\NumericBox{T}.DependencyProperties.cs" />
     <Compile Include="BaseBoxes\NumericBox{T}.Events.cs" />
+    <Compile Include="BaseBoxes\TextSource.cs" />
     <Compile Include="Internals\BindingHelper.cs" />
     <Compile Include="Internals\BooleanBoxes.cs" />
     <Compile Include="Converters\DecimalDigitsToStringFormatConverter.cs" />

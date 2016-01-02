@@ -14,6 +14,11 @@
             this.Bind(TextProxyProperty).OneWayTo(this, TextProperty);
         }
 
+        internal TextSource TextSource
+        {
+            get { return DependencyPropertyHelper.GetValueSource(this, TextProperty).BaseValueSource; }
+        }
+
         internal bool IsUpdatingValue { get; set; }
 
         internal bool IsFormatting { get; set; }
