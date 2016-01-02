@@ -4,6 +4,7 @@ namespace Gu.Wpf.NumericInput
     using System;
     using System.ComponentModel;
     using System.Globalization;
+    using System.Runtime.CompilerServices;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -202,6 +203,7 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnIsValidationDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Debug.WriteLine(e.NewValue.ToString());
             if (Equals(e.NewValue, BooleanBoxes.True))
             {
                 ((BaseBox)d).RaiseEvent(ValidationDirtyEventArgs);
@@ -210,6 +212,7 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnIsFormattingDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Debug.WriteLine(e.NewValue.ToString());
             if (Equals(e.NewValue, BooleanBoxes.True))
             {
                 ((BaseBox)d).RaiseEvent(FormatDirtyEventArgs);
@@ -254,15 +257,24 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnTextProxyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Debug.WriteLine(e.NewValue?.ToString() ?? "null");
             var baseBox = (BaseBox)d;
-            if (!baseBox.IsFormatting)
+            if (baseBox.Status != Status.Formatting)
             {
+                if (baseBox.Status == Status.Idle)
+                {
+                    baseBox.Status = Status.Updating;
+                    baseBox.TextSource = TextSource.UserInput;
+                }
+
                 d.SetCurrentValue(TextBindableProperty, e.NewValue);
+                baseBox.Status = Status.Idle;
             }
         }
 
         private static void OnTextBindableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Debug.WriteLine(e.NewValue?.ToString() ?? "null");
             d.SetCurrentValue(TextProperty, e.NewValue);
         }
     }

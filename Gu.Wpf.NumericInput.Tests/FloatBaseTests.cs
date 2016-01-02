@@ -6,7 +6,7 @@ namespace Gu.Wpf.NumericInput.Tests
     using NUnit.Framework;
 
     public abstract class FloatBaseTests<TBox, T> : NumericBoxTests<TBox, T>
-        where TBox : NumericBox<T>
+        where TBox : DecimalDigitsBox<T>
         where T : struct, IComparable<T>, IFormattable, IConvertible, IEquatable<T>
     {
         [Test]
@@ -96,7 +96,7 @@ namespace Gu.Wpf.NumericInput.Tests
         [TestCase("sv-SE", "1,23", "en-US", "1.2", "1.23")]
         [TestCase("en-US", "1.23", "sv-SE", "1,2", "1.23")]
         [TestCase("en-US", "1.23e", "sv-SE", "1.23e", "0")]
-        public void ChangeCultureDoesNotTruncDecimals(string culture1, string text, string culture2, string expected, string expectedValue)
+        public void ChangeCultureDoesNotTruncateDecimals(string culture1, string text, string culture2, string expected, string expectedValue)
         {
             this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, 1);
             this.Sut.Culture = new CultureInfo(culture1);

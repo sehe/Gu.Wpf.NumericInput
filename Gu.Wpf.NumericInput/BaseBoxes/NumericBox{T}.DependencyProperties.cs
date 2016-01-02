@@ -82,7 +82,7 @@
         [Browsable(true)]
         public bool CanValueBeNull
         {
-            get { return (bool) this.GetValue(CanValueBeNullProperty); }
+            get { return (bool)this.GetValue(CanValueBeNullProperty); }
             set { this.SetValue(CanValueBeNullProperty, value); }
         }
 
@@ -120,7 +120,14 @@
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            Debug.WriteLine(e.NewValue?.ToString() ?? "null");
             var numericBox = (NumericBox<T>)d;
+            if (numericBox.Status == Status.Idle)
+            {
+                numericBox.Status = Status.Updating;
+                numericBox.TextSource = TextSource.ValueBinding;
+            }
+
             if (!Equals(e.NewValue, e.OldValue))
             {
                 numericBox.OnValueChanged(e.NewValue, e.OldValue);

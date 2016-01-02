@@ -40,7 +40,8 @@
                 </HeaderedContentControl>
 
                 <HeaderedContentControl Header="Value">
-                    <TextBlock Text="{Binding Value, ElementName=InputBox}" />
+                    <TextBlock Text="{Binding Value, ElementName=InputBox}" 
+                               AutomationProperties.AutomationId="{x:Static local:AutomationIds.ValueBlock}"/>
                 </HeaderedContentControl>
 
                 <HeaderedContentControl Header="IsFocused">

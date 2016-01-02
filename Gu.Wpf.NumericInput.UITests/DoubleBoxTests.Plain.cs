@@ -6,11 +6,14 @@
     using NUnit.Framework;
     using TestStack.White.Factory;
     using TestStack.White.UIItems;
-    using TestStack.White.UIItems.ListBoxItems;
     using TestStack.White.UIItems.TabItems;
     using TestStack.White.Utility;
     using TestStack.White.WindowsAPI;
     using Application = TestStack.White.Application;
+    using CheckBox = TestStack.White.UIItems.CheckBox;
+    using ComboBox = TestStack.White.UIItems.ListBoxItems.ComboBox;
+    using GroupBox = TestStack.White.UIItems.GroupBox;
+    using TextBox = TestStack.White.UIItems.TextBox;
 
     public class DoubleBoxTests
     {
@@ -97,12 +100,16 @@
                     var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
                     Assert.AreNotEqual("1.2", inputBox.Text);
                     inputBox.Enter("1.2");
+                    Assert.AreEqual(false, inputBox.HasValidationError());
                     vmValueBox.Click();
+                    Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("1.2", inputBox.Text);
                     Assert.AreEqual("1.2", vmValueBox.Text);
 
                     cultureBox.Select("sv-SE");
+                    Assert.AreEqual(false, inputBox.HasValidationError());
                     vmValueBox.Click();
+                    Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("1,2", inputBox.Text);
                     Assert.AreEqual("1.2", vmValueBox.Text);
 
@@ -114,6 +121,7 @@
                     cultureBox.Select("en-US");
                     vmValueBox.Click();
                     Assert.AreEqual("2.3", inputBox.Text);
+                    Assert.AreEqual("2.3", groupBox.Get<Label>(AutomationIds.ValueBlock).Text);
                     Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("1.2", vmValueBox.Text); // maybe we want to update source here idk.
 

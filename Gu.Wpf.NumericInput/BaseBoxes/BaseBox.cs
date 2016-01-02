@@ -7,6 +7,9 @@
     /// </summary>
     public abstract partial class BaseBox
     {
+        private TextSource textSource;
+        private Status status;
+
         protected BaseBox()
         {
             this.IncreaseCommand = new ManualRelayCommand(this.Increase, this.CanIncrease);
@@ -16,12 +19,23 @@
 
         internal TextSource TextSource
         {
-            get { return DependencyPropertyHelper.GetValueSource(this, TextProperty).BaseValueSource; }
+            get { return this.textSource; }
+            set
+            {
+                Debug.WriteLine($"From: {this.textSource} to {value}");
+                this.textSource = value;
+            }
         }
 
-        internal bool IsUpdatingValue { get; set; }
-
-        internal bool IsFormatting { get; set; }
+        internal Status Status
+        {
+            get { return this.status; }
+            set
+            {
+                Debug.WriteLine($"From: {this.status} to {value}");
+                this.status = value;
+            }
+        }
 
         /// <summary>
         /// Invoked when IncreaseCommand.CanExecute() is executed

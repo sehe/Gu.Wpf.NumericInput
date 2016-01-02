@@ -32,7 +32,6 @@
         {
             this.add = add;
             this.subtract = subtract;
-
             var binding = new Binding
             {
                 Path = BindingHelper.GetPath(ValueProperty),
@@ -44,9 +43,12 @@
             };
 
             binding.ValidationRules.Add(CanParse<T>.Default);
-            binding.ValidationRules.Add(IsMatch.Default);
-            binding.ValidationRules.Add(IsGreaterThanOrEqualToMinRule<T>.Default);
-            binding.ValidationRules.Add(IsLessThanOrEqualToMaxRule<T>.Default);
+            binding.ValidationRules.Add(IsMatch.FromText);
+            binding.ValidationRules.Add(IsMatch.FromValue);
+            binding.ValidationRules.Add(IsGreaterThanOrEqualToMinRule<T>.FromText);
+            binding.ValidationRules.Add(IsGreaterThanOrEqualToMinRule<T>.FromValue);
+            binding.ValidationRules.Add(IsLessThanOrEqualToMaxRule<T>.FromText);
+            binding.ValidationRules.Add(IsLessThanOrEqualToMaxRule<T>.FromValue);
             BindingOperations.SetBinding(this, TextBindableProperty, binding);
             this.AddHandler(System.Windows.Controls.Validation.ErrorEvent, ValidationErrorHandler);
             this.AddHandler(FormatDirtyEvent, FormatDirtyHandler);
@@ -93,31 +95,37 @@
 
         public void UpdateFormat()
         {
-            this.IsFormatting = true;
             var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
-
-            if (bindingExpression.HasValidationError)
+            if (bindingExpression?.HasValidationError == true)
             {
-                T result;
-                if (this.TryParse(this.Text, out result))
+                if (this.TextSource == TextSource.UserInput)
                 {
-                    this.Text = result.ToString(this.StringFormat, this.Culture);
+                    Debug.WriteLine("bindingExpression?.HasValidationError == true && this.TextSource == TextSource.UserInput");
+                    bindingExpression.UpdateTarget();
+                }
+                else
+                {
+                    Debug.WriteLine("bindingExpression?.HasValidationError == true && this.TextSource == TextSource.Binding");
+                    bindingExpression.UpdateSource();
                 }
             }
             else
             {
+                Debug.WriteLine("bindingExpression?.HasValidationError == false");
+                this.Status = Status.Formatting;
                 this.Text = StringFormatConverter<T>.Default.GetFormattedText(this);
+                this.Status = Status.Idle;
             }
 
-            this.IsFormatting = false;
             this.IsFormattingDirty = false;
         }
 
         public void UpdateValidation()
         {
+            Debug.WriteLine(string.Empty);
             var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
             NeedsValidationProperty?.SetValue(bindingExpression, BooleanBoxes.True); // using reflection here. The alternatives means bloat.
-            bindingExpression.ValidateWithoutUpdate();
+            bindingExpression?.ValidateWithoutUpdate();
             this.IsValidationDirty = false;
         }
 
@@ -189,15 +197,6 @@
             SetTextUndoable(textBox ?? this, text);
         }
 
-        private static void SetTextUndoable(TextBox textBox, string text)
-        {
-            // http://stackoverflow.com/questions/27083236/change-the-text-in-a-textbox-with-text-binding-sometext-so-it-is-undoable/27083548?noredirect=1#comment42677255_27083548
-            // Dunno if nice, testing it for now
-            textBox.SelectAll();
-            textBox.SelectedText = text;
-            textBox.Select(0, 0);
-        }
-
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             if (e.Property == IsReadOnlyProperty)
@@ -208,26 +207,44 @@
             base.OnPropertyChanged(e);
         }
 
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            Debug.WriteLine(string.Empty);
+            if (this.IsFormattingDirty || this.TextSource == TextSource.UserInput)
+            {
+                this.UpdateFormat();
+            }
+
+            base.OnLostFocus(e);
+        }
+
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
             this.CheckSpinners();
             base.OnTextChanged(e);
         }
 
+        private static void SetTextUndoable(TextBox textBox, string text)
+        {
+            // http://stackoverflow.com/questions/27083236/change-the-text-in-a-textbox-with-text-binding-sometext-so-it-is-undoable/27083548?noredirect=1#comment42677255_27083548
+            // Dunno if nice, testing it for now
+            textBox.SelectAll();
+            textBox.SelectedText = text;
+            textBox.Select(0, 0);
+        }
+
         private static void OnValidationError(object sender, ValidationErrorEventArgs e)
         {
+            Debug.WriteLine(string.Empty);
             var box = (NumericBox<T>)sender;
-            var bindingExpression = BindingOperations.GetBindingExpression(box, TextBindableProperty);
-            if (bindingExpression != null)
-            {
-                box.IsUpdatingValue = true;
-                bindingExpression.UpdateTarget(); // Reset Value to value from from vm binding.
-                box.IsUpdatingValue = false;
-            }
+            var bindingExpression = BindingOperations.GetBindingExpression(box, ValueProperty);
+            box.Status = Status.ResettingValue;
+            bindingExpression?.UpdateTarget(); // Reset Value to value from DataContext binding.
         }
 
         private static void OnFormatDirty(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine(string.Empty);
             var box = (NumericBox<T>)sender;
             if (box.IsFocused || box.IsKeyboardFocusWithin)
             {
@@ -239,6 +256,7 @@
 
         private static void OnValidationDirty(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine(string.Empty);
             var box = (NumericBox<T>)sender;
             box.UpdateValidation();
         }

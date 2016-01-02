@@ -17,7 +17,13 @@
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return this.GetFormattedText((NumericBox<T>)parameter);
+            var box = (NumericBox<T>)parameter;
+            if (box.TextSource == TextSource.ValueBinding)
+            {
+                return this.GetFormattedText(box);
+            }
+
+            return Binding.DoNothing;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

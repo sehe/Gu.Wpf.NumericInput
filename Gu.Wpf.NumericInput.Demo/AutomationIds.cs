@@ -8,6 +8,7 @@
         public static readonly string DebugTab = Create();
         public static readonly string DoubleBoxGroupBox = Create();
         public static readonly string InputBox = Create();
+        public static readonly string ValueBlock = Create();
         public static readonly string VmValueBox = Create();
         public static readonly string IsReadonlyBox = Create();
         public static readonly string CanBeNullBox = Create();
