@@ -10,7 +10,7 @@ namespace Gu.Wpf.NumericInput
     /// <summary>
     /// Base class that adds a couple of dependency properties to TextBox
     /// </summary>
-    public abstract partial class BaseBox 
+    public abstract partial class BaseBox
     {
         private static readonly DependencyPropertyKey IsValidationDirtyPropertyKey = DependencyProperty.RegisterReadOnly(
             "IsValidationDirty",
@@ -199,6 +199,10 @@ namespace Gu.Wpf.NumericInput
             private set { this.SetValue(DecreaseCommandPropertyKey, value); }
         }
 
+        protected virtual void OnCultureChanged(IFormatProvider oldCulture, IFormatProvider newCulture)
+        {
+        }
+
         private static void OnIsValidationDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Debug.WriteLine(e);
@@ -227,6 +231,7 @@ namespace Gu.Wpf.NumericInput
         private static void OnCultureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
+            box.OnCultureChanged((IFormatProvider)e.OldValue, (IFormatProvider)e.NewValue);
             box.IsFormattingDirty = true;
             box.IsValidationDirty = true;
         }
@@ -273,7 +278,11 @@ namespace Gu.Wpf.NumericInput
         private static void OnTextBindableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Debug.WriteLine(e);
-            d.SetCurrentValue(TextProperty, e.NewValue);
+            var baseBox = (BaseBox)d;
+            if (baseBox.TextSource == TextSource.ValueBinding)
+            {
+                d.SetCurrentValue(TextProperty, e.NewValue);
+            }
         }
     }
 }

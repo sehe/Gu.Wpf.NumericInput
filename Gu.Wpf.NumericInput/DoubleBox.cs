@@ -1,5 +1,6 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
+    using System;
     using System.ComponentModel;
     using System.Globalization;
     using System.Windows;
@@ -27,6 +28,11 @@
         public override bool TryParse(string text, out double result)
         {
             return double.TryParse(text, this.NumberStyles, this.Culture, out result);
+        }
+
+        internal override bool TryParse(string text, IFormatProvider culture, out double result)
+        {
+            return double.TryParse(text, this.NumberStyles, culture, out result);
         }
     }
 }

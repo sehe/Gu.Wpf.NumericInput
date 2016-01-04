@@ -32,6 +32,29 @@ namespace Gu.Wpf.NumericInput
             set { this.SetValue(DecimalDigitsProperty, value); }
         }
 
+        internal abstract bool TryParse(string text, IFormatProvider culture, out T result);
+
+        protected override void OnCultureChanged(IFormatProvider oldCulture, IFormatProvider newCulture)
+        {
+            var text = (string)this.GetValue(TextBindableProperty);
+            if (string.IsNullOrEmpty(text) || oldCulture == null)
+            {
+                return;
+            }
+
+            T result;
+            if (this.TryParse(text, oldCulture, out result))
+            {
+                var status = this.Status;
+                this.Status = Status.Formatting;
+                var newText = result.ToString(newCulture);
+                this.SetCurrentValue(TextBindableProperty, newText);
+                this.Status = status;
+            }
+
+            base.OnCultureChanged(oldCulture, newCulture);
+        }
+
         private static void OnDecimalsValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (DecimalDigitsBox<T>)d;

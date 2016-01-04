@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Windows.Controls;
     using NUnit.Framework;
 
     public abstract class FloatBaseTests<TBox, T> : NumericBoxTests<TBox, T>
@@ -49,6 +50,21 @@
             Assert.AreEqual(expected, this.Sut.Value.ToString());
         }
 
+        [TestCase(2, 1, "1.234", "1.23")]
+        public void DigitsUpdatesWhenGreaterThanMax(int decimals, T max, string text, string expectedText)
+        {
+            this.Sut.Text = text;
+            this.Sut.MaxValue = max;
+            Assert.AreEqual(true, Validation.GetHasError(this.Sut));
+
+            this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, decimals);
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
+            Assert.AreEqual(expectedText, this.Sut.Text);
+            Assert.AreEqual(0, this.Sut.Value);
+            Assert.AreEqual(true, Validation.GetHasError(this.Sut));
+        }
+
         [TestCase("1.234", "1.234", "1.23", "1.23")]
         public void ValueUpdatedOnFewerDecimalDigitsFromUser(string text1, string expected1, string text2, string expected2)
         {
@@ -85,8 +101,7 @@
             this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, 2);
             this.Sut.Text = "1.23";
             this.Sut.Text = "1.234";
-            var actual = this.Sut.Value.Value.ToString(CultureInfo.InvariantCulture);
-            Assert.AreEqual("1.234", actual);
+            Assert.AreEqual("1.234", this.Sut.Value.ToString());
             Assert.AreEqual(Status.Idle, this.Sut.Status);
             Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
         }

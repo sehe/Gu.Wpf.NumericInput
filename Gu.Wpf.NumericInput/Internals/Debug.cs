@@ -12,7 +12,12 @@
 
         internal static void WriteLine(DependencyPropertyChangedEventArgs args, [CallerMemberName] string caller = null)
         {
-            System.Diagnostics.Debug.WriteLine($"{caller}: From: {args.OldValue.Formatted()} To: {args.NewValue.Formatted()}");
+            WriteLine(args.OldValue, args.NewValue, caller);
+        }
+
+        internal static void WriteLine(object from, object to, [CallerMemberName] string caller = null)
+        {
+            System.Diagnostics.Debug.WriteLine($"{caller}: From: {from.Formatted()} To: {to.Formatted()}");
         }
 
         private static string Formatted(this object o)

@@ -99,27 +99,19 @@
 
         public void UpdateFormat()
         {
-            var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
-            if (bindingExpression?.HasValidationError == true)
+            var text = (string)this.GetValue(TextBindableProperty);
+            T result;
+            if (this.TryParse(text, out result))
             {
-                if (this.TextSource == TextSource.UserInput)
-                {
-                    Debug.WriteLine("bindingExpression?.HasValidationError == true && this.TextSource == TextSource.UserInput");
-                    bindingExpression.UpdateTarget();
-                }
-                else
-                {
-                    Debug.WriteLine("bindingExpression?.HasValidationError == true && this.TextSource == TextSource.Binding");
-                    bindingExpression.UpdateSource();
-                }
+                this.Status = Status.Formatting;
+                var newText = this.Format(result);
+                Debug.WriteLine((object)this.Text, newText);
+                this.Text = newText;
+                this.Status = Status.Idle;
             }
             else
             {
-                Debug.WriteLine("bindingExpression?.HasValidationError == false");
-                this.Status = Status.Formatting;
-                this.SetCurrentValue(TextBindableProperty, this.Value?.ToString(this.Culture) ?? string.Empty);
-                this.Text = this.Format(this.Value);
-                this.Status = Status.Idle;
+                Debug.WriteLine("NOP");
             }
 
             this.IsFormattingDirty = false;

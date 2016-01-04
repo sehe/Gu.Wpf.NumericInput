@@ -8,6 +8,9 @@
     /// </summary>
     public abstract partial class BaseBox : TextBox
     {
+        private TextSource textSource;
+        private Status status;
+
         protected BaseBox()
         {
             this.IncreaseCommand = new ManualRelayCommand(this.Increase, this.CanIncrease);
@@ -15,9 +18,25 @@
             this.Bind(TextProxyProperty).OneWayTo(this, TextProperty);
         }
 
-        internal TextSource TextSource { get; set; }
+        internal TextSource TextSource
+        {
+            get { return this.textSource; }
+            set
+            {
+                Debug.WriteLine(this.textSource, value);
+                this.textSource = value;
+            }
+        }
 
-        internal Status Status { get; set; }
+        internal Status Status
+        {
+            get { return this.status; }
+            set
+            {
+                Debug.WriteLine(this.status, value);
+                this.status = value;
+            }
+        }
 
         /// <summary>
         /// Invoked when IncreaseCommand.CanExecute() is executed

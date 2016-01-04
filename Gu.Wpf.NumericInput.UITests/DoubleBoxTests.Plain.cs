@@ -95,6 +95,7 @@
                     var page = window.Get<TabPage>(AutomationIds.DebugTab);
                     page.Select();
                     var groupBox = window.Get<GroupBox>(AutomationIds.DoubleBoxGroupBox);
+                    window.Get<CheckBox>(AutomationIds.AllowThousandsBox).Checked = false;
                     var inputBox = groupBox.Get<TextBox>(AutomationIds.InputBox);
                     var cultureBox = groupBox.Get<ComboBox>(AutomationIds.CultureBox);
                     var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
@@ -167,6 +168,29 @@
             }
 
             [Test]
+            public void UpdateDigitsWhenGreaterThanMax()
+            {
+                using (var app = Application.AttachOrLaunch(Info.ProcessStartInfo))
+                {
+                    var window = app.GetWindow(AutomationIds.MainWindow, InitializeOption.NoCache);
+                    var page = window.Get<TabPage>(AutomationIds.DebugTab);
+                    page.Select();
+                    var groupBox = window.Get<GroupBox>(AutomationIds.DoubleBoxGroupBox);
+                    var inputBox = groupBox.Get<TextBox>(AutomationIds.InputBox);
+                    var digitsBox = groupBox.Get<TextBox>(AutomationIds.DigitsBox);
+                    var maxBox = groupBox.Get<TextBox>(AutomationIds.MaxBox);
+                    var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
+                    Assert.AreEqual("0", inputBox.Text);
+                    inputBox.Enter("1.2");
+                    maxBox.Enter("1");
+                    vmValueBox.Click();
+                    digitsBox.Enter("4");
+                    vmValueBox.Click();
+                    Assert.AreEqual("1.2000", inputBox.Text);
+                }
+            }
+
+            [Test]
             public void DecimalDigits()
             {
                 using (var app = Application.AttachOrLaunch(Info.ProcessStartInfo))
@@ -178,8 +202,10 @@
                     var inputBox = groupBox.Get<TextBox>(AutomationIds.InputBox);
                     var digitsBox = groupBox.Get<TextBox>(AutomationIds.DigitsBox);
                     var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
+                    Assert.AreEqual("0", inputBox.Text);
                     digitsBox.Enter("4");
-                    Assert.AreNotEqual("1.2", inputBox.Text);
+                    vmValueBox.Click();
+                    Assert.AreEqual("0.0000", inputBox.Text);
                     inputBox.Enter("1.2");
                     vmValueBox.Click();
                     Assert.AreEqual("1.2000", inputBox.Text);
