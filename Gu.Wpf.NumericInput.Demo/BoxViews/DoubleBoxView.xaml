@@ -5,14 +5,14 @@
              xmlns:local="clr-namespace:Gu.Wpf.NumericInput.Demo"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:propertyGrid="http://gu.se/PropertyGrid"
-             xmlns:validation="http://gu.se/NumericInput"
+             xmlns:numeric="http://gu.se/NumericInput"
              mc:Ignorable="d">
     <UserControl.DataContext>
         <local:DoubleBoxVm />
     </UserControl.DataContext>
     <UniformGrid Columns="2">
         <GroupBox VerticalAlignment="Top" Header="DoubleBox">
-            <validation:DoubleBox x:Name="InputBox"
+            <numeric:DoubleBox x:Name="InputBox"
                                   AllowSpinners="{Binding AllowSpinners}"
                                   AutomationProperties.AutomationId="{x:Static local:AutomationIds.InputBox}"
                                   CanValueBeNull="{Binding CanValueBeNull}"

@@ -110,12 +110,16 @@
             this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, 1);
             this.Sut.Culture = new CultureInfo(culture1);
             this.Sut.Text = text;
+            Assert.AreEqual(this.Sut.Text, text);
             Assert.AreEqual(expectedValue, this.Sut.Value.ToString());
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
 
             this.Sut.Culture = new CultureInfo(culture2);
             Assert.AreEqual(expected, this.Sut.Text);
-            var value2 = this.Sut.Value.Value.ToString(CultureInfo.InvariantCulture);
-            Assert.AreEqual(expectedValue, value2);
+            Assert.AreEqual(expectedValue, this.Sut.Value.ToString());
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
         }
     }
 }

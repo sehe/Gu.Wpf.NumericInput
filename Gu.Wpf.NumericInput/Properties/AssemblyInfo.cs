@@ -49,5 +49,4 @@ using System.Windows.Markup;
 [assembly: InternalsVisibleTo("Gu.Wpf.NumericInput.Tests", AllInternalsVisible = true)]
 [assembly: InternalsVisibleTo("Gu.Wpf.NumericInput.Demo", AllInternalsVisible = true)]
 [assembly: XmlnsDefinition("http://gu.se/NumericInput", "Gu.Wpf.NumericInput")]
-[assembly: XmlnsDefinition("http://gu.se/NumericInput", "Gu.Wpf.NumericInput.Validation")]
 [assembly: XmlnsPrefix("http://gu.se/NumericInput", "numeric")]

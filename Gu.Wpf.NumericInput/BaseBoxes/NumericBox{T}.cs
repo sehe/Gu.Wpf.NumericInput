@@ -117,6 +117,7 @@
             {
                 Debug.WriteLine("bindingExpression?.HasValidationError == false");
                 this.Status = Status.Formatting;
+                this.SetCurrentValue(TextBindableProperty, this.Value?.ToString(this.Culture) ?? string.Empty);
                 this.Text = this.Format(this.Value);
                 this.Status = Status.Idle;
             }

@@ -4,8 +4,6 @@
     using System.Globalization;
     using System.Windows.Data;
 
-    using Gu.Wpf.NumericInput.Validation;
-
     internal class StringFormatConverter<T> : IValueConverter
         where T : struct, IComparable<T>, IFormattable, IConvertible, IEquatable<T>
     {

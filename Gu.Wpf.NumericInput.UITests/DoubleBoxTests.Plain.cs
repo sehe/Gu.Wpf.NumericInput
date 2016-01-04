@@ -125,14 +125,13 @@
                     Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("1.2", vmValueBox.Text); // maybe we want to update source here idk.
 
-                    cultureBox.Enter("5.6a");
+                    inputBox.Enter("5.6a");
                     Assert.AreEqual(true, inputBox.HasValidationError());
                     cultureBox.Select("sv-SE");
                     vmValueBox.Click();
                     Assert.AreEqual("5.6a", inputBox.Text);
                     Assert.AreEqual(true, inputBox.HasValidationError());
                     Assert.AreEqual("1.2", vmValueBox.Text); // maybe we want to update source here idk.
-
                 }
             }
 
