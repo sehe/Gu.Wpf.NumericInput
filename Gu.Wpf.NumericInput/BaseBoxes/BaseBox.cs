@@ -1,15 +1,13 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
     using System.Windows;
+    using System.Windows.Controls;
 
     /// <summary>
     /// The reason for having this stuff here is enabling a shared style
     /// </summary>
-    public abstract partial class BaseBox
+    public abstract partial class BaseBox : TextBox
     {
-        private TextSource textSource;
-        private Status status;
-
         protected BaseBox()
         {
             this.IncreaseCommand = new ManualRelayCommand(this.Increase, this.CanIncrease);
@@ -17,25 +15,9 @@
             this.Bind(TextProxyProperty).OneWayTo(this, TextProperty);
         }
 
-        internal TextSource TextSource
-        {
-            get { return this.textSource; }
-            set
-            {
-                Debug.WriteLine($"From: {this.textSource} to {value}");
-                this.textSource = value;
-            }
-        }
+        internal TextSource TextSource { get; set; }
 
-        internal Status Status
-        {
-            get { return this.status; }
-            set
-            {
-                Debug.WriteLine($"From: {this.status} to {value}");
-                this.status = value;
-            }
-        }
+        internal Status Status { get; set; }
 
         /// <summary>
         /// Invoked when IncreaseCommand.CanExecute() is executed

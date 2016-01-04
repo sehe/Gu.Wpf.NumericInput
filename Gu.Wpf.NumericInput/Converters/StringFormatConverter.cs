@@ -20,7 +20,7 @@
             var box = (NumericBox<T>)parameter;
             if (box.TextSource == TextSource.ValueBinding)
             {
-                return this.GetFormattedText(box);
+                return box.Format(box.Value);
             }
 
             return Binding.DoNothing;
@@ -28,30 +28,20 @@
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var box = (NumericBox<T>)parameter;
-            return this.GetValue(box);
-        }
-
-        internal string GetFormattedText(NumericBox<T> box)
-        {
-            return box.Value?.ToString(box.StringFormat, box.Culture) ?? string.Empty;
-        }
-
-        private object GetValue(NumericBox<T> box)
-        {
-            var text = box.Text;
-            var textProxy = box.GetTextProxy();
-            if (!box.CanParse(text))
+            var text = (string)value;
+            if (string.IsNullOrWhiteSpace(text))
             {
                 return null;
             }
 
-            if (textProxy.HasMoreDecimalDigitsThan(text, box as DecimalDigitsBox<T>))
+            var box = (NumericBox<T>)parameter;
+            T result;
+            if (box.TryParse(text, out result))
             {
-                return box.Parse(textProxy);
+                return result;
             }
 
-            return box.Parse(text);
+            return Binding.DoNothing;
         }
     }
 }

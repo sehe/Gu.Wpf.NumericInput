@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -42,6 +44,7 @@
             };
             this.bindingExpression = BindingOperations.SetBinding(this.Sut, NumericBox<T>.ValueProperty, binding);
             this.Sut.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
 
         [TestCase("1", true)]
@@ -89,6 +92,8 @@
             this.vm.Value = value;
             Assert.AreEqual(expected, Validation.GetHasError(this.Sut));
             Assert.AreEqual(value.ToString(this.Sut.StringFormat, this.Sut.Culture), this.Sut.Text);
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.ValueBinding, this.Sut.TextSource);
         }
 
         [TestCase(9, false, 8, true)]
@@ -100,6 +105,8 @@
             Assert.AreEqual(expected, Validation.GetHasError(this.Sut));
             this.Sut.MaxValue = newMax;
             Assert.AreEqual(expected2, Validation.GetHasError(this.Sut));
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.ValueBinding, this.Sut.TextSource);
         }
 
         [TestCase(-9, false, -8, true)]
@@ -111,6 +118,8 @@
             Assert.AreEqual(expected, Validation.GetHasError(this.Sut));
             this.Sut.MinValue = newMax;
             Assert.AreEqual(expected2, Validation.GetHasError(this.Sut));
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.ValueBinding, this.Sut.TextSource);
         }
 
         [TestCase("9", 9, false)]
@@ -139,6 +148,8 @@
 
             Assert.AreEqual(text, this.Sut.Text);
             Assert.AreEqual(this.Sut.Value, expectedValue);
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
         }
 
         [TestCase(1, "11", true, "1", false)]
@@ -151,6 +162,8 @@
             this.Sut.Text = text2;
             Assert.AreEqual(expected2, Validation.GetHasError(this.Sut));
             //Assert.Fail("11 -> 1");
+            Assert.AreEqual(Status.Idle, this.Sut.Status);
+            Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
         }
 
         [TestCase(8)]

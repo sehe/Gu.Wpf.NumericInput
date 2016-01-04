@@ -72,7 +72,7 @@
         {
             this.IsUpdatingText = true;
             this.bindingExpression.UpdateTarget();
-            this.numericBox.Text = StringFormatConverter<T>.Default.GetFormattedText(this.numericBox);
+            this.numericBox.Text = this.numericBox.Format(this.numericBox.Value);
             this.IsUpdatingText = false;
         }
 
@@ -81,7 +81,7 @@
             if (!this.bindingExpression.HasValidationError)
             {
                 this.IsUpdatingText = true;
-                this.numericBox.Text = StringFormatConverter<T>.Default.GetFormattedText(this.numericBox);
+                this.numericBox.Text = this.numericBox.Format(this.numericBox.Value);
                 this.IsUpdatingText = false;
             }
         }

@@ -4,15 +4,13 @@ namespace Gu.Wpf.NumericInput
     using System;
     using System.ComponentModel;
     using System.Globalization;
-    using System.Runtime.CompilerServices;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Input;
 
     /// <summary>
     /// Base class that adds a couple of dependency properties to TextBox
     /// </summary>
-    public abstract partial class BaseBox : TextBox
+    public abstract partial class BaseBox 
     {
         private static readonly DependencyPropertyKey IsValidationDirtyPropertyKey = DependencyProperty.RegisterReadOnly(
             "IsValidationDirty",
@@ -102,7 +100,7 @@ namespace Gu.Wpf.NumericInput
             typeof(string),
             typeof(BaseBox),
             new PropertyMetadata(
-                default(string),
+                string.Empty,
                 OnTextProxyChanged));
 
         internal static readonly DependencyProperty TextBindableProperty = DependencyProperty.Register(
@@ -110,7 +108,7 @@ namespace Gu.Wpf.NumericInput
             typeof(string),
             typeof(BaseBox),
             new PropertyMetadata(
-                default(string),
+                string.Empty,
                 OnTextBindableChanged));
 
         static BaseBox()
@@ -203,7 +201,7 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnIsValidationDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine(e.NewValue.ToString());
+            Debug.WriteLine(e);
             if (Equals(e.NewValue, BooleanBoxes.True))
             {
                 ((BaseBox)d).RaiseEvent(ValidationDirtyEventArgs);
@@ -212,7 +210,7 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnIsFormattingDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine(e.NewValue.ToString());
+            Debug.WriteLine(e);
             if (Equals(e.NewValue, BooleanBoxes.True))
             {
                 ((BaseBox)d).RaiseEvent(FormatDirtyEventArgs);
@@ -257,7 +255,7 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnTextProxyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine(e.NewValue?.ToString() ?? "null");
+            Debug.WriteLine(e);
             var baseBox = (BaseBox)d;
             if (baseBox.Status != Status.Formatting)
             {
@@ -274,7 +272,7 @@ namespace Gu.Wpf.NumericInput
 
         private static void OnTextBindableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine(e.NewValue?.ToString() ?? "null");
+            Debug.WriteLine(e);
             d.SetCurrentValue(TextProperty, e.NewValue);
         }
     }

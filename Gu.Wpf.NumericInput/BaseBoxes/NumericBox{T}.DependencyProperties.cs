@@ -120,7 +120,7 @@
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Debug.WriteLine(e.NewValue?.ToString() ?? "null");
+            Debug.WriteLine(e);
             var numericBox = (NumericBox<T>)d;
             if (numericBox.Status == Status.Idle)
             {

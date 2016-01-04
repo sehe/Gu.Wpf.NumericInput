@@ -16,7 +16,6 @@
     {
         private static readonly T TypeMin = (T)typeof(T).GetField("MinValue").GetValue(null);
         private static readonly T TypeMax = (T)typeof(T).GetField("MaxValue").GetValue(null);
-        private static readonly PropertyInfo NeedsValidationProperty = typeof(BindingExpression).GetProperty("NeedsValidation", BindingFlags.Instance | BindingFlags.NonPublic);
         private readonly Func<T, T, T> add;
         private readonly Func<T, T, T> subtract;
         private static readonly EventHandler<ValidationErrorEventArgs> ValidationErrorHandler = OnValidationError;
@@ -93,6 +92,11 @@
             throw new FormatException($"Could not parse {text} to an instance of {typeof(T)}");
         }
 
+        internal string Format(T? value)
+        {
+            return value?.ToString(this.StringFormat, this.Culture) ?? string.Empty;
+        }
+
         public void UpdateFormat()
         {
             var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
@@ -113,7 +117,7 @@
             {
                 Debug.WriteLine("bindingExpression?.HasValidationError == false");
                 this.Status = Status.Formatting;
-                this.Text = StringFormatConverter<T>.Default.GetFormattedText(this);
+                this.Text = this.Format(this.Value);
                 this.Status = Status.Idle;
             }
 
@@ -123,10 +127,11 @@
         public void UpdateValidation()
         {
             Debug.WriteLine(string.Empty);
-            var bindingExpression = BindingOperations.GetBindingExpression(this, TextBindableProperty);
-            NeedsValidationProperty?.SetValue(bindingExpression, BooleanBoxes.True); // using reflection here. The alternatives means bloat.
-            bindingExpression?.ValidateWithoutUpdate();
+            this.Status = Status.Updating;
+            var text = this.GetValue(TextBindableProperty);
+            this.SetCurrentValue(TextBindableProperty, text);
             this.IsValidationDirty = false;
+            this.Status = Status.Idle;
         }
 
         protected virtual void OnValueChanged(object newValue, object oldValue)
