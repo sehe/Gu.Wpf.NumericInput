@@ -240,6 +240,7 @@
             var bindingExpression = BindingOperations.GetBindingExpression(box, ValueProperty);
             box.Status = Status.ResettingValue;
             bindingExpression?.UpdateTarget(); // Reset Value to value from DataContext binding.
+            box.Status = Status.Idle;
         }
 
         private static void OnFormatDirty(object sender, RoutedEventArgs e)
