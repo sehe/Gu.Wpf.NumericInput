@@ -23,7 +23,7 @@
                 return false;
             }
 
-            throw new InvalidOperationException();
+            return false;
         }
     }
 }

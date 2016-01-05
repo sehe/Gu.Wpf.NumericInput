@@ -2,7 +2,6 @@
 {
     using System;
     using System.Windows;
-    using System.Windows.Media.TextFormatting;
     using Gu.Wpf.NumericInput.Demo;
     using NUnit.Framework;
     using TestStack.White.Factory;
@@ -16,7 +15,7 @@
     using GroupBox = TestStack.White.UIItems.GroupBox;
     using TextBox = TestStack.White.UIItems.TextBox;
 
-    public class DoubleBoxTests
+    public partial class DoubleBoxTests
     {
         public class Plain
         {
@@ -581,11 +580,21 @@
                     inputBox.Click();
                     keyboard.Enter("1");
                     Assert.AreEqual("10", inputBox.Text);
+                    Assert.AreEqual(false, inputBox.HasValidationError());
+                    Assert.AreEqual("0", vmValueBox.Text);
+                    Assert.AreEqual("10", groupBox.Get<Label>(AutomationIds.ValueBlock).Text);
+                    Assert.AreEqual(Gu.Wpf.NumericInput.TextSource.UserInput.ToString(), groupBox.Get<Label>(AutomationIds.TextSourceBlock).Text);
+                    Assert.AreEqual(Gu.Wpf.NumericInput.Status.Idle.ToString(), groupBox.Get<Label>(AutomationIds.StatusBlock).Text);
+
                     keyboard.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
                     keyboard.Enter("z");
                     keyboard.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
                     Assert.AreEqual("0", inputBox.Text);
+                    Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("0", vmValueBox.Text);
+                    Assert.AreEqual("0", groupBox.Get<Label>(AutomationIds.ValueBlock).Text);
+                    Assert.AreEqual(Gu.Wpf.NumericInput.TextSource.UserInput.ToString(), groupBox.Get<Label>(AutomationIds.TextSourceBlock).Text);
+                    Assert.AreEqual(Gu.Wpf.NumericInput.Status.Idle.ToString(), groupBox.Get<Label>(AutomationIds.StatusBlock).Text);
                 }
             }
 

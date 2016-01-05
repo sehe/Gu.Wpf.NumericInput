@@ -113,7 +113,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <RepeatButton Grid.Column="0"
+                <RepeatButton x:Name="DecreaseButton"
+                              Grid.Column="0"
                               Command="{TemplateBinding DecreaseCommand}"
                               CommandParameter="{Binding ElementName=TextBox}"
                               Content="-"
@@ -140,7 +141,8 @@
                          Style="{DynamicResource {x:Static local:NumericBox.SuffixTextBoxStyleKey}}"
                          Text="{TemplateBinding Suffix}" />
 
-                <RepeatButton Grid.Column="3"
+                <RepeatButton x:Name="IncreaseButton"
+                              Grid.Column="3"
                               Command="{TemplateBinding IncreaseCommand}"
                               CommandParameter="{Binding ElementName=TextBox}"
                               Content="+"
@@ -164,7 +166,8 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <RepeatButton Grid.Column="0"
+                <RepeatButton x:Name="DecreaseButton"
+                              Grid.Column="0"
                               Command="{TemplateBinding DecreaseCommand}"
                               CommandParameter="{Binding ElementName=TextBox}"
                               Content="-"
@@ -187,7 +190,8 @@
                     -->
                 </TextBox>
 
-                <RepeatButton Grid.Column="2"
+                <RepeatButton x:Name="IncreaseButton"
+                              Grid.Column="2"
                               Command="{TemplateBinding IncreaseCommand}"
                               CommandParameter="{Binding ElementName=TextBox}"
                               Content="+"

@@ -56,11 +56,6 @@
             this.AddHandler(ValidationDirtyEvent, ValidationDirtyHandler);
         }
 
-        /// <summary>
-        /// Gets the current value. Will throw if bad format
-        /// </summary>
-        internal T? CurrentValue => this.Parse(this.Text);
-
         internal T MaxLimit => this.MaxValue ?? TypeMax;
 
         internal T MinLimit => this.MinValue ?? TypeMin;
@@ -153,26 +148,30 @@
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(this.Text) || !this.CanParse(this.Text))
+            if (this.ValueBox.IsReadOnly || !this.ValueBox.IsEnabled)
             {
                 return false;
             }
 
-            if (Comparer<T>.Default.Compare(this.CurrentValue.Value, this.MaxLimit) >= 0)
+            if (string.IsNullOrWhiteSpace(this.Text))
             {
                 return false;
             }
 
-            return true;
+            T value;
+            if (this.TryParse(this.Text, out value))
+            {
+                return Comparer<T>.Default.Compare(value, this.MaxLimit) >= 0;
+            }
+
+            return false;
         }
 
         protected override void Increase(object parameter)
         {
             var value = this.AddIncrement();
-            var text = value.ToString(this.StringFormat, this.Culture);
-
-            var textBox = parameter as TextBox;
-            SetTextUndoable(textBox ?? this, text);
+            var text = this.Format(value);
+            SetTextUndoable(this.ValueBox, text);
         }
 
         protected override bool CanDecrease(object parameter)
@@ -182,26 +181,30 @@
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(this.Text) || !this.CanParse(this.Text))
+            if (this.ValueBox.IsReadOnly || !this.ValueBox.IsEnabled)
             {
                 return false;
             }
 
-            if (Comparer<T>.Default.Compare(this.CurrentValue.Value, this.MinLimit) <= 0)
+            if (string.IsNullOrWhiteSpace(this.Text))
             {
                 return false;
             }
 
-            return true;
+            T value;
+            if (this.TryParse(this.Text, out value))
+            {
+                return Comparer<T>.Default.Compare(value, this.MinLimit) <= 0;
+            }
+
+            return false;
         }
 
         protected override void Decrease(object parameter)
         {
             var value = this.SubtractIncrement();
-            var text = value.ToString(this.StringFormat, this.Culture);
-
-            var textBox = parameter as TextBox;
-            SetTextUndoable(textBox ?? this, text);
+            var text = this.Format(value);
+            SetTextUndoable(this.ValueBox, text);
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -282,7 +285,7 @@
                 ? this.MaxLimit
                 : TypeMax;
             var incremented = this.subtract(min, this.Increment);
-            var currentValue = this.CurrentValue.Value;
+            var currentValue = this.Value.Value;
             return currentValue.CompareTo(incremented) < 0
                             ? this.add(currentValue, this.Increment)
                             : min;
@@ -294,7 +297,7 @@
                                 ? this.MinLimit
                                 : TypeMin;
             var incremented = this.add(max, this.Increment);
-            var currentValue = this.CurrentValue.Value;
+            var currentValue = this.Value.Value;
             return currentValue.CompareTo(incremented) > 0
                             ? this.subtract(currentValue, this.Increment)
                             : max;
