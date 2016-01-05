@@ -21,6 +21,7 @@
         private static readonly EventHandler<ValidationErrorEventArgs> ValidationErrorHandler = OnValidationError;
         private static readonly RoutedEventHandler FormatDirtyHandler = OnFormatDirty;
         private static readonly RoutedEventHandler ValidationDirtyHandler = OnValidationDirty;
+        private readonly BindingExpressionBase textValueBindingExpression;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NumericBox{T}"/> class.
@@ -48,7 +49,7 @@
             binding.ValidationRules.Add(IsGreaterThanOrEqualToMinRule<T>.FromValue);
             binding.ValidationRules.Add(IsLessThanOrEqualToMaxRule<T>.FromText);
             binding.ValidationRules.Add(IsLessThanOrEqualToMaxRule<T>.FromValue);
-            BindingOperations.SetBinding(this, TextBindableProperty, binding);
+            this.textValueBindingExpression = BindingOperations.SetBinding(this, TextBindableProperty, binding);
             this.AddHandler(System.Windows.Controls.Validation.ErrorEvent, ValidationErrorHandler);
             this.AddHandler(FormatDirtyEvent, FormatDirtyHandler);
             this.AddHandler(ValidationDirtyEvent, ValidationDirtyHandler);
@@ -103,11 +104,12 @@
             T result;
             if (this.TryParse(text, out result))
             {
-                this.Status = Status.Formatting;
+                var status = this.Status;
+                this.Status = NumericInput.Status.Formatting;
                 var newText = this.Format(result);
                 Debug.WriteLine((object)this.Text, newText);
                 this.Text = newText;
-                this.Status = Status.Idle;
+                this.Status = status;
             }
             else
             {
@@ -120,11 +122,12 @@
         public void UpdateValidation()
         {
             Debug.WriteLine(string.Empty);
-            this.Status = Status.Updating;
+            var status = this.Status;
+            this.Status = NumericInput.Status.Updating;
             var text = this.GetValue(TextBindableProperty);
             this.SetCurrentValue(TextBindableProperty, text);
             this.IsValidationDirty = false;
-            this.Status = Status.Idle;
+            this.Status = status;
         }
 
         protected virtual void OnValueChanged(object newValue, object oldValue)
@@ -233,12 +236,19 @@
 
         private static void OnValidationError(object sender, ValidationErrorEventArgs e)
         {
-            Debug.WriteLine(string.Empty);
             var box = (NumericBox<T>)sender;
-            var bindingExpression = BindingOperations.GetBindingExpression(box, ValueProperty);
-            box.Status = Status.ResettingValue;
-            bindingExpression?.UpdateTarget(); // Reset Value to value from DataContext binding.
-            box.Status = Status.Idle;
+            if (box.textValueBindingExpression.HasValidationError && box.Status != Status.ResettingValue)
+            {
+                var valueBindingExpression = BindingOperations.GetBindingExpression(box, ValueProperty);
+                if (valueBindingExpression != null)
+                {
+                    Debug.WriteLine(string.Empty);
+                    var status = box.Status;
+                    box.Status = NumericInput.Status.ResettingValue;
+                    valueBindingExpression.UpdateTarget(); // Reset Value to value from DataContext binding.
+                    box.Status = status;
+                }
+            }
         }
 
         private static void OnFormatDirty(object sender, RoutedEventArgs e)

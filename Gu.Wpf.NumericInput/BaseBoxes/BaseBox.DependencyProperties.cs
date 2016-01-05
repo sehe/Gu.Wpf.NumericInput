@@ -1,5 +1,4 @@
-﻿#pragma warning disable SA1202 // Elements must be ordered by access. Reason: this does not work with dependency properties
-namespace Gu.Wpf.NumericInput
+﻿namespace Gu.Wpf.NumericInput
 {
     using System;
     using System.ComponentModel;
@@ -111,6 +110,18 @@ namespace Gu.Wpf.NumericInput
                 string.Empty,
                 OnTextBindableChanged));
 
+        internal static readonly DependencyProperty TextSourceProperty = DependencyProperty.Register(
+            "TextSource",
+            typeof(TextSource),
+            typeof(BaseBox),
+            new PropertyMetadata(NumericInput.TextSource.ValueBinding, OnTextSourceChanged));
+
+        internal static readonly DependencyProperty StatusProperty = DependencyProperty.Register(
+            "Status",
+            typeof(Status),
+            typeof(BaseBox),
+            new PropertyMetadata(Status.Idle, OnStatusChanged));
+
         static BaseBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BaseBox), new FrameworkPropertyMetadata(typeof(BaseBox)));
@@ -178,6 +189,7 @@ namespace Gu.Wpf.NumericInput
         [Category(nameof(NumericBox))]
         [Browsable(true)]
         public bool AllowSpinners
+#pragma warning restore SA1600 // Elements must be documented
         {
             get { return (bool)this.GetValue(AllowSpinnersProperty); }
             set { this.SetValue(AllowSpinnersProperty, value); }
@@ -197,6 +209,18 @@ namespace Gu.Wpf.NumericInput
         {
             get { return (ICommand)this.GetValue(DecreaseCommandProperty); }
             private set { this.SetValue(DecreaseCommandPropertyKey, value); }
+        }
+
+        internal TextSource TextSource
+        {
+            get { return (TextSource)GetValue(TextSourceProperty); }
+            set { SetValue(TextSourceProperty, value); }
+        }
+
+        internal Status Status
+        {
+            get { return (Status)GetValue(StatusProperty); }
+            set { SetValue(StatusProperty, value); }
         }
 
         protected virtual void OnCultureChanged(IFormatProvider oldCulture, IFormatProvider newCulture)
@@ -262,16 +286,16 @@ namespace Gu.Wpf.NumericInput
         {
             Debug.WriteLine(e);
             var baseBox = (BaseBox)d;
-            if (baseBox.Status != Status.Formatting)
+            if (baseBox.Status != NumericInput.Status.Formatting)
             {
-                if (baseBox.Status == Status.Idle)
+                if (baseBox.Status == NumericInput.Status.Idle)
                 {
-                    baseBox.Status = Status.Updating;
+                    baseBox.Status = NumericInput.Status.Updating;
                     baseBox.TextSource = TextSource.UserInput;
                 }
 
                 d.SetCurrentValue(TextBindableProperty, e.NewValue);
-                baseBox.Status = Status.Idle;
+                baseBox.Status = NumericInput.Status.Idle;
             }
         }
 
@@ -283,6 +307,16 @@ namespace Gu.Wpf.NumericInput
             {
                 d.SetCurrentValue(TextProperty, e.NewValue);
             }
+        }
+
+        private static void OnStatusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine(e);
+        }
+
+        private static void OnTextSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine(e);
         }
     }
 }

@@ -49,31 +49,11 @@
                 </HeaderedContentControl>
 
                 <HeaderedContentControl Header="TextSource">
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{StaticResource TextSourceConverter}" Mode="OneWay">
-                                <Binding ElementName="InputBox" Mode="OneTime" />
-                                <Binding ElementName="InputBox"
-                                         Mode="OneWay"
-                                         Path="Text"
-                                         UpdateSourceTrigger="PropertyChanged" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock AutomationProperties.AutomationId="{x:Static local:AutomationIds.TextSourceBlock}" Text="{Binding Path=TextSource, ElementName=InputBox}" />
                 </HeaderedContentControl>
 
                 <HeaderedContentControl Header="Status">
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{StaticResource StatusConverter}" Mode="OneWay">
-                                <Binding ElementName="InputBox" Mode="OneTime" />
-                                <Binding ElementName="InputBox"
-                                         Mode="OneWay"
-                                         Path="Text"
-                                         UpdateSourceTrigger="PropertyChanged" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock AutomationProperties.AutomationId="{x:Static local:AutomationIds.StatusBlock}" Text="{Binding Path=Status, ElementName=InputBox}" />
                 </HeaderedContentControl>
             </ItemsControl>
 

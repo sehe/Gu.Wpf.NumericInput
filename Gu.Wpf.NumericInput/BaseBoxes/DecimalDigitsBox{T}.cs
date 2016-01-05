@@ -46,7 +46,7 @@ namespace Gu.Wpf.NumericInput
             if (this.TryParse(text, oldCulture, out result))
             {
                 var status = this.Status;
-                this.Status = Status.Formatting;
+                this.Status = NumericInput.Status.Formatting;
                 var newText = result.ToString(newCulture);
                 this.SetCurrentValue(TextBindableProperty, newText);
                 this.Status = status;

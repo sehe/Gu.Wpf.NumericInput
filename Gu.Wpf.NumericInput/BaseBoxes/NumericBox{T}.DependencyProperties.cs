@@ -122,9 +122,9 @@
         {
             Debug.WriteLine(e);
             var numericBox = (NumericBox<T>)d;
-            if (numericBox.Status == Status.Idle)
+            if (numericBox.Status == NumericInput.Status.Idle)
             {
-                numericBox.Status = Status.Updating;
+                numericBox.Status = NumericInput.Status.Updating;
                 numericBox.TextSource = TextSource.ValueBinding;
             }
 

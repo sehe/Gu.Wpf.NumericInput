@@ -313,14 +313,14 @@
         public void ValidationErrorResetsValue()
         {
             this.Sut.Text = "1";
+            Assert.AreEqual(false, Validation.GetHasError(this.Box));
             Assert.AreEqual(1, this.Sut.Value);
-            this.Sut.Text = "1e";
+            Assert.AreEqual(0, this.vm.Value);
 
-            var hasError = Validation.GetHasError(this.Box);
+            this.Sut.Text = "1e";
+            Assert.AreEqual(true, Validation.GetHasError(this.Box));
             Assert.AreEqual("1e", this.Sut.Text);
-            var actual = this.Sut.Value;
-            Assert.AreEqual(this.vm.Value, actual);
-            Assert.IsTrue(hasError);
+            Assert.AreEqual(this.vm.Value, this.Sut.Value);
         }
     }
 }
