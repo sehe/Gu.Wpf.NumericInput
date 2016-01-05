@@ -32,8 +32,6 @@ namespace Gu.Wpf.NumericInput
             set { this.SetValue(DecimalDigitsProperty, value); }
         }
 
-        internal abstract bool TryParse(string text, IFormatProvider culture, out T result);
-
         protected override void OnCultureChanged(IFormatProvider oldCulture, IFormatProvider newCulture)
         {
             var text = (string)this.GetValue(TextBindableProperty);
@@ -43,7 +41,7 @@ namespace Gu.Wpf.NumericInput
             }
 
             T result;
-            if (this.TryParse(text, oldCulture, out result))
+            if (this.TryParse(text, this.NumberStyles, oldCulture, out result))
             {
                 var status = this.Status;
                 this.Status = NumericInput.Status.Formatting;

@@ -3,8 +3,10 @@
     internal enum Status
     {
         Idle,
-        Updating,
+        UpdatingFromUserInput,
+        UpdatingFromValueBinding,
         Formatting,
-        ResettingValue
+        ResettingValue,
+        Validating
     }
 }

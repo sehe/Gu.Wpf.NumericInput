@@ -25,14 +25,9 @@
         {
         }
 
-        public override bool TryParse(string text, out double result)
+        public override bool TryParse(string text, NumberStyles numberStyles, IFormatProvider culture, out double result)
         {
-            return double.TryParse(text, this.NumberStyles, this.Culture, out result);
-        }
-
-        internal override bool TryParse(string text, IFormatProvider culture, out double result)
-        {
-            return double.TryParse(text, this.NumberStyles, culture, out result);
+            return double.TryParse(text, numberStyles, culture, out result);
         }
     }
 }

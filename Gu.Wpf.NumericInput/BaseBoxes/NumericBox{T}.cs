@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -36,9 +37,9 @@
             {
                 Path = BindingHelper.GetPath(ValueProperty),
                 Source = this,
-                Mode = BindingMode.TwoWay,
+                Mode = BindingMode.OneWayToSource,
                 NotifyOnValidationError = true,
-                Converter = StringFormatConverter<T>.Default,
+                Converter = StringConverter<T>.Default,
                 ConverterParameter = this,
             };
 
@@ -64,7 +65,12 @@
 
         internal T MinLimit => this.MinValue ?? TypeMin;
 
-        public abstract bool TryParse(string text, out T result);
+        public bool TryParse(string text, out T result)
+        {
+            return TryParse(text, this.NumberStyles, this.Culture, out result);
+        }
+
+        public abstract bool TryParse(string text, NumberStyles numberStyles, IFormatProvider culture, out T result);
 
         public bool CanParse(string text)
         {
@@ -123,7 +129,7 @@
         {
             Debug.WriteLine(string.Empty);
             var status = this.Status;
-            this.Status = NumericInput.Status.Updating;
+            this.Status = NumericInput.Status.Validating;
             var text = this.GetValue(TextBindableProperty);
             this.SetCurrentValue(TextBindableProperty, text);
             this.IsValidationDirty = false;

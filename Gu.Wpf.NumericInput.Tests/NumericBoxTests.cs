@@ -24,8 +24,7 @@
 
         protected abstract T Increment { get; }
 
-        private DummyVm<T> vm;
-        private BindingExpressionBase bindingExpression;
+        internal DummyVm<T> Vm { get; private set; }
 
         [SetUp]
         public void SetUp()
@@ -35,14 +34,14 @@
             this.Sut.MinValue = this.Min;
             this.Sut.MaxValue = this.Max;
             this.Sut.Increment = this.Increment;
-            this.vm = new DummyVm<T>();
+            this.Vm = new DummyVm<T>();
             var binding = new Binding("Value")
             {
-                Source = this.vm,
+                Source = this.Vm,
                 UpdateSourceTrigger = UpdateSourceTrigger.LostFocus,
                 Mode = BindingMode.TwoWay
             };
-            this.bindingExpression = BindingOperations.SetBinding(this.Sut, NumericBox<T>.ValueProperty, binding);
+            var bindingExpression = BindingOperations.SetBinding(this.Sut, NumericBox<T>.ValueProperty, binding);
             this.Sut.RaiseEvent(new RoutedEventArgs(FrameworkElement.LoadedEvent));
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
@@ -89,7 +88,7 @@
         [TestCase(-11, true)]
         public void SetValueValidates(T value, bool expected)
         {
-            this.vm.Value = value;
+            this.Vm.Value = value;
             Assert.AreEqual(expected, Validation.GetHasError(this.Sut));
             Assert.AreEqual(value.ToString(this.Sut.StringFormat, this.Sut.Culture), this.Sut.Text);
             Assert.AreEqual(Status.Idle, this.Sut.Status);
@@ -101,7 +100,7 @@
         [TestCase(11, true, 15, false)]
         public void SetMaxValidates(T value, bool expected, T newMax, bool expected2)
         {
-            this.vm.Value = value;
+            this.Vm.Value = value;
             Assert.AreEqual(expected, Validation.GetHasError(this.Sut));
             this.Sut.MaxValue = newMax;
             Assert.AreEqual(expected2, Validation.GetHasError(this.Sut));
@@ -114,7 +113,7 @@
         [TestCase(-11, true, -15, false)]
         public void SetMinValidates(T value, bool expected, T newMax, bool expected2)
         {
-            this.vm.Value = value;
+            this.Vm.Value = value;
             Assert.AreEqual(expected, Validation.GetHasError(this.Sut));
             this.Sut.MinValue = newMax;
             Assert.AreEqual(expected2, Validation.GetHasError(this.Sut));
@@ -155,7 +154,7 @@
         [TestCase(1, "11", true, "1", false)]
         public void SetTextTwiceTest(T vmValue, string text1, bool expected1, string text2, bool expected2)
         {
-            this.vm.Value = vmValue;
+            this.Vm.Value = vmValue;
             this.Sut.Text = text1;
             Assert.AreEqual(expected1, Validation.GetHasError(this.Sut));
 
@@ -199,7 +198,7 @@
             ((ManualRelayCommand)this.Sut.IncreaseCommand).RaiseCanExecuteChanged();
             Assert.AreEqual(1, count);
 
-            this.vm.Value = newValue;
+            this.Vm.Value = newValue;
             Assert.AreEqual(expected, count);
         }
 
@@ -315,12 +314,12 @@
             this.Sut.Text = "1";
             Assert.AreEqual(false, Validation.GetHasError(this.Box));
             Assert.AreEqual(1, this.Sut.Value);
-            Assert.AreEqual(0, this.vm.Value);
+            Assert.AreEqual(0, this.Vm.Value);
 
             this.Sut.Text = "1e";
             Assert.AreEqual(true, Validation.GetHasError(this.Box));
             Assert.AreEqual("1e", this.Sut.Text);
-            Assert.AreEqual(this.vm.Value, this.Sut.Value);
+            Assert.AreEqual(this.Vm.Value, this.Sut.Value);
         }
     }
 }

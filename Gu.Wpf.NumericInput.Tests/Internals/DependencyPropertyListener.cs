@@ -1,4 +1,4 @@
-namespace Gu.Wpf.NumericInput.Tests
+namespace Gu.Wpf.NumericInput.Tests.Internals
 {
     using System;
     using System.Collections.Concurrent;
@@ -16,18 +16,17 @@ namespace Gu.Wpf.NumericInput.Tests
             new PropertyMetadata(null, OnSourceChanged));
 
         private readonly Action<DependencyPropertyChangedEventArgs> onChanged;
-        private bool disposed;
 
         public DependencyPropertyListener(
-            DependencyObject source, 
-            DependencyProperty property, 
+            DependencyObject source,
+            DependencyProperty property,
             Action<DependencyPropertyChangedEventArgs> onChanged = null)
             : this(source, Cache.GetOrAdd(property, x => new PropertyPath(x)), onChanged)
         {
         }
 
         public DependencyPropertyListener(
-            DependencyObject source, 
+            DependencyObject source,
             PropertyPath property,
             Action<DependencyPropertyChangedEventArgs> onChanged)
         {
@@ -52,23 +51,12 @@ namespace Gu.Wpf.NumericInput.Tests
 
         public void Dispose()
         {
-            if (this.disposed)
-            {
-                return;
-            }
-
-            this.disposed = true;
             BindingOperations.ClearBinding(this, ProxyProperty);
         }
 
         private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var listener = (DependencyPropertyListener)d;
-            if (listener.disposed)
-            {
-                return;
-            }
-
             listener.onChanged?.Invoke(e);
             listener.OnChanged(e);
         }

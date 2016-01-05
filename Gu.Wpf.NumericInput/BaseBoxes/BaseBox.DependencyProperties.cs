@@ -223,10 +223,6 @@
             set { SetValue(StatusProperty, value); }
         }
 
-        protected virtual void OnCultureChanged(IFormatProvider oldCulture, IFormatProvider newCulture)
-        {
-        }
-
         private static void OnIsValidationDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Debug.WriteLine(e);
@@ -248,6 +244,7 @@
         private static void OnStringFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
+            box.OnStringFormatChanged((string)e.OldValue, (string)e.NewValue);
             box.IsFormattingDirty = true;
             box.IsValidationDirty = true;
         }
@@ -286,14 +283,11 @@
         {
             Debug.WriteLine(e);
             var baseBox = (BaseBox)d;
-            if (baseBox.Status != NumericInput.Status.Formatting)
-            {
-                if (baseBox.Status == NumericInput.Status.Idle)
-                {
-                    baseBox.Status = NumericInput.Status.Updating;
-                    baseBox.TextSource = TextSource.UserInput;
-                }
 
+            if (baseBox.Status == NumericInput.Status.Idle)
+            {
+                baseBox.Status = NumericInput.Status.UpdatingFromUserInput;
+                baseBox.TextSource = TextSource.UserInput;
                 d.SetCurrentValue(TextBindableProperty, e.NewValue);
                 baseBox.Status = NumericInput.Status.Idle;
             }
@@ -302,11 +296,6 @@
         private static void OnTextBindableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Debug.WriteLine(e);
-            var baseBox = (BaseBox)d;
-            if (baseBox.TextSource == TextSource.ValueBinding)
-            {
-                d.SetCurrentValue(TextProperty, e.NewValue);
-            }
         }
 
         private static void OnStatusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

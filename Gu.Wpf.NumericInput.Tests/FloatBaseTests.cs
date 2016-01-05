@@ -1,6 +1,7 @@
 ﻿namespace Gu.Wpf.NumericInput.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Windows.Controls;
     using NUnit.Framework;
@@ -39,7 +40,7 @@
         }
 
         [TestCase(2, "1.234", "1.23", "1.234")]
-        public void ValueNotAffectedByDecimalDigits(int decimals, string text, string expectedText, string expected)
+        public void ValueNotAffectedByDecimalDigits(int decimals, string text, string expectedText, string expectedValue)
         {
             this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, 3);
             this.Sut.Text = text;
@@ -47,7 +48,44 @@
             Assert.AreEqual(Status.Idle, this.Sut.Status);
             Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
             Assert.AreEqual(expectedText, this.Sut.Text);
-            Assert.AreEqual(expected, this.Sut.Value.ToString());
+            Assert.AreEqual(expectedValue, this.Sut.Value.ToString());
+        }
+
+        [TestCase(2, 3, "1.234", "1.23", "1.234")]
+        [TestCase(3, 2, "1.234", "1.234", "1.23")]
+        public void DecimalDigitsWhenValueFromDataContext(int decimals1, int decimals2, string text, string expectedText1, string expectedText2)
+        {
+            this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, decimals1);
+            var value = this.Sut.Parse(text);
+            var statuses = new List<Status>();
+            var expectedStatuses = new List<Status>();
+            var sources = new List<TextSource>();
+            using (this.Sut.PropertyChanged(BaseBox.StatusProperty, x => statuses.Add((Status)x.NewValue)))
+            using (this.Sut.PropertyChanged(BaseBox.TextSourceProperty, x => sources.Add((TextSource)x.NewValue)))
+            {
+                this.Vm.Value = value;
+                Assert.AreEqual(expectedText1, this.Sut.Text);
+                Assert.AreEqual(value, this.Sut.Value);
+                expectedStatuses.AddRange(new[] { Status.UpdatingFromValueBinding, Status.Idle });
+                CollectionAssert.AreEqual(expectedStatuses, statuses);
+                CollectionAssert.IsEmpty(sources);
+
+                this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, decimals2);
+                Assert.AreEqual(Status.Idle, this.Sut.Status);
+                Assert.AreEqual(TextSource.ValueBinding, this.Sut.TextSource);
+                Assert.AreEqual(expectedText2, this.Sut.Text);
+                Assert.AreEqual(value, this.Sut.Value);
+                expectedStatuses.AddRange(new[] { Status.Formatting, Status.Idle, Status.Validating, Status.Idle });
+                CollectionAssert.AreEqual(expectedStatuses, statuses);
+                CollectionAssert.IsEmpty(sources);
+
+                this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, decimals1);
+                Assert.AreEqual(expectedText1, this.Sut.Text);
+                Assert.AreEqual(value, this.Sut.Value);
+                expectedStatuses.AddRange(new[] { Status.Formatting, Status.Idle, Status.Validating, Status.Idle });
+                CollectionAssert.AreEqual(expectedStatuses, statuses);
+                CollectionAssert.IsEmpty(sources);
+            }
         }
 
         [TestCase(2, 1, "1.234", "1.23")]

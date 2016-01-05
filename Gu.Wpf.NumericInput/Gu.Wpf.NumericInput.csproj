@@ -67,7 +67,7 @@
     <Compile Include="Converters\IsNullOrEmptyConverter.cs" />
     <Compile Include="BaseBoxes\NumericBox.Keys.cs" />
     <Compile Include="BaseBoxes\NumericBox.AttachedProperties.cs" />
-    <Compile Include="Converters\StringFormatConverter.cs" />
+    <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Internals\ManualRelayCommand.cs" />
     <Compile Include="BaseBoxes\BaseBox.DependencyProperties.cs" />
     <Compile Include="DecimalBox.cs" />

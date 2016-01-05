@@ -4,24 +4,18 @@
     using System.Globalization;
     using System.Windows.Data;
 
-    internal class StringFormatConverter<T> : IValueConverter
+    internal class StringConverter<T> : IValueConverter
         where T : struct, IComparable<T>, IFormattable, IConvertible, IEquatable<T>
     {
-        internal static readonly StringFormatConverter<T> Default = new StringFormatConverter<T>();
+        internal static readonly StringConverter<T> Default = new StringConverter<T>();
 
-        private StringFormatConverter()
+        private StringConverter()
         {
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var box = (NumericBox<T>)parameter;
-            if (box.TextSource == TextSource.ValueBinding)
-            {
-                return box.Format(box.Value);
-            }
-
-            return Binding.DoNothing;
+            throw new NotSupportedException("This is meant for OneWayToSource only");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

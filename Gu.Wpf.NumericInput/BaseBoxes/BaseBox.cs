@@ -1,5 +1,6 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
+    using System;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -60,6 +61,14 @@
             }
 
             base.OnIsKeyboardFocusWithinChanged(e);
+        }
+
+        protected virtual void OnStringFormatChanged(string oldFormat, string newFormat)
+        {
+        }
+
+        protected virtual void OnCultureChanged(IFormatProvider oldCulture, IFormatProvider newCulture)
+        {
         }
     }
 }

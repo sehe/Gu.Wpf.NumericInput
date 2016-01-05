@@ -27,14 +27,9 @@
         {
         }
 
-        public override bool TryParse(string text, out float result)
+        public override bool TryParse(string text, NumberStyles numberStyles, IFormatProvider culture, out float result)
         {
-            return float.TryParse(text, this.NumberStyles, this.Culture, out result);
-        }
-
-        internal override bool TryParse(string text, IFormatProvider culture, out float result)
-        {
-            return float.TryParse(text, this.NumberStyles, culture, out result);
+            return float.TryParse(text, numberStyles, culture, out result);
         }
     }
 }

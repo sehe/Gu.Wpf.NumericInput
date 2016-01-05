@@ -124,15 +124,16 @@
             var numericBox = (NumericBox<T>)d;
             if (numericBox.Status == NumericInput.Status.Idle)
             {
-                numericBox.Status = NumericInput.Status.Updating;
+                numericBox.Status = NumericInput.Status.UpdatingFromValueBinding;
                 numericBox.TextSource = TextSource.ValueBinding;
+                var newValue = (T?)e.NewValue;
+                numericBox.SetCurrentValue(TextProperty, numericBox.Format(newValue));
+                numericBox.SetCurrentValue(TextBindableProperty, newValue?.ToString(numericBox.Culture) ?? string.Empty);
+                numericBox.Status = Status.Idle;
             }
 
-            if (!Equals(e.NewValue, e.OldValue))
-            {
-                numericBox.OnValueChanged(e.NewValue, e.OldValue);
-                numericBox.CheckSpinners();
-            }
+            numericBox.OnValueChanged(e.NewValue, e.OldValue);
+            numericBox.CheckSpinners();
         }
 
         private static void OnCanBeNullChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
