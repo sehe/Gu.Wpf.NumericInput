@@ -1,30 +1,42 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Windows.Controls;
+    using System.Windows.Input;
 
-    internal class TextChangeMerger
+    internal class TextChangeMerger : IDisposable
     {
+        private readonly TextBox valueBox;
         private readonly List<TextChangedEventArgs> args = new List<TextChangedEventArgs>();
 
-        public void OnTextChanged(object sender, TextChangedEventArgs e)
+        public TextChangeMerger(TextBox valueBox)
         {
-            this.args.Add(e);
+            this.valueBox = valueBox;
+            this.valueBox.PreviewTextInput += this.OnPreviewTextInput;
+            this.valueBox.TextChanged += this.OnTextChanged;
+        }
+
+        public void Dispose()
+        {
+            this.valueBox.PreviewTextInput -= this.OnPreviewTextInput;
+            this.valueBox.TextChanged -= this.OnTextChanged;
+        }
+
+        internal IReadOnlyList<TextChangedEventArgs> GetMergeEventArgs()
+        {
+            return this.args;
+        }
+
+        private void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
             e.Handled = true;
         }
 
-        public TextChangedEventArgs GetMergeEventArgs()
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (this.args.Count == 0)
-            {
-                return null;
-            }
-
-            var changes = this.args.SelectMany(x => x.Changes).ToList();
-            var routedEvent = this.args[0].RoutedEvent;
-            this.args.Clear();
-            return new TextChangedEventArgs(routedEvent, UndoAction.Merge, changes);
+            this.args.Add(e);
+            e.Handled = true;
         }
     }
 }
