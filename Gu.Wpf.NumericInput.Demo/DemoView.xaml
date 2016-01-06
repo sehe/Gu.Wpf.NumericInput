@@ -13,7 +13,7 @@
         <local:DemoVm />
     </UserControl.DataContext>
     <UniformGrid Columns="3">
-        <StackPanel>
+        <StackPanel KeyboardNavigation.TabNavigation="Cycle">
             <GroupBox VerticalAlignment="Top" Header="DoubleBox">
                 <numeric:DoubleBox AllowSpinners="{Binding Settings.AllowSpinners}"
                                    Culture="{Binding Settings.Culture}"

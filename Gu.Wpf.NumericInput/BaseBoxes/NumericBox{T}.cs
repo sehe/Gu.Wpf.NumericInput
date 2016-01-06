@@ -7,6 +7,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Input;
 
     /// <summary>
     /// Baseclass with common functionality for numeric textboxes
@@ -127,7 +128,7 @@
                 this.Status = Status.Formatting;
                 var newText = this.Format(result);
                 Debug.WriteLine((object)this.Text, newText);
-                this.Text = newText;
+                this.SetTextAndMergeUndoAction(newText);
                 this.Status = status;
             }
             else
@@ -221,14 +222,8 @@
             this.Status = Status.Incrementing;
             var text = value.ToString(this.StringFormat, this.Culture);
             this.SetCurrentValue(TextBindableProperty, value.ToString(this.Culture));
-            this.SetTextUndoable(text);
+            this.SetTextAndCreateUndoAction(text);
             this.Status = status;
-        }
-
-        protected virtual void SetTextUndoable(string text)
-        {
-            this.TextSource = TextSource.UserInput;
-            this.ValueBox.SetTextUndoable(text);
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -246,14 +241,25 @@
             base.OnPropertyChanged(e);
         }
 
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            var value = this.CurrentTextValue;
+            if (value != null)
+            {
+                var status = this.Status;
+                this.Status = Status.Editing;
+                var text = value.Value.ToString(this.EditStringFormat, this.Culture);
+                this.SetTextAndMergeUndoAction(text);
+                this.Status = status;
+            }
+
+            base.OnGotKeyboardFocus(e);
+        }
+
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             Debug.WriteLine(string.Empty);
-            if (this.IsFormattingDirty || this.TextSource == TextSource.UserInput)
-            {
-                this.UpdateFormat();
-            }
-
+            this.UpdateFormat();
             base.OnLostFocus(e);
         }
 

@@ -8,6 +8,7 @@
         Formatting,
         ResettingValue,
         Validating,
-        Incrementing
+        Incrementing,
+        Editing
     }
 }

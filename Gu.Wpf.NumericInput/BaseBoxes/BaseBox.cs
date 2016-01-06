@@ -4,6 +4,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+    using System.Windows.Input;
 
     /// <summary>
     /// The reason for having this stuff here is enabling a shared style
@@ -33,6 +34,58 @@
         {
             this.ValueBox = (TextBox)this.GetTemplateChild(ValueBoxName) ?? this;
             base.OnApplyTemplate();
+        }
+
+        protected virtual void SetTextAndCreateUndoAction(string text)
+        {
+            var canUndo = this.CanUndo;
+            this.TextSource = TextSource.UserInput;
+            this.ValueBox.SetCurrentValue(TextProperty, text);
+            Debug.WriteLine(canUndo, this.CanUndo);
+        }
+
+        protected virtual void SetTextAndMergeUndoAction(string text)
+        {
+            var canUndo = this.CanUndo;
+            if (this.TextSource == TextSource.UserInput)
+            {
+                var merger = new TextChangeMerger();
+                this.ValueBox.TextChanged += merger.OnTextChanged;
+                this.ValueBox.SetCurrentValue(TextProperty, text);
+                var textChangedEventArgs = merger.GetMergeEventArgs();
+                if (textChangedEventArgs != null)
+                {
+                    this.ValueBox.RaiseEvent(textChangedEventArgs);
+                }
+
+                this.ValueBox.TextChanged -= merger.OnTextChanged;
+            }
+            else
+            {
+                this.SetTextClearUndo(text);
+            }
+
+            Debug.WriteLine(canUndo, this.CanUndo);
+        }
+
+        protected virtual void SetTextClearUndo(string text)
+        {
+            var canUndo = this.CanUndo;
+            var isUndoEnabled = this.ValueBox.IsUndoEnabled;
+            this.ValueBox.IsUndoEnabled = false;
+            this.ValueBox.SetCurrentValue(TextProperty, text);
+            this.ValueBox.IsUndoEnabled = isUndoEnabled;
+            Debug.WriteLine(canUndo, this.CanUndo);
+        }
+
+        protected override void OnPreviewTextInput(TextCompositionEventArgs e)
+        {
+            base.OnPreviewTextInput(e);
+        }
+
+        protected override void OnTextChanged(TextChangedEventArgs e)
+        {
+            base.OnTextChanged(e);
         }
 
         /// <summary>
@@ -73,7 +126,7 @@
 
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (Equals(e.NewValue, false))
+            if (Equals(e.NewValue, BooleanBoxes.False))
             {
                 // this is needed because the inner textbox gets focus
                 this.RaiseEvent(new RoutedEventArgs(LostFocusEvent));

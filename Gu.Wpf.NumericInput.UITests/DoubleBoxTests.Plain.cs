@@ -316,6 +316,8 @@
 
                     vmValueBox.Enter("1.2");
                     inputBox.Click();
+                    Assert.AreEqual("1.2", inputBox.Text);
+                    vmValueBox.Click();
                     Assert.AreEqual("1.2000", inputBox.Text);
                     Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("1.2", vmValueBox.Text);
@@ -404,6 +406,8 @@
 
                     vmValueBox.Enter("4444.5555");
                     inputBox.Click();
+                    Assert.AreEqual("4444.5555", inputBox.Text);
+                    vmValueBox.Click();
                     Assert.AreEqual("4,444.556", inputBox.Text);
                     Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("4444.5555", vmValueBox.Text);

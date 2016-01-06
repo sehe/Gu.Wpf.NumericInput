@@ -75,6 +75,7 @@
     <Compile Include="FloatBox.cs" />
     <Compile Include="IntBox.cs" />
     <Compile Include="Internals\TextBoxExt.cs" />
+    <Compile Include="Internals\TextChangeMerger.cs" />
     <Compile Include="Internals\VisualTreeHelperExt.cs" />
     <Compile Include="LongBox.cs" />
     <Compile Include="BaseBoxes\NumericBox{T}.cs" />

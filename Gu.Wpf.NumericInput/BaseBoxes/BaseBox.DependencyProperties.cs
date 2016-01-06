@@ -55,6 +55,12 @@
             typeof(BaseBox),
             new PropertyMetadata(string.Empty, OnStringFormatChanged));
 
+        public static readonly DependencyProperty EditStringFormatProperty = DependencyProperty.Register(
+            "EditStringFormat",
+            typeof(string),
+            typeof(BaseBox),
+            new PropertyMetadata(string.Empty));
+
         public static readonly DependencyProperty CultureProperty = DependencyProperty.Register(
             "Culture",
             typeof(IFormatProvider),
@@ -173,6 +179,14 @@
         {
             get { return (string)this.GetValue(StringFormatProperty); }
             set { this.SetValue(StringFormatProperty, value); }
+        }
+
+        [Category(nameof(NumericBox))]
+        [Browsable(true)]
+        public string EditStringFormat
+        {
+            get { return (string)GetValue(EditStringFormatProperty); }
+            set { SetValue(EditStringFormatProperty, value); }
         }
 
         /// <summary>
