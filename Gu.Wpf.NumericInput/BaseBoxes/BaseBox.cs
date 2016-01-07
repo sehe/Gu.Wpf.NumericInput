@@ -49,14 +49,17 @@
             var canUndo = this.CanUndo;
             if (this.TextSource == TextSource.UserInput)
             {
-                using (var merger = new TextChangeMerger(this.ValueBox))
-                {
-                    this.ValueBox.SetCurrentValue(TextProperty, text);
-                    foreach (var arg in merger.GetMergeEventArgs())
-                    {
-                        this.ValueBox.RaiseEvent(arg);
-                    }
-                }
+                var undoLimit = this.UndoLimit;
+                this.SetCurrentValue(UndoLimitProperty, 0);
+                this.ValueBox.SetCurrentValue(TextProperty, text);
+                this.SetCurrentValue(UndoLimitProperty, undoLimit);
+                //using (var merger = new TextChangeMerger(this.ValueBox))
+                //{
+                //    foreach (var arg in merger.GetMergeEventArgs())
+                //    {
+                //        this.ValueBox.RaiseEvent(arg);
+                //    }
+                //}
             }
             else
             {
