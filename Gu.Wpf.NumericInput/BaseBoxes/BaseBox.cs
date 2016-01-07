@@ -4,7 +4,6 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
-    using System.Windows.Input;
 
     /// <summary>
     /// The reason for having this stuff here is enabling a shared style
@@ -15,10 +14,10 @@
     [TemplatePart(Name = SuffixBoxName, Type = typeof(TextBox))]
     public abstract partial class BaseBox : TextBox
     {
-        public const string DecreaseButtonName = "DecreaseButton";
-        public const string IncreaseButtonName = "IncreaseButton";
-        public const string ValueBoxName = "ValueBox";
-        public const string SuffixBoxName = "SuffixBox";
+        public const string DecreaseButtonName = "PART_DecreaseButton";
+        public const string IncreaseButtonName = "PART_IncreaseButton";
+        public const string ValueBoxName = "PART_ValueBox";
+        public const string SuffixBoxName = "PART_SuffixBox";
 
         protected BaseBox()
         {
@@ -53,13 +52,6 @@
                 this.SetCurrentValue(UndoLimitProperty, 0);
                 this.ValueBox.SetCurrentValue(TextProperty, text);
                 this.SetCurrentValue(UndoLimitProperty, undoLimit);
-                //using (var merger = new TextChangeMerger(this.ValueBox))
-                //{
-                //    foreach (var arg in merger.GetMergeEventArgs())
-                //    {
-                //        this.ValueBox.RaiseEvent(arg);
-                //    }
-                //}
             }
             else
             {
@@ -77,16 +69,6 @@
             this.ValueBox.SetCurrentValue(TextProperty, text);
             this.ValueBox.IsUndoEnabled = isUndoEnabled;
             Debug.WriteLine(canUndo, this.CanUndo);
-        }
-
-        protected override void OnPreviewTextInput(TextCompositionEventArgs e)
-        {
-            base.OnPreviewTextInput(e);
-        }
-
-        protected override void OnTextChanged(TextChangedEventArgs e)
-        {
-            base.OnTextChanged(e);
         }
 
         /// <summary>

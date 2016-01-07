@@ -76,7 +76,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="ValueBox"
+                <TextBox x:Name="PART_ValueBox"
                          Grid.Column="0"
                          Style="{DynamicResource {x:Static local:NumericBox.TextBoxStyleKey}}"
                          Text="{Binding Text,
@@ -93,7 +93,7 @@
 
                 </TextBox>
 
-                <TextBox x:Name="SuffixBox"
+                <TextBox x:Name="PART_SuffixBox"
                          Grid.Column="1"
                          Style="{DynamicResource {x:Static local:NumericBox.SuffixTextBoxStyleKey}}"
                          Text="{TemplateBinding Suffix}" />
@@ -114,7 +114,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <RepeatButton x:Name="DecreaseButton"
+                <RepeatButton x:Name="PART_DecreaseButton"
                               Grid.Column="0"
                               Command="{TemplateBinding DecreaseCommand}"
                               Content="-"
@@ -122,7 +122,7 @@
                               FontSize="{TemplateBinding FontSize}"
                               Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
 
-                <TextBox x:Name="ValueBox"
+                <TextBox x:Name="PART_ValueBox"
                          Grid.Column="1"
                          Style="{DynamicResource {x:Static local:NumericBox.TextBoxStyleKey}}"
                          Text="{Binding Text,
@@ -137,12 +137,12 @@
                     -->
                 </TextBox>
 
-                <TextBox x:Name="SuffixBox"
+                <TextBox x:Name="PART_SuffixBox"
                          Grid.Column="2"
                          Style="{DynamicResource {x:Static local:NumericBox.SuffixTextBoxStyleKey}}"
                          Text="{TemplateBinding Suffix}" />
 
-                <RepeatButton x:Name="IncreaseButton"
+                <RepeatButton x:Name="PART_IncreaseButton"
                               Grid.Column="3"
                               Command="{TemplateBinding IncreaseCommand}"
                               Content="+"
@@ -166,7 +166,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <RepeatButton x:Name="DecreaseButton"
+                <RepeatButton x:Name="PART_DecreaseButton"
                               Grid.Column="0"
                               Command="{TemplateBinding DecreaseCommand}"
                               Content="-"
@@ -174,7 +174,7 @@
                               FontSize="{TemplateBinding FontSize}"
                               Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
 
-                <TextBox x:Name="ValueBox"
+                <TextBox x:Name="PART_ValueBox"
                          Grid.Column="1"
                          Style="{DynamicResource {x:Static local:NumericBox.TextBoxStyleKey}}"
                          Text="{Binding Text,
@@ -189,7 +189,7 @@
                     -->
                 </TextBox>
 
-                <RepeatButton x:Name="IncreaseButton"
+                <RepeatButton x:Name="PART_IncreaseButton"
                               Grid.Column="2"
                               Command="{TemplateBinding IncreaseCommand}"
                               Content="+"
