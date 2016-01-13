@@ -59,6 +59,8 @@
     <Compile Include="BaseBoxes\NumericBox{T}.Events.cs" />
     <Compile Include="BaseBoxes\Status.cs" />
     <Compile Include="BaseBoxes\TextSource.cs" />
+    <Compile Include="Converters\HiddenWhenTrueConverter.cs" />
+    <Compile Include="Converters\VisibleWhenTrueConverter.cs" />
     <Compile Include="Internals\BindingHelper.cs" />
     <Compile Include="Internals\BooleanBoxes.cs" />
     <Compile Include="Converters\DecimalDigitsToStringFormatConverter.cs" />

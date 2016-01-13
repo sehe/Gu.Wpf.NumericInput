@@ -123,16 +123,12 @@
             T result;
             if (this.TryParse(text, out result))
             {
-                var status = this.Status;
-                this.Status = Status.Formatting;
                 var newText = this.Format(result);
-                Debug.WriteLine((object)this.Text, newText);
-                this.SetTextAndMergeUndoAction(newText);
-                this.Status = status;
+                this.FormattedText = newText;
             }
             else
             {
-                Debug.WriteLine("NOP");
+                this.FormattedText = text;
             }
 
             this.IsFormattingDirty = false;
@@ -222,6 +218,7 @@
             var text = value.ToString(this.StringFormat, this.Culture);
             this.SetCurrentValue(TextBindableProperty, value.ToString(this.Culture));
             this.SetTextAndCreateUndoAction(text);
+            this.FormattedText = this.Format(value);
             this.Status = status;
         }
 
@@ -238,21 +235,6 @@
             }
 
             base.OnPropertyChanged(e);
-        }
-
-        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
-        {
-            var value = this.CurrentTextValue;
-            if (value != null)
-            {
-                var status = this.Status;
-                this.Status = Status.Editing;
-                var text = value.Value.ToString(this.EditStringFormat, this.Culture);
-                this.SetTextAndMergeUndoAction(text);
-                this.Status = status;
-            }
-
-            base.OnGotKeyboardFocus(e);
         }
 
         protected override void OnLostFocus(RoutedEventArgs e)

@@ -1,6 +1,8 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
     using System;
+    using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -10,14 +12,15 @@
     /// </summary>
     [TemplatePart(Name = IncreaseButtonName, Type = typeof(RepeatButton))]
     [TemplatePart(Name = DecreaseButtonName, Type = typeof(RepeatButton))]
-    [TemplatePart(Name = ValueBoxName, Type = typeof(TextBox))]
+    [TemplatePart(Name = FormattedName, Type = typeof(TextBox))]
     [TemplatePart(Name = SuffixBoxName, Type = typeof(TextBox))]
     public abstract partial class BaseBox : TextBox
     {
         public const string DecreaseButtonName = "PART_DecreaseButton";
         public const string IncreaseButtonName = "PART_IncreaseButton";
-        public const string ValueBoxName = "PART_ValueBox";
-        public const string SuffixBoxName = "PART_SuffixBox";
+        public const string EditBoxName = "PART_EditText";
+        public const string FormattedName = "PART_FormattedText";
+        public const string SuffixBoxName = "PART_SuffixText";
 
         protected BaseBox()
         {
@@ -31,8 +34,9 @@
 
         public override void OnApplyTemplate()
         {
-            this.ValueBox = (TextBox)this.GetTemplateChild(ValueBoxName) ?? this;
             base.OnApplyTemplate();
+            this.ValueBox = (TextBox)this.GetTemplateChild(EditBoxName) ?? this;
+            this.UpdateFormattedView();
         }
 
         protected virtual void SetTextAndCreateUndoAction(string text)
@@ -40,24 +44,6 @@
             var canUndo = this.CanUndo;
             this.TextSource = TextSource.UserInput;
             this.ValueBox.SetCurrentValue(TextProperty, text);
-            Debug.WriteLine(canUndo, this.CanUndo);
-        }
-
-        protected virtual void SetTextAndMergeUndoAction(string text)
-        {
-            var canUndo = this.CanUndo;
-            if (this.TextSource == TextSource.UserInput)
-            {
-                var undoLimit = this.UndoLimit;
-                this.SetCurrentValue(UndoLimitProperty, 0);
-                this.ValueBox.SetCurrentValue(TextProperty, text);
-                this.SetCurrentValue(UndoLimitProperty, undoLimit);
-            }
-            else
-            {
-                this.SetTextClearUndo(text);
-            }
-
             Debug.WriteLine(canUndo, this.CanUndo);
         }
 
@@ -124,6 +110,53 @@
 
         protected virtual void OnCultureChanged(IFormatProvider oldCulture, IFormatProvider newCulture)
         {
+        }
+
+        protected void UpdateFormattedView()
+        {
+            var scrollViewer = this.ValueBox?.NestedChildren().OfType<ScrollViewer>().SingleOrDefault();
+            var whenFocused = scrollViewer?.NestedChildren().OfType<ScrollContentPresenter>().SingleOrDefault();
+            var grid = whenFocused?.Parent as Grid;
+            if (scrollViewer == null || whenFocused == null || grid == null)
+            {
+                if (this.ValueBox?.IsLoaded == false)
+                {
+                    this.ValueBox.Loaded += this.OnValueBoxLoaded;
+                    return;
+                }
+
+                if (DesignerProperties.GetIsInDesignMode(this))
+                {
+                    var message = $"The template does not match the expected template. Cannot use formatting\r\n" +
+                                  $"The expected template is (psudo)\r\n" +
+                                  $"{nameof(ScrollViewer)}: {(scrollViewer == null ? "null" : string.Empty)}\r\n" +
+                                  $"  {nameof(Grid)}: {(grid == null ? "null" : string.Empty)}\r\n" +
+                                  $"    {nameof(ScrollContentPresenter)}: {(whenFocused == null ? "null" : string.Empty)}";
+                    throw new InvalidOperationException(message);
+                }
+                else
+                {
+                    // Falling back to vanilla textbox in runtime
+                    return;
+                }
+            }
+            var whenNotFocused = new TextBlock { Margin = new Thickness(2, 0, 2, 0), Name = FormattedName };
+            whenNotFocused.Bind(TextBlock.TextProperty)
+                          .OneWayTo(this, FormattedTextProperty);
+
+            whenNotFocused.Bind(TextBox.VisibilityProperty)
+                          .OneWayTo(this, IsKeyboardFocusWithinProperty, HiddenWhenTrueConverter.Default);
+
+            grid.Children.Add(whenNotFocused);
+
+            whenFocused.Bind(UIElement.VisibilityProperty)
+                       .OneWayTo(this, IsKeyboardFocusWithinProperty, VisibleWhenTrueConverter.Default);
+        }
+
+        private void OnValueBoxLoaded(object sender, RoutedEventArgs e)
+        {
+            ((Control)sender).Loaded -= this.OnValueBoxLoaded;
+            this.UpdateFormattedView();
         }
     }
 }

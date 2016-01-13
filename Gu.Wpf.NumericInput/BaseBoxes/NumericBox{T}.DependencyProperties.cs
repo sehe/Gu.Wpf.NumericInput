@@ -2,7 +2,6 @@
 {
     using System.ComponentModel;
     using System.Globalization;
-    using System.Runtime.CompilerServices;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -128,8 +127,10 @@
                 numericBox.Status = NumericInput.Status.UpdatingFromValueBinding;
                 numericBox.TextSource = TextSource.ValueBinding;
                 var newValue = (T?)e.NewValue;
-                numericBox.SetTextClearUndo(numericBox.Format(newValue));
-                numericBox.SetCurrentValue(TextBindableProperty, newValue?.ToString(numericBox.Culture) ?? string.Empty);
+                var newRaw = newValue?.ToString(numericBox.Culture) ?? string.Empty;
+                numericBox.SetTextClearUndo(newRaw);
+                numericBox.SetCurrentValue(TextBindableProperty, newRaw);
+                numericBox.FormattedText = numericBox.Format(newValue);
                 numericBox.Status = Status.Idle;
             }
 

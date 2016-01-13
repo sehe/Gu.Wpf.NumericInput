@@ -17,19 +17,21 @@
 
         <TabItem AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DebugTab}" Header="Debug">
             <UniformGrid Rows="1">
-                <GroupBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBoxGroupBox}" Header="DoubleBox">
+                <GroupBox VerticalAlignment="Top"
+                          AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBoxGroupBox}"
+                          Header="DoubleBox">
                     <demo:DoubleBoxView HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </GroupBox>
 
-                <GroupBox Header="DecimalBox">
+                <GroupBox VerticalAlignment="Top" Header="DecimalBox">
                     <demo:DecimalBoxView HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </GroupBox>
 
-                <GroupBox Header="IntBox">
+                <GroupBox VerticalAlignment="Top" Header="IntBox">
                     <demo:IntBoxView HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </GroupBox>
 
-                <GroupBox Header="ShortBox">
+                <GroupBox VerticalAlignment="Top" Header="ShortBox">
                     <demo:ShortBoxView HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </GroupBox>
             </UniformGrid>

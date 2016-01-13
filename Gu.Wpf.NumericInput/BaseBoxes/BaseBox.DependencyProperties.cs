@@ -11,6 +11,14 @@
     /// </summary>
     public abstract partial class BaseBox
     {
+        private static readonly DependencyPropertyKey FormattedTextPropertyKey = DependencyProperty.RegisterReadOnly(
+            "FormattedText",
+            typeof(string),
+            typeof(BaseBox),
+            new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty FormattedTextProperty = FormattedTextPropertyKey.DependencyProperty;
+
         private static readonly DependencyPropertyKey IsValidationDirtyPropertyKey = DependencyProperty.RegisterReadOnly(
             "IsValidationDirty",
             typeof(bool),
@@ -54,12 +62,6 @@
             typeof(string),
             typeof(BaseBox),
             new PropertyMetadata(string.Empty, OnStringFormatChanged));
-
-        public static readonly DependencyProperty EditStringFormatProperty = DependencyProperty.Register(
-            "EditStringFormat",
-            typeof(string),
-            typeof(BaseBox),
-            new PropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty CultureProperty = DependencyProperty.Register(
             "Culture",
@@ -133,6 +135,14 @@
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BaseBox), new FrameworkPropertyMetadata(typeof(BaseBox)));
         }
 
+        [Category(nameof(NumericBox))]
+        [Browsable(true)]
+        public string FormattedText
+        {
+            get { return (string)this.GetValue(FormattedTextProperty); }
+            protected set { this.SetValue(FormattedTextPropertyKey, value); }
+        }
+
         public bool IsFormattingDirty
         {
             get { return (bool)this.GetValue(IsFormattingDirtyProperty); }
@@ -179,14 +189,6 @@
         {
             get { return (string)this.GetValue(StringFormatProperty); }
             set { this.SetValue(StringFormatProperty, value); }
-        }
-
-        [Category(nameof(NumericBox))]
-        [Browsable(true)]
-        public string EditStringFormat
-        {
-            get { return (string)GetValue(EditStringFormatProperty); }
-            set { SetValue(EditStringFormatProperty, value); }
         }
 
         /// <summary>

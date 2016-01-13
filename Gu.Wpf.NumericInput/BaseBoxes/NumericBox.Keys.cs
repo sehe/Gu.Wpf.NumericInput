@@ -13,7 +13,7 @@
 
         public static ResourceKey SpinnerPathStyleKey { get; } = CreateKey();
 
-        public static ResourceKey TextBoxStyleKey { get; } = CreateKey();
+        public static ResourceKey EditTextBoxStyleKey { get; } = CreateKey();
 
         public static ResourceKey BaseBoxStyleKey { get; } = CreateKey();
 

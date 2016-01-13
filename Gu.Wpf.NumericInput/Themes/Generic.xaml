@@ -8,7 +8,7 @@
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-    <Style x:Key="{x:Static local:NumericBox.TextBoxStyleKey}"
+    <Style x:Key="{x:Static local:NumericBox.EditTextBoxStyleKey}"
            BasedOn="{StaticResource {x:Type TextBox}}"
            TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="{x:Null}" />
@@ -49,7 +49,7 @@
     </Style>
 
     <Style x:Key="{x:Static local:NumericBox.SuffixTextBoxStyleKey}"
-           BasedOn="{StaticResource {x:Static local:NumericBox.TextBoxStyleKey}}"
+           BasedOn="{StaticResource {x:Static local:NumericBox.EditTextBoxStyleKey}}"
            TargetType="{x:Type TextBox}">
         <!--<Setter Property="local:NumericBox.SelectAllOnDoubleClick" Value="False" />-->
         <Setter Property="IsReadOnly" Value="True" />
@@ -76,9 +76,10 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="PART_ValueBox"
+                <TextBox x:Name="PART_EditText"
                          Grid.Column="0"
-                         Style="{DynamicResource {x:Static local:NumericBox.TextBoxStyleKey}}"
+                         Margin="0,0,0,-2"
+                         Style="{DynamicResource {x:Static local:NumericBox.EditTextBoxStyleKey}}"
                          Text="{Binding Text,
                                         RelativeSource={RelativeSource TemplatedParent},
                                         UpdateSourceTrigger=PropertyChanged}">
@@ -90,11 +91,11 @@
                                     <KeyBinding Key="Down" Command="{Binding DecreaseCommand, RelativeSource={RelativeSource TemplatedParent}}" />
                                     </TextBox.InputBindings>
                     -->
-
                 </TextBox>
 
-                <TextBox x:Name="PART_SuffixBox"
+                <TextBox x:Name="PART_SuffixText"
                          Grid.Column="1"
+                         Margin="-2,0,0,0"
                          Style="{DynamicResource {x:Static local:NumericBox.SuffixTextBoxStyleKey}}"
                          Text="{TemplateBinding Suffix}" />
             </Grid>
@@ -122,9 +123,10 @@
                               FontSize="{TemplateBinding FontSize}"
                               Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
 
-                <TextBox x:Name="PART_ValueBox"
+                <TextBox x:Name="PART_EditText"
                          Grid.Column="1"
-                         Style="{DynamicResource {x:Static local:NumericBox.TextBoxStyleKey}}"
+                         Margin="0,0,0,-2"
+                         Style="{DynamicResource {x:Static local:NumericBox.EditTextBoxStyleKey}}"
                          Text="{Binding Text,
                                         RelativeSource={RelativeSource TemplatedParent},
                                         UpdateSourceTrigger=PropertyChanged}">
@@ -137,8 +139,9 @@
                     -->
                 </TextBox>
 
-                <TextBox x:Name="PART_SuffixBox"
+                <TextBox x:Name="PART_SuffixText"
                          Grid.Column="2"
+                         Margin="-2,0,0,0"
                          Style="{DynamicResource {x:Static local:NumericBox.SuffixTextBoxStyleKey}}"
                          Text="{TemplateBinding Suffix}" />
 
@@ -174,19 +177,13 @@
                               FontSize="{TemplateBinding FontSize}"
                               Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
 
-                <TextBox x:Name="PART_ValueBox"
+                <TextBox x:Name="PART_EditText"
                          Grid.Column="1"
-                         Style="{DynamicResource {x:Static local:NumericBox.TextBoxStyleKey}}"
+                         Style="{DynamicResource {x:Static local:NumericBox.EditTextBoxStyleKey}}"
                          Text="{Binding Text,
                                         RelativeSource={RelativeSource TemplatedParent},
                                         UpdateSourceTrigger=PropertyChanged}">
                     <!--  Text must be bound with UpdateSourceTrigger=PropertyChanged in template for realtime validation  -->
-                    <!--
-                                    <TextBox.InputBindings>
-                                    <KeyBinding Key="Up" Command="{Binding IncreaseCommand, RelativeSource={RelativeSource TemplatedParent}}" />
-                                    <KeyBinding Key="Down" Command="{Binding DecreaseCommand, RelativeSource={RelativeSource TemplatedParent}}" />
-                                    </TextBox.InputBindings>
-                    -->
                 </TextBox>
 
                 <RepeatButton x:Name="PART_IncreaseButton"
@@ -218,7 +215,7 @@
         <Setter Property="MaxLines" Value="1" />
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="AutoWordSelection" Value="True" />
-
+        <!--<Setter Property="Template" Value="{DynamicResource {x:Static local:NumericBox.EditAndFormattedTemplateKey}}" />-->
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>

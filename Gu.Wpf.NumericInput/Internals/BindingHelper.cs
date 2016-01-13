@@ -67,21 +67,7 @@
             internal BindingExpression OneWayTo(object source, DependencyProperty sourceProperty)
             {
                 var sourcePath = GetPath(sourceProperty);
-                return this.OneWayTo(source, sourcePath);
-            }
-
-            internal BindingExpression TwoWayTo(object source, DependencyProperty sourceProperty)
-            {
-                var sourcePath = GetPath(sourceProperty);
-                var binding = new Binding
-                {
-                    Source = source,
-                    Path = sourcePath,
-                    Mode = BindingMode.TwoWay,
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                };
-
-                return (BindingExpression)BindingOperations.SetBinding(this.target, this.targetProperty, binding);
+                return this.OneWayTo(source, sourcePath, null);
             }
 
             internal BindingExpression OneWayTo(object source)
@@ -95,13 +81,34 @@
                 return (BindingExpression)BindingOperations.SetBinding(this.target, this.targetProperty, binding);
             }
 
-            internal BindingExpression OneWayTo(object source, PropertyPath sourcePath)
+            internal BindingExpression OneWayTo(object source, DependencyProperty sourceProperty, IValueConverter converter)
+            {
+                var sourcePath = GetPath(sourceProperty);
+                return this.OneWayTo(source, sourcePath, converter);
+            }
+
+            internal BindingExpression OneWayTo(object source, PropertyPath sourcePath, IValueConverter converter)
             {
                 var binding = new Binding
                 {
                     Path = sourcePath,
                     Source = source,
                     Mode = BindingMode.OneWay,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                    Converter = converter
+                };
+
+                return (BindingExpression)BindingOperations.SetBinding(this.target, this.targetProperty, binding);
+            }
+
+            internal BindingExpression TwoWayTo(object source, DependencyProperty sourceProperty)
+            {
+                var sourcePath = GetPath(sourceProperty);
+                var binding = new Binding
+                {
+                    Source = source,
+                    Path = sourcePath,
+                    Mode = BindingMode.TwoWay,
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                 };
 
