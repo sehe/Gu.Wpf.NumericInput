@@ -28,33 +28,29 @@
             this.IncreaseCommand = new ManualRelayCommand(this.Increase, this.CanIncrease);
             this.DecreaseCommand = new ManualRelayCommand(this.Decrease, this.CanDecrease);
             this.Bind(TextProxyProperty).OneWayTo(this, TextProperty);
-            this.ValueBox = this;
         }
-
-        protected TextBox ValueBox { get; private set; }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.ValueBox = (TextBox)this.GetTemplateChild(EditBoxName) ?? this;
-            this.UpdateFormattedView();
+            this.UpdateView();
         }
 
         protected virtual void SetTextAndCreateUndoAction(string text)
         {
             var canUndo = this.CanUndo;
             this.TextSource = TextSource.UserInput;
-            this.ValueBox.SetCurrentValue(TextProperty, text);
+            this.SetCurrentValue(TextProperty, text);
             Debug.WriteLine(canUndo, this.CanUndo);
         }
 
         protected virtual void SetTextClearUndo(string text)
         {
             var canUndo = this.CanUndo;
-            var isUndoEnabled = this.ValueBox.IsUndoEnabled;
-            this.ValueBox.IsUndoEnabled = false;
-            this.ValueBox.SetCurrentValue(TextProperty, text);
-            this.ValueBox.IsUndoEnabled = isUndoEnabled;
+            var isUndoEnabled = this.IsUndoEnabled;
+            this.IsUndoEnabled = false;
+            this.SetCurrentValue(TextProperty, text);
+            this.IsUndoEnabled = isUndoEnabled;
             Debug.WriteLine(canUndo, this.CanUndo);
         }
 
@@ -113,18 +109,24 @@
         {
         }
 
-        protected void UpdateFormattedView()
+        protected void UpdateView()
         {
-            var scrollViewer = this.ValueBox?.NestedChildren().OfType<ScrollViewer>().SingleOrDefault(x => x.Name == "PART_ContentHost");
+            var scrollViewer = this.NestedChildren().OfType<ScrollViewer>().SingleOrDefault(x => x.Name == "PART_ContentHost");
             var whenFocused = scrollViewer?.NestedChildren().OfType<ScrollContentPresenter>().SingleOrDefault();
             var grid = whenFocused?.Parent as Grid;
             if (scrollViewer == null || whenFocused == null || grid == null)
             {
-                if (this.ValueBox?.IsArrangeValid == false)
+                if (!this.IsLoaded)
+                {
+                    this.Loaded += OnLoaded;
+                    return;
+                }
+
+                if (this.IsArrangeValid == false)
                 {
                     // retry after arrange
                     // using the Loaded event does not work if template is changed in runtime.
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(this.UpdateFormattedView));
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(this.UpdateView));
                     return;
                 }
 
@@ -144,24 +146,34 @@
                 }
             }
 
-            var whenNotFocused = new TextBlock
+            if (grid.Children.OfType<TextBlock>().All(x => x.Name != FormattedName))
             {
-                Name = FormattedName,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            whenNotFocused.Bind(TextBlock.TextProperty)
-                          .OneWayTo(this, FormattedTextProperty);
+                var whenNotFocused = new TextBlock
+                {
+                    Name = FormattedName,
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+                whenNotFocused.Bind(TextBlock.TextProperty)
+                              .OneWayTo(this, FormattedTextProperty);
 
-            whenNotFocused.Bind(TextBlock.MarginProperty)
-                          .OneWayTo(whenFocused, MarginProperty, FormattedTextBlockMarginConverter.Default, whenFocused);
+                whenNotFocused.Bind(TextBlock.MarginProperty)
+                              .OneWayTo(whenFocused, MarginProperty, FormattedTextBlockMarginConverter.Default, whenFocused);
 
-            whenNotFocused.Bind(TextBox.VisibilityProperty)
-                          .OneWayTo(this, IsKeyboardFocusWithinProperty, HiddenWhenTrueConverter.Default);
+                whenNotFocused.Bind(TextBox.VisibilityProperty)
+                              .OneWayTo(this, IsKeyboardFocusWithinProperty, HiddenWhenTrueConverter.Default);
 
-            grid.Children.Add(whenNotFocused);
+                grid.Children.Add(whenNotFocused);
 
-            whenFocused.Bind(UIElement.VisibilityProperty)
-                       .OneWayTo(this, IsKeyboardFocusWithinProperty, VisibleWhenTrueConverter.Default);
+                whenFocused.Bind(UIElement.VisibilityProperty)
+                           .OneWayTo(this, IsKeyboardFocusWithinProperty, VisibleWhenTrueConverter.Default);
+            }
+        }
+
+        private static void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var baseBox = (BaseBox)sender;
+            baseBox.Loaded -= OnLoaded;
+            baseBox.UpdateView();
         }
     }
 }

@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Threading;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
 
     /// <summary>
@@ -84,7 +85,17 @@
             typeof(BaseBox),
             new FrameworkPropertyMetadata(
                 false,
-                FrameworkPropertyMetadataOptions.AffectsArrange));
+                FrameworkPropertyMetadataOptions.AffectsArrange,
+                OnAllowSpinnersChanged));
+
+        public static readonly DependencyProperty SpinnerTemplateProperty = DependencyProperty.Register(
+            "SpinnerTemplate",
+            typeof(ControlTemplate),
+            typeof(BaseBox),
+            new FrameworkPropertyMetadata(
+                default(ControlTemplate),
+                FrameworkPropertyMetadataOptions.AffectsArrange,
+                OnSpinnerTemplateChanged));
 
         private static readonly DependencyPropertyKey IncreaseCommandPropertyKey = DependencyProperty.RegisterReadOnly(
             "IncreaseCommand",
@@ -122,7 +133,7 @@
             "TextSource",
             typeof(TextSource),
             typeof(BaseBox),
-            new PropertyMetadata(NumericInput.TextSource.ValueBinding, OnTextSourceChanged));
+            new PropertyMetadata(TextSource.ValueBinding, OnTextSourceChanged));
 
         internal static readonly DependencyProperty StatusProperty = DependencyProperty.Register(
             "Status",
@@ -212,6 +223,14 @@
 
         [Category(nameof(NumericBox))]
         [Browsable(true)]
+        public ControlTemplate SpinnerTemplate
+        {
+            get { return (ControlTemplate)this.GetValue(SpinnerTemplateProperty); }
+            set { this.SetValue(SpinnerTemplateProperty, value); }
+        }
+
+        [Category(nameof(NumericBox))]
+        [Browsable(true)]
         public ICommand IncreaseCommand
         {
             get { return (ICommand)this.GetValue(IncreaseCommandProperty); }
@@ -228,14 +247,14 @@
 
         internal TextSource TextSource
         {
-            get { return (TextSource)GetValue(TextSourceProperty); }
-            set { SetValue(TextSourceProperty, value); }
+            get { return (TextSource)this.GetValue(TextSourceProperty); }
+            set { this.SetValue(TextSourceProperty, value); }
         }
 
         internal Status Status
         {
-            get { return (Status)GetValue(StatusProperty); }
-            set { SetValue(StatusProperty, value); }
+            get { return (Status)this.GetValue(StatusProperty); }
+            set { this.SetValue(StatusProperty, value); }
         }
 
         private static void OnIsValidationDirtyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -278,6 +297,18 @@
             box.IsValidationDirty = true;
         }
 
+        private static void OnAllowSpinnersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var box = (BaseBox)d;
+            box.UpdateView();
+        }
+
+        private static void OnSpinnerTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var box = (BaseBox)d;
+            box.UpdateView();
+        }
+
         private static void OnSuffixChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((BaseBox)d).HasSuffix = !string.IsNullOrEmpty(e.NewValue as string);
@@ -299,12 +330,12 @@
             Debug.WriteLine(e);
             var baseBox = (BaseBox)d;
 
-            if (baseBox.Status == NumericInput.Status.Idle)
+            if (baseBox.Status == Status.Idle)
             {
-                baseBox.Status = NumericInput.Status.UpdatingFromUserInput;
+                baseBox.Status = Status.UpdatingFromUserInput;
                 baseBox.TextSource = TextSource.UserInput;
                 d.SetCurrentValue(TextBindableProperty, e.NewValue);
-                baseBox.Status = NumericInput.Status.Idle;
+                baseBox.Status = Status.Idle;
             }
         }
 
