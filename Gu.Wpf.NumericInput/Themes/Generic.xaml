@@ -9,7 +9,7 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <ControlTemplate x:Key="{x:Static local:NumericBox.SpinnersTemplateKey}" TargetType="{x:Type local:SpinnerDecorator}">
-        <!--<Grid Margin="{TemplateBinding Padding}">
+        <Grid Margin="{TemplateBinding Padding}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -17,7 +17,8 @@
             </Grid.ColumnDefinitions>
             <RepeatButton x:Name="PART_DecreaseButton"
                           Grid.Column="0"
-                          Command="{TemplateBinding Child.DecreaseCommand}"
+                          Command="{Binding Path=Child.DecreaseCommand,
+                                            RelativeSource={RelativeSource TemplatedParent}}"
                           Content="-"
                           FontSize="{TemplateBinding FontSize}"
                           Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
@@ -28,12 +29,13 @@
 
             <RepeatButton x:Name="PART_IncreaseButton"
                           Grid.Column="2"
-                          Command="{TemplateBinding Child.IncreaseCommand}"
+                          Command="{Binding Path=Child.IncreaseCommand,
+                                            RelativeSource={RelativeSource TemplatedParent}}"
                           Content="+"
                           FontSize="{TemplateBinding FontSize}"
                           Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
 
-        </Grid>-->
+        </Grid>
     </ControlTemplate>
 
     <!--  BaseUpDown  -->

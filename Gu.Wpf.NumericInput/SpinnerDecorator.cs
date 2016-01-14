@@ -2,7 +2,9 @@
 {
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Markup;
 
+    [ContentProperty(nameof(Child))]
     public class SpinnerDecorator : Control
     {
         public static readonly DependencyProperty ChildProperty = DependencyProperty.Register(
