@@ -106,7 +106,7 @@
         <Border Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
-                FocusManager.FocusedElement="{Binding ElementName=TextBox}"
+                FocusManager.FocusedElement="{Binding ElementName=PART_EditText}"
                 Padding="{TemplateBinding Padding}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -161,7 +161,7 @@
         <Border Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
-                FocusManager.FocusedElement="{Binding ElementName=TextBox}"
+                FocusManager.FocusedElement="{Binding ElementName=PART_EditText}"
                 Padding="{TemplateBinding Padding}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -215,15 +215,12 @@
         <Setter Property="MaxLines" Value="1" />
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="AutoWordSelection" Value="True" />
-        <!--<Setter Property="Template" Value="{DynamicResource {x:Static local:NumericBox.EditAndFormattedTemplateKey}}" />-->
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="AllowSpinners" Value="True" />
                     <Condition Property="HasSuffix" Value="True" />
                 </MultiTrigger.Conditions>
-                <Setter Property="FocusManager.IsFocusScope" Value="True" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Template" Value="{DynamicResource {x:Static local:NumericBox.WithSpinnersAndSuffixTemplateKey}}" />
             </MultiTrigger>
 
@@ -232,8 +229,6 @@
                     <Condition Property="AllowSpinners" Value="True" />
                     <Condition Property="HasSuffix" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter Property="FocusManager.IsFocusScope" Value="True" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Template" Value="{DynamicResource {x:Static local:NumericBox.WithSpinnersTemplateKey}}" />
             </MultiTrigger>
 
@@ -242,8 +237,6 @@
                     <Condition Property="AllowSpinners" Value="False" />
                     <Condition Property="HasSuffix" Value="True" />
                 </MultiTrigger.Conditions>
-                <Setter Property="FocusManager.IsFocusScope" Value="True" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="Template" Value="{DynamicResource {x:Static local:NumericBox.WithSuffixTemplateKey}}" />
             </MultiTrigger>
         </Style.Triggers>

@@ -56,8 +56,9 @@
         internal static string EditText(this TextBox textBox)
         {
             var groupBox = textBox.GetParent<CustomUIItem>().GetParent<GroupBox>();
-            if (groupBox.Get<CheckBox>(AutomationIds.AllowSpinnersBox).Checked ||
-                !string.IsNullOrEmpty(groupBox.Get<TextBox>(AutomationIds.SuffixBox).Text))
+            var alowSpinnersBox = groupBox.Get<CheckBox>(AutomationIds.AllowSpinnersBox);
+            var suffixBox = groupBox.Get<TextBox>(AutomationIds.SuffixBox);
+            if (alowSpinnersBox.Checked || !string.IsNullOrEmpty(suffixBox.Text))
             {
                 return textBox.Get<TextBox>(BaseBox.EditBoxName).Text;
             }

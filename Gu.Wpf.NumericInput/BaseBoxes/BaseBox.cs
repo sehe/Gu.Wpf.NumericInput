@@ -6,6 +6,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+    using System.Windows.Threading;
 
     /// <summary>
     /// The reason for having this stuff here is enabling a shared style
@@ -119,16 +120,18 @@
             var grid = whenFocused?.Parent as Grid;
             if (scrollViewer == null || whenFocused == null || grid == null)
             {
-                if (this.ValueBox?.IsLoaded == false)
+                if (this.ValueBox?.IsArrangeValid == false)
                 {
-                    this.ValueBox.Loaded += this.OnValueBoxLoaded;
+                    // retry after arrange
+                    // using the Loaded event does not work if template is changed in runtime.
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(this.UpdateFormattedView));
                     return;
                 }
 
                 if (DesignerProperties.GetIsInDesignMode(this))
                 {
                     var message = $"The template does not match the expected template. Cannot use formatting\r\n" +
-                                  $"The expected template is (psudo)\r\n" +
+                                  $"The expected template is (pseudo)\r\n" +
                                   $"{nameof(ScrollViewer)}: {(scrollViewer == null ? "null" : string.Empty)}\r\n" +
                                   $"  {nameof(Grid)}: {(grid == null ? "null" : string.Empty)}\r\n" +
                                   $"    {nameof(ScrollContentPresenter)}: {(whenFocused == null ? "null" : string.Empty)}";
@@ -140,6 +143,7 @@
                     return;
                 }
             }
+
             var whenNotFocused = new TextBlock { Margin = new Thickness(2, 0, 2, 0), Name = FormattedName };
             whenNotFocused.Bind(TextBlock.TextProperty)
                           .OneWayTo(this, FormattedTextProperty);

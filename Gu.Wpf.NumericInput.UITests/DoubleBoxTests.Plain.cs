@@ -31,7 +31,7 @@
                     var groupBox = window.Get<GroupBox>(AutomationIds.DoubleBoxGroupBox);
                     var inputBox = groupBox.Get<TextBox>(AutomationIds.InputBox);
                     var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
-                    Assert.AreNotEqual("1.2", inputBox.Text);
+                    Assert.AreEqual("0", inputBox.Text);
                     Assert.AreEqual("0", groupBox.Get<Label>(AutomationIds.ValueBlock).Text);
                      Assert.AreEqual(Gu.Wpf.NumericInput.TextSource.ValueBinding, groupBox.TextSource());
                     Assert.AreEqual(Gu.Wpf.NumericInput.Status.Idle, groupBox.Status());
@@ -57,10 +57,11 @@
                     var inputBox = groupBox.Get<TextBox>(AutomationIds.InputBox);
                     var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
                     Assert.AreEqual(vmValueBox.Text, inputBox.Text);
-                    Assert.AreNotEqual("1.2", inputBox.Text);
+                    Assert.AreEqual("0", inputBox.Text);
                     vmValueBox.Enter("1.2");
                     inputBox.Click();
-                    Assert.AreEqual("1.2", inputBox.Text);
+                    Assert.AreEqual("1.2", inputBox.EditText());
+                    Assert.AreEqual("1.2", inputBox.FormattedText());
                     Assert.AreEqual(false, inputBox.HasValidationError());
                     Assert.AreEqual("1.2", groupBox.Get<Label>(AutomationIds.ValueBlock).Text);
                     Assert.AreEqual(Gu.Wpf.NumericInput.TextSource.ValueBinding, groupBox.TextSource());

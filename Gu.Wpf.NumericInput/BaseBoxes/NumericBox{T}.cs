@@ -215,7 +215,7 @@
             this.TextSource = TextSource.UserInput;
             var status = this.Status;
             this.Status = Status.Incrementing;
-            var text = value.ToString(this.StringFormat, this.Culture);
+            var text = value.ToString(this.Culture);
             this.SetCurrentValue(TextBindableProperty, value.ToString(this.Culture));
             this.SetTextAndCreateUndoAction(text);
             this.FormattedText = this.Format(value);
