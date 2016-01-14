@@ -175,7 +175,6 @@
                     var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
                     vmValueBox.Click();
                     inputBox.Enter("5");
-                    vmValueBox.Click();
                     Assert.AreEqual("5", inputBox.EditText());
                     Assert.AreEqual("5", inputBox.FormattedText());
                     Assert.AreEqual(true, groupBox.Get<TextBox>(AutomationIds.InputBox).HasValidationError());

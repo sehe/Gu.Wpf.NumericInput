@@ -115,7 +115,7 @@
 
         protected void UpdateFormattedView()
         {
-            var scrollViewer = this.ValueBox?.NestedChildren().OfType<ScrollViewer>().SingleOrDefault();
+            var scrollViewer = this.ValueBox?.NestedChildren().OfType<ScrollViewer>().SingleOrDefault(x => x.Name == "PART_ContentHost");
             var whenFocused = scrollViewer?.NestedChildren().OfType<ScrollContentPresenter>().SingleOrDefault();
             var grid = whenFocused?.Parent as Grid;
             if (scrollViewer == null || whenFocused == null || grid == null)
@@ -144,9 +144,16 @@
                 }
             }
 
-            var whenNotFocused = new TextBlock { Margin = new Thickness(2, 0, 2, 0), Name = FormattedName };
+            var whenNotFocused = new TextBlock
+            {
+                Name = FormattedName,
+                VerticalAlignment = VerticalAlignment.Center
+            };
             whenNotFocused.Bind(TextBlock.TextProperty)
                           .OneWayTo(this, FormattedTextProperty);
+
+            whenNotFocused.Bind(TextBlock.MarginProperty)
+                          .OneWayTo(whenFocused, MarginProperty, FormattedTextBlockMarginConverter.Default, whenFocused);
 
             whenNotFocused.Bind(TextBox.VisibilityProperty)
                           .OneWayTo(this, IsKeyboardFocusWithinProperty, HiddenWhenTrueConverter.Default);
@@ -155,12 +162,6 @@
 
             whenFocused.Bind(UIElement.VisibilityProperty)
                        .OneWayTo(this, IsKeyboardFocusWithinProperty, VisibleWhenTrueConverter.Default);
-        }
-
-        private void OnValueBoxLoaded(object sender, RoutedEventArgs e)
-        {
-            ((Control)sender).Loaded -= this.OnValueBoxLoaded;
-            this.UpdateFormattedView();
         }
     }
 }

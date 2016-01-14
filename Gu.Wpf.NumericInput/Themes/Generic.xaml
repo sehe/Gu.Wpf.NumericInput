@@ -69,7 +69,7 @@
         <Border Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
-                FocusManager.FocusedElement="{Binding ElementName=TextBox}"
+                FocusManager.FocusedElement="{Binding ElementName=PART_EditText}"
                 Padding="{TemplateBinding Padding}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -158,18 +158,13 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="{x:Static local:NumericBox.WithSpinnersTemplateKey}" TargetType="{x:Type local:BaseBox}">
-        <Border Background="{TemplateBinding Background}"
-                BorderBrush="{TemplateBinding BorderBrush}"
-                BorderThickness="{TemplateBinding BorderThickness}"
-                FocusManager.FocusedElement="{Binding ElementName=PART_EditText}"
-                Padding="{TemplateBinding Padding}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <RepeatButton x:Name="PART_DecreaseButton"
+        <Grid Margin="{TemplateBinding Padding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <RepeatButton x:Name="PART_DecreaseButton"
                               Grid.Column="0"
                               Command="{TemplateBinding DecreaseCommand}"
                               Content="-"
@@ -177,16 +172,16 @@
                               FontSize="{TemplateBinding FontSize}"
                               Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
 
-                <TextBox x:Name="PART_EditText"
+            <TextBox x:Name="PART_EditText"
                          Grid.Column="1"
                          Style="{DynamicResource {x:Static local:NumericBox.EditTextBoxStyleKey}}"
                          Text="{Binding Text,
                                         RelativeSource={RelativeSource TemplatedParent},
                                         UpdateSourceTrigger=PropertyChanged}">
-                    <!--  Text must be bound with UpdateSourceTrigger=PropertyChanged in template for realtime validation  -->
-                </TextBox>
+                <!--  Text must be bound with UpdateSourceTrigger=PropertyChanged in template for realtime validation  -->
+            </TextBox>
 
-                <RepeatButton x:Name="PART_IncreaseButton"
+            <RepeatButton x:Name="PART_IncreaseButton"
                               Grid.Column="2"
                               Command="{TemplateBinding IncreaseCommand}"
                               Content="+"
@@ -194,8 +189,7 @@
                               FontSize="{TemplateBinding FontSize}"
                               Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
 
-            </Grid>
-        </Border>
+        </Grid>
     </ControlTemplate>
 
     <!--  BaseUpDown  -->

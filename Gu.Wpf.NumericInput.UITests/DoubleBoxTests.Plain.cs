@@ -571,39 +571,6 @@
             }
 
             [Test]
-            public void Focus()
-            {
-                using (var app = Application.AttachOrLaunch(Info.ProcessStartInfo))
-                {
-                    var window = app.GetWindow(AutomationIds.MainWindow, InitializeOption.NoCache);
-                    var page = window.Get<TabPage>(AutomationIds.FocusTab);
-                    page.Select();
-                    var doubleBox1 = page.Get<TextBox>(AutomationIds.DoubleBox1);
-                    var doubleBox2 = page.Get<TextBox>(AutomationIds.DoubleBox2);
-                    var doubleBox3 = page.Get<TextBox>(AutomationIds.DoubleBox3);
-                    doubleBox1.Click();
-                    Assert.AreEqual(true, doubleBox1.IsFocussed);
-                    Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
-
-                    window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
-                    Assert.AreEqual(false, doubleBox1.IsFocussed);
-                    Assert.AreEqual(true, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
-
-                    window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
-                    Assert.AreEqual(false, doubleBox1.IsFocussed);
-                    Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(true, doubleBox3.IsFocussed);
-
-                    window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
-                    Assert.AreEqual(true, doubleBox1.IsFocussed);
-                    Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
-                }
-            }
-
-            [Test]
             public void Undo()
             {
                 using (var app = Application.AttachOrLaunch(Info.ProcessStartInfo))

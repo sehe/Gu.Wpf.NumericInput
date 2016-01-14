@@ -60,6 +60,7 @@
     <Compile Include="BaseBoxes\Status.cs" />
     <Compile Include="BaseBoxes\TextSource.cs" />
     <Compile Include="Converters\HiddenWhenTrueConverter.cs" />
+    <Compile Include="Converters\FormattedTextBlockMarginConverter.cs" />
     <Compile Include="Converters\VisibleWhenTrueConverter.cs" />
     <Compile Include="Internals\BindingHelper.cs" />
     <Compile Include="Internals\BooleanBoxes.cs" />
