@@ -20,7 +20,8 @@
 
         <GroupBox Header="DoubleBoxes">
             <UniformGrid Columns="1" KeyboardNavigation.TabNavigation="Cycle">
-                <numeric:SpinnerDecorator Focusable="False" Template="{StaticResource {x:Static numeric:NumericBox.SpinnersTemplateKey}}">
+                <TextBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBox1}" Text="{Binding Value1}" />
+                <numeric:SpinnerDecorator>
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                                ElementName=AllowSpinners}"
                                        AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox1}"
@@ -28,12 +29,7 @@
                                                         ElementName=SuffixBox}"
                                        Value="{Binding Value1}" />
                 </numeric:SpinnerDecorator>
-                <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
-                                                           ElementName=AllowSpinners}"
-                                   AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox1}"
-                                   Suffix="{Binding Text,
-                                                    ElementName=SuffixBox}"
-                                   Value="{Binding Value1}" />
+
                 <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                            ElementName=AllowSpinners}"
                                    AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox2}"
@@ -67,7 +63,8 @@
                           Grid.Row="0"
                           Grid.Column="1"
                           VerticalAlignment="Center"
-                          AutomationProperties.AutomationId="{x:Static demo:AutomationIds.AllowSpinnersBox}" />
+                          AutomationProperties.AutomationId="{x:Static demo:AutomationIds.AllowSpinnersBox}"
+                          IsChecked="True" />
 
                 <TextBlock Grid.Row="1"
                            Grid.Column="0"

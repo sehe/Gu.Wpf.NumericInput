@@ -1,5 +1,6 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
@@ -11,12 +12,57 @@
             "Child",
             typeof(BaseBox),
             typeof(SpinnerDecorator),
-            new PropertyMetadata(default(BaseBox)));
+            new PropertyMetadata(default(BaseBox), OnChildChanged));
+
+        static SpinnerDecorator()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(SpinnerDecorator), new FrameworkPropertyMetadata(typeof(SpinnerDecorator)));
+        }
 
         public BaseBox Child
         {
             get { return (BaseBox)this.GetValue(ChildProperty); }
             set { this.SetValue(ChildProperty, value); }
+        }
+
+        /// <summary>
+        ///     This method is invoked when the Child property changes.
+        /// </summary>
+        /// <param name="oldChild">The old value of the Child property.</param>
+        /// <param name="newChild">The new value of the Child property.</param>
+        protected virtual void OnChildChanged(BaseBox oldChild, BaseBox newChild)
+        {
+            // Remove the old content child
+            this.RemoveLogicalChild(oldChild);
+
+            if (newChild != null)
+            {
+                DependencyObject logicalParent = LogicalTreeHelper.GetParent(newChild);
+                if (logicalParent != null)
+                {
+                    if (this.TemplatedParent != null && FrameworkObject.IsEffectiveAncestor(logicalParent, this))
+                    {
+                        // In the case that this ContentControl belongs in a parent template
+                        // and represents the content of a parent, we do not wish to change
+                        // the logical ancestry of the content.
+                        return;
+                    }
+                    else
+                    {
+                        // If the new content was previously hooked up to the logical
+                        // tree then we sever it from the old parent.
+                        LogicalTreeHelper.RemoveLogicalChild(logicalParent, newChild);
+                    }
+                }
+            }
+
+            // Add the new content child
+            this.AddLogicalChild(newChild);
+        }
+
+        private static void OnChildChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((SpinnerDecorator)d).OnChildChanged((BaseBox)e.OldValue, (BaseBox)e.NewValue);
         }
     }
 }

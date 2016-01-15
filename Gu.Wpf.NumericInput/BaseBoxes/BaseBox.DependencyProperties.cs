@@ -46,7 +46,7 @@
             typeof(BaseBox),
             new FrameworkPropertyMetadata(
                 null,
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange,
+                FrameworkPropertyMetadataOptions.AffectsMeasure,
                 OnSuffixChanged,
                 OnSuffixCoerce));
 
@@ -85,17 +85,7 @@
             typeof(BaseBox),
             new FrameworkPropertyMetadata(
                 false,
-                FrameworkPropertyMetadataOptions.AffectsArrange,
-                OnAllowSpinnersChanged));
-
-        public static readonly DependencyProperty SpinnerTemplateProperty = DependencyProperty.Register(
-            "SpinnerTemplate",
-            typeof(ControlTemplate),
-            typeof(BaseBox),
-            new FrameworkPropertyMetadata(
-                default(ControlTemplate),
-                FrameworkPropertyMetadataOptions.AffectsArrange,
-                OnSpinnerTemplateChanged));
+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
 
         private static readonly DependencyPropertyKey IncreaseCommandPropertyKey = DependencyProperty.RegisterReadOnly(
             "IncreaseCommand",
@@ -223,14 +213,6 @@
 
         [Category(nameof(NumericBox))]
         [Browsable(true)]
-        public ControlTemplate SpinnerTemplate
-        {
-            get { return (ControlTemplate)this.GetValue(SpinnerTemplateProperty); }
-            set { this.SetValue(SpinnerTemplateProperty, value); }
-        }
-
-        [Category(nameof(NumericBox))]
-        [Browsable(true)]
         public ICommand IncreaseCommand
         {
             get { return (ICommand)this.GetValue(IncreaseCommandProperty); }
@@ -295,18 +277,6 @@
         {
             var box = (BaseBox)d;
             box.IsValidationDirty = true;
-        }
-
-        private static void OnAllowSpinnersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var box = (BaseBox)d;
-            box.UpdateView();
-        }
-
-        private static void OnSpinnerTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var box = (BaseBox)d;
-            box.UpdateView();
         }
 
         private static void OnSuffixChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

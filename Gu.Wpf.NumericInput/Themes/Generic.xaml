@@ -8,36 +8,6 @@
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-    <ControlTemplate x:Key="{x:Static local:NumericBox.SpinnersTemplateKey}" TargetType="{x:Type local:SpinnerDecorator}">
-        <Grid Margin="{TemplateBinding Padding}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <RepeatButton x:Name="PART_DecreaseButton"
-                          Grid.Column="0"
-                          Command="{Binding Path=Child.DecreaseCommand,
-                                            RelativeSource={RelativeSource TemplatedParent}}"
-                          Content="-"
-                          FontSize="{TemplateBinding FontSize}"
-                          Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
-
-            <ContentPresenter Grid.Column="1"
-                              Content="{TemplateBinding Child}"
-                              Focusable="False" />
-
-            <RepeatButton x:Name="PART_IncreaseButton"
-                          Grid.Column="2"
-                          Command="{Binding Path=Child.IncreaseCommand,
-                                            RelativeSource={RelativeSource TemplatedParent}}"
-                          Content="+"
-                          FontSize="{TemplateBinding FontSize}"
-                          Style="{DynamicResource {x:Static local:NumericBox.SpinnerButtonStyleKey}}" />
-
-        </Grid>
-    </ControlTemplate>
-
     <!--  BaseUpDown  -->
     <Style x:Key="{x:Static local:NumericBox.BaseBoxStyleKey}"
            BasedOn="{StaticResource {x:Type TextBox}}"
@@ -55,7 +25,6 @@
         <Setter Property="MaxLines" Value="1" />
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="AutoWordSelection" Value="True" />
-        <Setter Property="SpinnerTemplate" Value="{DynamicResource {x:Static local:NumericBox.SpinnersTemplateKey}}" />
     </Style>
 
     <!--  DoubleBox  -->
