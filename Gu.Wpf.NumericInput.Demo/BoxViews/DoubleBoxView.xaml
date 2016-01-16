@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <numeric:SpinnerDecorator>
+        <numeric:SpinnerDecorator Width="100" HorizontalAlignment="Left">
             <numeric:DoubleBox x:Name="InputBox"
                                AllowSpinners="{Binding AllowSpinners}"
                                AutomationProperties.AutomationId="{x:Static local:AutomationIds.InputBox}"
