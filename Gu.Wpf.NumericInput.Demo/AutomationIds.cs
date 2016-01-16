@@ -24,6 +24,9 @@
         public static readonly string IncrementBox = Create();
         public static readonly string RegexPatternBox = Create();
         public static readonly string FocusTab = Create();
+
+        public static readonly string TextBoxes = Create();
+        public static readonly string DoubleBoxes = Create();
         public static readonly string TextBox1 = Create();
         public static readonly string TextBox2 = Create();
         public static readonly string TextBox3 = Create();

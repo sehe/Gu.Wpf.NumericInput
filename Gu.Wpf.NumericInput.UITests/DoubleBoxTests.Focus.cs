@@ -21,31 +21,34 @@
                     var window = app.GetWindow(AutomationIds.MainWindow, InitializeOption.NoCache);
                     var page = window.Get<TabPage>(AutomationIds.FocusTab);
                     page.Select();
-                    var doubleBox1 = page.Get<TextBox>(AutomationIds.DoubleBox1);
-                    var doubleBox2 = page.Get<TextBox>(AutomationIds.DoubleBox2);
-                    var doubleBox3 = page.Get<TextBox>(AutomationIds.DoubleBox3);
+                    var doubleBoxes = page.Get<GroupBox>(AutomationIds.DoubleBoxes);
+                    var textBoxes = page.Get<GroupBox>(AutomationIds.TextBoxes);
+                    var textBox1 = doubleBoxes.Get<TextBox>(AutomationIds.TextBox1);
+                    var doubleBox1 = doubleBoxes.Get<TextBox>(AutomationIds.DoubleBox1);
+                    var doubleBox2 = doubleBoxes.Get<TextBox>(AutomationIds.DoubleBox2);
                     doubleBox1.Click();
+
+                    Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
                     doubleBox1.Enter("2");
-                    Assert.AreEqual("1.234", page.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual("1.234", textBoxes.Get<TextBox>(AutomationIds.TextBox1).Text);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
-                    Assert.AreEqual("2", page.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual("2", textBoxes.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
+                    Assert.AreEqual(true, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(true, doubleBox3.IsFocussed);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
+                    Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
                 }
             }
 
@@ -57,37 +60,39 @@
                     var window = app.GetWindow(AutomationIds.MainWindow, InitializeOption.NoCache);
                     var page = window.Get<TabPage>(AutomationIds.FocusTab);
                     page.Select();
-                    var doubleBox1 = page.Get<TextBox>(AutomationIds.DoubleBox1);
-                    var doubleBox2 = page.Get<TextBox>(AutomationIds.DoubleBox2);
-                    var doubleBox3 = page.Get<TextBox>(AutomationIds.DoubleBox3);
+                    var doubleBoxes = page.Get<GroupBox>(AutomationIds.DoubleBoxes);
+                    var textBoxes = page.Get<GroupBox>(AutomationIds.TextBoxes);
+                    var textBox1 = doubleBoxes.Get<TextBox>(AutomationIds.TextBox1);
+                    var doubleBox1 = doubleBoxes.Get<TextBox>(AutomationIds.DoubleBox1);
+                    var doubleBox2 = doubleBoxes.Get<TextBox>(AutomationIds.DoubleBox2);
                     page.Get<CheckBox>(AutomationIds.AllowSpinnersBox).Checked = true;
                     doubleBox1.Click();
+                    Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
                     doubleBox1.Enter("2");
-                    Assert.AreEqual("1.234", page.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual("1.234", textBoxes.Get<TextBox>(AutomationIds.TextBox1).Text);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
                     Assert.AreEqual("2", page.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
                     doubleBox2.Get<Button>(BaseBox.IncreaseButtonName).Click();
                     Assert.AreEqual("1.345", doubleBox1.Text);
                     Assert.AreEqual("2.345", page.Get<TextBox>(AutomationIds.TextBox2).Text);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
                     Assert.AreEqual("1.345", doubleBox1.Text);
-                    Assert.AreEqual("1.345", page.Get<TextBox>(AutomationIds.TextBox2).Text);
+                    Assert.AreEqual("1.345", textBoxes.Get<TextBox>(AutomationIds.TextBox2).Text);
+                    Assert.AreEqual(true, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(true, doubleBox3.IsFocussed);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
+                    Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
-                    Assert.AreEqual(false, doubleBox3.IsFocussed);
                 }
             }
         }

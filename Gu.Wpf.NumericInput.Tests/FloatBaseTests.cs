@@ -108,7 +108,7 @@
             Assert.AreEqual(TextSource.UserInput, this.Sut.TextSource);
             Assert.AreEqual(text, this.Sut.Text);
             Assert.AreEqual(expectedText, this.Sut.FormattedText);
-            Assert.AreEqual(0, this.Sut.Value);
+            Assert.AreEqual(null, this.Sut.Value);
             Assert.AreEqual(true, Validation.GetHasError(this.Sut));
         }
 
@@ -168,7 +168,7 @@
 
         [TestCase("sv-SE", "1,23", "en-US", "1.23", "1.2", "1.23")]
         [TestCase("en-US", "1.23", "sv-SE", "1,23", "1,2", "1.23")]
-        [TestCase("en-US", "1.23e", "sv-SE", "1.23e", "1.23e", "0")]
+        [TestCase("en-US", "1.23e", "sv-SE", "1.23e", "1.23e", "")]
         public void ChangeCultureDoesNotTruncateDecimals(string culture1, string text, string culture2, string expectedText, string expectedFormattedText, string expectedValue)
         {
             this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, 1);

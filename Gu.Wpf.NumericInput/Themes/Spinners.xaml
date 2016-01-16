@@ -36,7 +36,8 @@
                 </Grid.ColumnDefinitions>
                 <RepeatButton x:Name="PART_DecreaseButton"
                               Grid.Column="0"
-                              Command="{TemplateBinding DecreaseCommand}"
+                              Command="{Binding Child.DecreaseCommand,
+                                                RelativeSource={RelativeSource TemplatedParent}}"
                               Content="-"
                               Style="{DynamicResource {x:Static numericInput:NumericBox.SpinnerButtonStyleKey}}"
                               Visibility="{Binding Path=Child.AllowSpinners,
@@ -47,7 +48,8 @@
 
                 <RepeatButton x:Name="PART_IncreaseButton"
                               Grid.Column="2"
-                              Command="{TemplateBinding IncreaseCommand}"
+                              Command="{Binding Child.IncreaseCommand,
+                                                RelativeSource={RelativeSource TemplatedParent}}"
                               Content="+"
                               Style="{DynamicResource {x:Static numericInput:NumericBox.SpinnerButtonStyleKey}}"
                               Visibility="{Binding Path=Child.AllowSpinners,

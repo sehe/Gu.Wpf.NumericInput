@@ -15,25 +15,26 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-
-        <numeric:DoubleBox x:Name="InputBox"
-                           AllowSpinners="{Binding AllowSpinners}"
-                           AutomationProperties.AutomationId="{x:Static local:AutomationIds.InputBox}"
-                           CanValueBeNull="{Binding CanValueBeNull}"
-                           Culture="{Binding Culture}"
-                           DecimalDigits="{Binding DecimalDigits}"
-                           Increment="{Binding Increment}"
-                           IsReadOnly="{Binding IsReadOnly}"
-                           MaxValue="{Binding Max}"
-                           MinValue="{Binding Min}"
-                           NumberStyles="{Binding NumberStyles,
-                                                  Mode=OneWay,
-                                                  UpdateSourceTrigger=PropertyChanged}"
-                           RegexPattern="{Binding RegexPattern}"
-                           StringFormat="{Binding StringFormat,
-                                                  Mode=TwoWay}"
-                           Suffix="{Binding Suffix}"
-                           Value="{Binding Value}" />
+        <numeric:SpinnerDecorator>
+            <numeric:DoubleBox x:Name="InputBox"
+                               AllowSpinners="{Binding AllowSpinners}"
+                               AutomationProperties.AutomationId="{x:Static local:AutomationIds.InputBox}"
+                               CanValueBeNull="{Binding CanValueBeNull}"
+                               Culture="{Binding Culture}"
+                               DecimalDigits="{Binding DecimalDigits}"
+                               Increment="{Binding Increment}"
+                               IsReadOnly="{Binding IsReadOnly}"
+                               MaxValue="{Binding Max}"
+                               MinValue="{Binding Min}"
+                               NumberStyles="{Binding NumberStyles,
+                                                      Mode=OneWay,
+                                                      UpdateSourceTrigger=PropertyChanged}"
+                               RegexPattern="{Binding RegexPattern}"
+                               StringFormat="{Binding StringFormat,
+                                                      Mode=TwoWay}"
+                               Suffix="{Binding Suffix}"
+                               Value="{Binding Value}" />
+        </numeric:SpinnerDecorator>
 
         <ItemsControl Grid.Row="1" Style="{StaticResource {x:Static propertyGrid:Keys.PropertyGridStyleKey}}">
             <ItemsControl Style="{StaticResource {x:Static propertyGrid:Keys.NestedPropertyGridStyleKey}}">

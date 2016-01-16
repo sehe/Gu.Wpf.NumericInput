@@ -85,7 +85,8 @@
             typeof(BaseBox),
             new FrameworkPropertyMetadata(
                 false,
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange,
+                OnAllowSpinnersChanged));
 
         private static readonly DependencyPropertyKey IncreaseCommandPropertyKey = DependencyProperty.RegisterReadOnly(
             "IncreaseCommand",
@@ -260,23 +261,36 @@
         private static void OnStringFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
-            box.OnStringFormatChanged((string)e.OldValue, (string)e.NewValue);
-            box.IsFormattingDirty = true;
-            box.IsValidationDirty = true;
+            if (box.Text != string.Empty)
+            {
+                box.OnStringFormatChanged((string)e.OldValue, (string)e.NewValue);
+                box.IsFormattingDirty = true;
+                box.IsValidationDirty = true;
+            }
         }
 
         private static void OnCultureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
-            box.OnCultureChanged((IFormatProvider)e.OldValue, (IFormatProvider)e.NewValue);
-            box.IsFormattingDirty = true;
-            box.IsValidationDirty = true;
+            if (box.Text != string.Empty)
+            {
+                box.OnCultureChanged((IFormatProvider)e.OldValue, (IFormatProvider)e.NewValue);
+                box.IsFormattingDirty = true;
+                box.IsValidationDirty = true;
+            }
         }
 
         private static void OnPatternChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (BaseBox)d;
             box.IsValidationDirty = true;
+        }
+
+        private static void OnAllowSpinnersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var box = (BaseBox)d;
+            (box.IncreaseCommand as ManualRelayCommand)?.RaiseCanExecuteChanged();
+            (box.DecreaseCommand as ManualRelayCommand)?.RaiseCanExecuteChanged();
         }
 
         private static void OnSuffixChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

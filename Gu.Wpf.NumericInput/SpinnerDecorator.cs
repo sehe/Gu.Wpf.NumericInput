@@ -15,22 +15,6 @@
             typeof(SpinnerDecorator),
             new PropertyMetadata(default(BaseBox), OnChildChanged));
 
-        private static readonly DependencyPropertyKey IncreaseCommandPropertyKey = DependencyProperty.RegisterReadOnly(
-            "IncreaseCommand",
-            typeof(ICommand),
-            typeof(SpinnerDecorator),
-            new PropertyMetadata(default(ICommand), OnCommandChanged));
-
-        public static readonly DependencyProperty IncreaseCommandProperty = IncreaseCommandPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey DecreaseCommandPropertyKey = DependencyProperty.RegisterReadOnly(
-            "DecreaseCommand",
-            typeof(ICommand),
-            typeof(SpinnerDecorator),
-            new PropertyMetadata(default(ICommand), OnCommandChanged));
-
-        public static readonly DependencyProperty DecreaseCommandProperty = DecreaseCommandPropertyKey.DependencyProperty;
-
         static SpinnerDecorator()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SpinnerDecorator),
@@ -41,18 +25,6 @@
         {
             get { return (BaseBox)this.GetValue(ChildProperty); }
             set { this.SetValue(ChildProperty, value); }
-        }
-
-        public ICommand IncreaseCommand
-        {
-            get { return (ICommand)this.GetValue(IncreaseCommandProperty); }
-            private set { this.SetValue(IncreaseCommandPropertyKey, value); }
-        }
-
-        public ICommand DecreaseCommand
-        {
-            get { return (ICommand)this.GetValue(DecreaseCommandProperty); }
-            private set { this.SetValue(DecreaseCommandPropertyKey, value); }
         }
 
         /// <summary>
@@ -89,14 +61,6 @@
                         //LogicalTreeHelper.RemoveLogicalChild(logicalParent, newChild);
                     }
                 }
-
-                this.IncreaseCommand = new DecoratingCommand(newChild.IncreaseCommand, _ => Keyboard.Focus(newChild));
-                this.DecreaseCommand = new DecoratingCommand(newChild.DecreaseCommand, _ => Keyboard.Focus(newChild));
-            }
-            else
-            {
-                this.IncreaseCommand = null;
-                this.DecreaseCommand = null;
             }
 
             // Add the new content child
@@ -106,11 +70,6 @@
         private static void OnChildChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((SpinnerDecorator)d).OnChildChanged((BaseBox)e.OldValue, (BaseBox)e.NewValue);
-        }
-
-        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            (e.OldValue as IDisposable)?.Dispose();
         }
     }
 }

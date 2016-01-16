@@ -140,27 +140,39 @@
         private static void OnCanBeNullChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (NumericBox<T>)d;
-            box.IsValidationDirty = true;
+            if (box.Text == string.Empty)
+            {
+                box.IsValidationDirty = true;
+            }
         }
 
         private static void OnNumberStylesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (NumericBox<T>)d;
-            box.IsValidationDirty = true;
+            if (box.Text != string.Empty)
+            {
+                box.IsValidationDirty = true;
+            }
         }
 
         private static void OnMinValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (NumericBox<T>)d;
-            box.CheckSpinners();
-            box.IsValidationDirty = true;
+            if (box.Text != string.Empty)
+            {
+                box.CheckSpinners();
+                box.IsValidationDirty = true;
+            }
         }
 
         private static void OnMaxValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = (NumericBox<T>)d;
-            box.CheckSpinners();
-            box.IsValidationDirty = true;
+            if (box.Text != string.Empty)
+            {
+                box.CheckSpinners();
+                box.IsValidationDirty = true;
+            }
         }
 
         private static void OnIncrementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

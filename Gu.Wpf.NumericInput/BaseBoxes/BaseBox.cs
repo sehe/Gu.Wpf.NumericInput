@@ -85,21 +85,9 @@
         {
             if (this.AllowSpinners)
             {
-                // Not nice to cast like this but want to have ManualRelayCommand as internal
-                ((ManualRelayCommand)this.IncreaseCommand).RaiseCanExecuteChanged();
-                ((ManualRelayCommand)this.DecreaseCommand).RaiseCanExecuteChanged();
+                (this.IncreaseCommand as ManualRelayCommand)?.RaiseCanExecuteChanged();
+                (this.DecreaseCommand as ManualRelayCommand)?.RaiseCanExecuteChanged();
             }
-        }
-
-        protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (Equals(e.NewValue, BooleanBoxes.False))
-            {
-                // this is needed because the inner textbox gets focus
-                this.RaiseEvent(new RoutedEventArgs(LostFocusEvent));
-            }
-
-            base.OnIsKeyboardFocusWithinChanged(e);
         }
 
         protected virtual void OnStringFormatChanged(string oldFormat, string newFormat)
@@ -158,15 +146,15 @@
                 whenNotFocused.Bind(TextBlock.TextProperty)
                               .OneWayTo(this, FormattedTextProperty);
 
-                whenNotFocused.Bind(TextBlock.MarginProperty)
+                whenNotFocused.Bind(MarginProperty)
                               .OneWayTo(whenFocused, MarginProperty, FormattedTextBlockMarginConverter.Default, whenFocused);
 
-                whenNotFocused.Bind(TextBox.VisibilityProperty)
+                whenNotFocused.Bind(VisibilityProperty)
                               .OneWayTo(this, IsKeyboardFocusWithinProperty, HiddenWhenTrueConverter.Default);
 
                 grid.Children.Add(whenNotFocused);
 
-                whenFocused.Bind(UIElement.VisibilityProperty)
+                whenFocused.Bind(VisibilityProperty)
                            .OneWayTo(this, IsKeyboardFocusWithinProperty, VisibleWhenTrueConverter.Default);
             }
         }

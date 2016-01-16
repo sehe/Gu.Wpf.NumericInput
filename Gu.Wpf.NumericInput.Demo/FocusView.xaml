@@ -10,7 +10,7 @@
         <demo:FocusVm />
     </UserControl.DataContext>
     <UniformGrid Rows="1">
-        <GroupBox Header="TextBoxes">
+        <GroupBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBoxes}" Header="TextBoxes">
             <UniformGrid Columns="1" KeyboardNavigation.TabNavigation="Cycle">
                 <TextBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBox1}" Text="{Binding Value1}" />
                 <TextBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBox2}" Text="{Binding Value2}" />
@@ -18,10 +18,10 @@
             </UniformGrid>
         </GroupBox>
 
-        <GroupBox Header="DoubleBoxes">
+        <GroupBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBoxes}" Header="DoubleBoxes">
             <UniformGrid Columns="1" KeyboardNavigation.TabNavigation="Cycle">
                 <TextBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBox1}" Text="{Binding Value1}" />
-                
+
                 <numeric:SpinnerDecorator>
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                                ElementName=AllowSpinners}"
@@ -33,11 +33,11 @@
 
                 <numeric:SpinnerDecorator>
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
-                                                           ElementName=AllowSpinners}"
-                                   AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox2}"
-                                   Suffix="{Binding Text,
-                                                    ElementName=SuffixBox}"
-                                   Value="{Binding Value3}" />
+                                                               ElementName=AllowSpinners}"
+                                       AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox2}"
+                                       Suffix="{Binding Text,
+                                                        ElementName=SuffixBox}"
+                                       Value="{Binding Value3}" />
                 </numeric:SpinnerDecorator>
             </UniformGrid>
         </GroupBox>

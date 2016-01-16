@@ -156,7 +156,7 @@
 
         protected override bool CanIncrease(object parameter)
         {
-            if (this.IsReadOnly || !this.IsEnabled)
+            if (this.IsReadOnly || !this.IsEnabled || !this.AllowSpinners)
             {
                 return false;
             }
@@ -184,7 +184,7 @@
 
         protected override bool CanDecrease(object parameter)
         {
-            if (this.IsReadOnly || !this.IsEnabled)
+            if (this.IsReadOnly || !this.IsEnabled || !this.AllowSpinners)
             {
                 return false;
             }
@@ -212,14 +212,9 @@
 
         protected virtual void SetIncremented(T value)
         {
-            this.TextSource = TextSource.UserInput;
-            var status = this.Status;
-            this.Status = Status.Incrementing;
-            var text = value.ToString(this.Culture);
-            this.SetCurrentValue(TextBindableProperty, value.ToString(this.Culture));
-            this.SetTextAndCreateUndoAction(text);
+            Keyboard.Focus(this);
+            this.SetTextAndCreateUndoAction(value.ToString(this.Culture));
             this.FormattedText = this.Format(value);
-            this.Status = status;
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
