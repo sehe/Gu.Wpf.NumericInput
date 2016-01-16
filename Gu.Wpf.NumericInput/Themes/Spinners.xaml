@@ -22,50 +22,40 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="Width" Value="12" />
         <Setter Property="Focusable" Value="False" />
-        <!--<RepeatButton Grid.Column="0"
-                                                  Margin="0"
-                                                  VerticalAlignment="Stretch"
-                                                  VerticalContentAlignment="Center"
-                                                  Command="{TemplateBinding DecreaseCommand}"
-                                                  CommandParameter="{Binding ElementName=TextBox}"
-                                                  Content="-"
-                                                  FocusManager.FocusedElement="{Binding ElementName=TextBox}"
-                                                  FontSize="{TemplateBinding FontSize}"
-                                                  Padding="0" />-->
     </Style>
 
     <ControlTemplate x:Key="{x:Static numericInput:NumericBox.SpinnersTemplateKey}" TargetType="{x:Type numericInput:SpinnerDecorator}">
-        <Grid Margin="{TemplateBinding Padding}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <RepeatButton x:Name="PART_DecreaseButton"
-                          Grid.Column="0"
-                          Command="{Binding Path=Child.DecreaseCommand,
-                                            RelativeSource={RelativeSource TemplatedParent}}"
-                          Content="-"
-                          FontSize="{TemplateBinding FontSize}"
-                          Style="{DynamicResource {x:Static numericInput:NumericBox.SpinnerButtonStyleKey}}"
-                          Visibility="{Binding Path=Child.AllowSpinners,
-                                               RelativeSource={RelativeSource TemplatedParent},
-                                               Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Border Margin="{TemplateBinding Padding}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <RepeatButton x:Name="PART_DecreaseButton"
+                              Grid.Column="0"
+                              Command="{TemplateBinding DecreaseCommand}"
+                              Content="-"
+                              Style="{DynamicResource {x:Static numericInput:NumericBox.SpinnerButtonStyleKey}}"
+                              Visibility="{Binding Path=Child.AllowSpinners,
+                                                   RelativeSource={RelativeSource TemplatedParent},
+                                                   Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-            <ContentPresenter Grid.Column="1" Content="{Binding Child, RelativeSource={RelativeSource TemplatedParent}}" />
+                <ContentPresenter Grid.Column="1" Content="{Binding Child, RelativeSource={RelativeSource TemplatedParent}}" />
 
-            <RepeatButton x:Name="PART_IncreaseButton"
-                          Grid.Column="2"
-                          Command="{Binding Path=Child.IncreaseCommand,
-                                            RelativeSource={RelativeSource TemplatedParent}}"
-                          Content="+"
-                          FontSize="{TemplateBinding FontSize}"
-                          Style="{DynamicResource {x:Static numericInput:NumericBox.SpinnerButtonStyleKey}}"
-                          Visibility="{Binding Path=Child.AllowSpinners,
-                                               RelativeSource={RelativeSource TemplatedParent},
-                                               Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <RepeatButton x:Name="PART_IncreaseButton"
+                              Grid.Column="2"
+                              Command="{TemplateBinding IncreaseCommand}"
+                              Content="+"
+                              Style="{DynamicResource {x:Static numericInput:NumericBox.SpinnerButtonStyleKey}}"
+                              Visibility="{Binding Path=Child.AllowSpinners,
+                                                   RelativeSource={RelativeSource TemplatedParent},
+                                                   Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        </Grid>
+            </Grid>
+        </Border>
     </ControlTemplate>
 
     <Style TargetType="{x:Type numericInput:SpinnerDecorator}">

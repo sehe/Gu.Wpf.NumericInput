@@ -66,11 +66,13 @@
     <Compile Include="Internals\BooleanBoxes.cs" />
     <Compile Include="Converters\DecimalDigitsToStringFormatConverter.cs" />
     <Compile Include="Internals\Debug.cs" />
+    <Compile Include="Internals\DecoratingCommand.cs" />
     <Compile Include="Internals\DependencyPropertyExt.cs" />
     <Compile Include="Converters\IsNullOrEmptyConverter.cs" />
     <Compile Include="BaseBoxes\NumericBox.Keys.cs" />
     <Compile Include="BaseBoxes\NumericBox.AttachedProperties.cs" />
     <Compile Include="Converters\StringConverter.cs" />
+    <Compile Include="Internals\FrameworkObject.cs" />
     <Compile Include="Internals\ManualRelayCommand.cs" />
     <Compile Include="BaseBoxes\BaseBox.DependencyProperties.cs" />
     <Compile Include="DecimalBox.cs" />

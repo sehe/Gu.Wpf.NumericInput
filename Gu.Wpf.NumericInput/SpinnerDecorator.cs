@@ -1,8 +1,9 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
-    using System.ComponentModel;
+    using System;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Markup;
 
     [ContentProperty(nameof(Child))]
@@ -14,9 +15,26 @@
             typeof(SpinnerDecorator),
             new PropertyMetadata(default(BaseBox), OnChildChanged));
 
+        private static readonly DependencyPropertyKey IncreaseCommandPropertyKey = DependencyProperty.RegisterReadOnly(
+            "IncreaseCommand",
+            typeof(ICommand),
+            typeof(SpinnerDecorator),
+            new PropertyMetadata(default(ICommand), OnCommandChanged));
+
+        public static readonly DependencyProperty IncreaseCommandProperty = IncreaseCommandPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey DecreaseCommandPropertyKey = DependencyProperty.RegisterReadOnly(
+            "DecreaseCommand",
+            typeof(ICommand),
+            typeof(SpinnerDecorator),
+            new PropertyMetadata(default(ICommand), OnCommandChanged));
+
+        public static readonly DependencyProperty DecreaseCommandProperty = DecreaseCommandPropertyKey.DependencyProperty;
+
         static SpinnerDecorator()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(SpinnerDecorator), new FrameworkPropertyMetadata(typeof(SpinnerDecorator)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(SpinnerDecorator),
+                new FrameworkPropertyMetadata(typeof(SpinnerDecorator)));
         }
 
         public BaseBox Child
@@ -25,8 +43,21 @@
             set { this.SetValue(ChildProperty, value); }
         }
 
+        public ICommand IncreaseCommand
+        {
+            get { return (ICommand)this.GetValue(IncreaseCommandProperty); }
+            private set { this.SetValue(IncreaseCommandPropertyKey, value); }
+        }
+
+        public ICommand DecreaseCommand
+        {
+            get { return (ICommand)this.GetValue(DecreaseCommandProperty); }
+            private set { this.SetValue(DecreaseCommandPropertyKey, value); }
+        }
+
         /// <summary>
         ///     This method is invoked when the Child property changes.
+        /// http://referencesource.microsoft.com/#PresentationFramework/src/Framework/System/Windows/Controls/ContentControl.cs,262
         /// </summary>
         /// <param name="oldChild">The old value of the Child property.</param>
         /// <param name="newChild">The new value of the Child property.</param>
@@ -42,7 +73,7 @@
                 {
                     if (this.TemplatedParent != null && FrameworkObject.IsEffectiveAncestor(logicalParent, this))
                     {
-                        // In the case that this ContentControl belongs in a parent template
+                        // In the case that this SpinnerDecorator belongs in a parent template
                         // and represents the content of a parent, we do not wish to change
                         // the logical ancestry of the content.
                         return;
@@ -51,9 +82,18 @@
                     {
                         // If the new content was previously hooked up to the logical
                         // tree then we sever it from the old parent.
-                        LogicalTreeHelper.RemoveLogicalChild(logicalParent, newChild);
+                        throw new NotSupportedException("Cannot add child that already belongs to a parent");
+                        //LogicalTreeHelper.RemoveLogicalChild(logicalParent, newChild);
                     }
                 }
+
+                this.IncreaseCommand = new DecoratingCommand(newChild.IncreaseCommand, _ => Keyboard.Focus(newChild));
+                this.DecreaseCommand = new DecoratingCommand(newChild.DecreaseCommand, _ => Keyboard.Focus(newChild));
+            }
+            else
+            {
+                this.IncreaseCommand = null;
+                this.DecreaseCommand = null;
             }
 
             // Add the new content child
@@ -63,6 +103,11 @@
         private static void OnChildChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((SpinnerDecorator)d).OnChildChanged((BaseBox)e.OldValue, (BaseBox)e.NewValue);
+        }
+
+        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (e.OldValue as IDisposable)?.Dispose();
         }
     }
 }
