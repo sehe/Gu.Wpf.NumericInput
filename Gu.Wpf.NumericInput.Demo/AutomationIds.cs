@@ -29,7 +29,6 @@
         public static readonly string TextBox3 = Create();
         public static readonly string DoubleBox1 = Create();
         public static readonly string DoubleBox2 = Create();
-        public static readonly string DoubleBox3 = Create();
 
         public static readonly string AllowLeadingWhiteBox = Create();
         public static readonly string AllowTrailingWhiteBox = Create();

@@ -21,27 +21,24 @@
         <GroupBox Header="DoubleBoxes">
             <UniformGrid Columns="1" KeyboardNavigation.TabNavigation="Cycle">
                 <TextBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBox1}" Text="{Binding Value1}" />
+                
                 <numeric:SpinnerDecorator>
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                                ElementName=AllowSpinners}"
                                        AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox1}"
                                        Suffix="{Binding Text,
                                                         ElementName=SuffixBox}"
-                                       Value="{Binding Value1}" />
+                                       Value="{Binding Value2}" />
                 </numeric:SpinnerDecorator>
 
-                <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
+                <numeric:SpinnerDecorator>
+                    <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                            ElementName=AllowSpinners}"
                                    AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox2}"
                                    Suffix="{Binding Text,
                                                     ElementName=SuffixBox}"
-                                   Value="{Binding Value2}" />
-                <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
-                                                           ElementName=AllowSpinners}"
-                                   AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox3}"
-                                   Suffix="{Binding Text,
-                                                    ElementName=SuffixBox}"
                                    Value="{Binding Value3}" />
+                </numeric:SpinnerDecorator>
             </UniformGrid>
         </GroupBox>
 

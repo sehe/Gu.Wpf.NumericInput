@@ -82,7 +82,10 @@
                     {
                         // If the new content was previously hooked up to the logical
                         // tree then we sever it from the old parent.
-                        throw new NotSupportedException("Cannot add child that already belongs to a parent");
+                        var message = "Cannot add child that already belongs to a parent.\r\n" +
+                                      "Fixing this requires more source diving than I feel like right now.\r\n" +
+                                      "Waiting to see if it becomes a problem";
+                        throw new NotSupportedException(message);
                         //LogicalTreeHelper.RemoveLogicalChild(logicalParent, newChild);
                     }
                 }

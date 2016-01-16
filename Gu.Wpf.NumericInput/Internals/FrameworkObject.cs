@@ -2,6 +2,7 @@ namespace Gu.Wpf.NumericInput
 {
     using System;
     using System.Windows;
+    using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Media.Media3D;
 
@@ -13,24 +14,28 @@ namespace Gu.Wpf.NumericInput
         private static readonly DependencyObjectType FrameworkElement_DType = DependencyObjectType.FromSystemType(typeof(FrameworkElement));
         private static readonly DependencyObjectType FrameworkContentElement_DType = DependencyObjectType.FromSystemType(typeof(FrameworkContentElement));
 
+        private FrameworkElement frameworkElement;
+        private FrameworkContentElement frameworkContentElement;
+        private DependencyObject dependencyObject;
+
         internal FrameworkObject(DependencyObject d)
         {
             // [code should be identical to Reset(d)]
-            this._do = d;
+            this.dependencyObject = d;
             if (FrameworkElement_DType.IsInstanceOfType(d))
             {
-                this._fe = (FrameworkElement)d;
-                this._fce = null;
+                this.frameworkElement = (FrameworkElement)d;
+                this.frameworkContentElement = null;
             }
             else if (FrameworkContentElement_DType.IsInstanceOfType(d))
             {
-                this._fe = null;
-                this._fce = (FrameworkContentElement)d;
+                this.frameworkElement = null;
+                this.frameworkContentElement = (FrameworkContentElement)d;
             }
             else
             {
-                this._fe = null;
-                this._fce = null;
+                this.frameworkElement = null;
+                this.frameworkContentElement = null;
             }
         }
 
@@ -44,73 +49,73 @@ namespace Gu.Wpf.NumericInput
         //    }
         //}
 
-        internal FrameworkObject(FrameworkElement fe, FrameworkContentElement fce)
+        internal FrameworkObject(FrameworkElement frameworkElement, FrameworkContentElement frameworkContentElement)
         {
-            this._fe = fe;
-            this._fce = fce;
+            this.frameworkElement = frameworkElement;
+            this.frameworkContentElement = frameworkContentElement;
 
-            if (fe != null)
+            if (frameworkElement != null)
             {
-                this._do = fe;
+                this.dependencyObject = frameworkElement;
             }
             else
             {
-                this._do = fce;
+                this.dependencyObject = frameworkContentElement;
             }
         }
 
         internal void Reset(DependencyObject d)
         {
-            this._do = d;
+            this.dependencyObject = d;
 
             if (FrameworkElement_DType.IsInstanceOfType(d))
             {
-                this._fe = (FrameworkElement)d;
-                this._fce = null;
+                this.frameworkElement = (FrameworkElement)d;
+                this.frameworkContentElement = null;
             }
             else if (FrameworkContentElement_DType.IsInstanceOfType(d))
             {
-                this._fe = null;
-                this._fce = (FrameworkContentElement)d;
+                this.frameworkElement = null;
+                this.frameworkContentElement = (FrameworkContentElement)d;
             }
             else
             {
-                this._fe = null;
-                this._fce = null;
+                this.frameworkElement = null;
+                this.frameworkContentElement = null;
             }
         }
 
-        internal FrameworkElement FE => this._fe;
+        internal FrameworkElement FrameworkElement => this.frameworkElement;
 
-        internal FrameworkContentElement FCE => this._fce;
+        internal FrameworkContentElement FrameworkContentElement => this.frameworkContentElement;
 
-        internal DependencyObject DO => this._do;
+        internal DependencyObject DependencyObject => this.dependencyObject;
 
-        internal bool IsFE => this._fe != null;
+        internal bool IsFE => this.frameworkElement != null;
 
-        internal bool IsFCE => this._fce != null;
+        internal bool IsFCE => this.frameworkContentElement != null;
 
-        internal bool IsValid => this._fe != null || this._fce != null;
+        internal bool IsValid => this.frameworkElement != null || this.frameworkContentElement != null;
 
         //// logical parent
-        //internal DependencyObject Parent
-        //{
-        //    get
-        //    {
-        //        if (this.IsFE)
-        //        {
-        //            return this._fe.Parent;
-        //        }
-        //        else if (this.IsFCE)
-        //        {
-        //            return this._fce.Parent;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //}
+        internal DependencyObject Parent
+        {
+            get
+            {
+                if (this.IsFE)
+                {
+                    return this.frameworkElement.Parent;
+                }
+                else if (this.IsFCE)
+                {
+                    return this.frameworkContentElement.Parent;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         //internal int TemplateChildIndex
         //{
@@ -131,24 +136,24 @@ namespace Gu.Wpf.NumericInput
         //    }
         //}
 
-        //internal DependencyObject TemplatedParent
-        //{
-        //    get
-        //    {
-        //        if (this.IsFE)
-        //        {
-        //            return this._fe.TemplatedParent;
-        //        }
-        //        else if (this.IsFCE)
-        //        {
-        //            return this._fce.TemplatedParent;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //}
+        internal DependencyObject TemplatedParent
+        {
+            get
+            {
+                if (this.IsFE)
+                {
+                    return this.frameworkElement.TemplatedParent;
+                }
+                else if (this.IsFCE)
+                {
+                    return this.frameworkContentElement.TemplatedParent;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         //internal Style ThemeStyle
         //{
@@ -169,24 +174,24 @@ namespace Gu.Wpf.NumericInput
         //    }
         //}
 
-        //internal XmlLanguage Language
-        //{
-        //    get
-        //    {
-        //        if (this.IsFE)
-        //        {
-        //            return this._fe.Language;
-        //        }
-        //        else if (this.IsFCE)
-        //        {
-        //            return this._fce.Language;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //}
+        internal XmlLanguage Language
+        {
+            get
+            {
+                if (this.IsFE)
+                {
+                    return this.frameworkElement.Language;
+                }
+                else if (this.IsFCE)
+                {
+                    return this.frameworkContentElement.Language;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         //internal FrameworkTemplate TemplateInternal
         //{
@@ -211,7 +216,7 @@ namespace Gu.Wpf.NumericInput
         //        {
         //            DependencyObject parent = this._fe.ContextVerifiedGetParent();
 
-        //            // NOTE: Logical parent can only be an FE, FCE
+        //            // NOTE: Logical parent can only be an frameworkElement, frameworkContentElement
         //            if (parent != null)
         //            {
         //                Invariant.Assert(parent is FrameworkElement || parent is FrameworkContentElement);
@@ -226,7 +231,7 @@ namespace Gu.Wpf.NumericInput
         //                }
         //            }
 
-        //            // This is when current does not have a logical parent that is an fe or fce
+        //            // This is when current does not have a logical parent that is an frameworkElement or frameworkContentElement
         //            FrameworkObject foParent = GetContainingFrameworkElement(this._fe.InternalVisualParent);
         //            if (foParent.IsValid)
         //            {
@@ -248,7 +253,7 @@ namespace Gu.Wpf.NumericInput
         //        {
         //            DependencyObject parent = this._fce.Parent;
 
-        //            // NOTE: Logical parent can only be an FE, FCE
+        //            // NOTE: Logical parent can only be an frameworkElement, frameworkContentElement
         //            if (parent != null)
         //            {
         //                Invariant.Assert(parent is FrameworkElement || parent is FrameworkContentElement);
@@ -263,7 +268,7 @@ namespace Gu.Wpf.NumericInput
         //                }
         //            }
 
-        //            // This is when current does not have a logical parent that is an fe or fce
+        //            // This is when current does not have a logical parent that is an frameworkElement or frameworkContentElement
         //            parent = ContentOperations.GetParent((ContentElement)this._fce);
         //            FrameworkObject foParent = GetContainingFrameworkElement(parent);
         //            if (foParent.IsValid)
@@ -286,7 +291,7 @@ namespace Gu.Wpf.NumericInput
         {
             FrameworkObject fo = new FrameworkObject(current);
 
-            while (!fo.IsValid && fo.DO != null)
+            while (!fo.IsValid && fo.DependencyObject != null)
             {
                 // The current object is neither a FrameworkElement nor a
                 // FrameworkContentElement.  We will now walk the "core"
@@ -295,15 +300,15 @@ namespace Gu.Wpf.NumericInput
                 Visual3D visual3D;
                 ContentElement ce;
 
-                if ((visual = fo.DO as Visual) != null)
+                if ((visual = fo.DependencyObject as Visual) != null)
                 {
                     fo.Reset(VisualTreeHelper.GetParent(visual));
                 }
-                else if ((ce = fo.DO as ContentElement) != null)
+                else if ((ce = fo.DependencyObject as ContentElement) != null)
                 {
                     fo.Reset(ContentOperations.GetParent(ce));
                 }
-                else if ((visual3D = fo.DO as Visual3D) != null)
+                else if ((visual3D = fo.DependencyObject as Visual3D) != null)
                 {
                     fo.Reset(VisualTreeHelper.GetParent(visual3D));
                 }
@@ -317,36 +322,35 @@ namespace Gu.Wpf.NumericInput
             return fo;
         }
 
-        //// Style property
-        //internal Style Style
-        //{
-        //    get
-        //    {
-        //        if (this.IsFE)
-        //        {
-        //            return this._fe.Style;
-        //        }
-        //        else if (this.IsFCE)
-        //        {
-        //            return this._fce.Style;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    set
-        //    {
-        //        if (this.IsFE)
-        //        {
-        //            this._fe.Style = value;
-        //        }
-        //        else if (this.IsFCE)
-        //        {
-        //            this._fce.Style = value;
-        //        }
-        //    }
-        //}
+        internal Style Style
+        {
+            get
+            {
+                if (this.IsFE)
+                {
+                    return this.frameworkElement.Style;
+                }
+                else if (this.IsFCE)
+                {
+                    return this.frameworkContentElement.Style;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (this.IsFE)
+                {
+                    this.frameworkElement.Style = value;
+                }
+                else if (this.IsFCE)
+                {
+                    this.frameworkContentElement.Style = value;
+                }
+            }
+        }
 
         // IsStyleSetFromGenerator property
         //internal bool IsStyleSetFromGenerator
@@ -389,11 +393,11 @@ namespace Gu.Wpf.NumericInput
 
                 if (this.IsFE)
                 {
-                    parent = VisualTreeHelper.GetParent(this._fe);
+                    parent = VisualTreeHelper.GetParent(this.frameworkElement);
                 }
                 else if (this.IsFCE)
                 {
-                    parent = this._fce.Parent;
+                    parent = this.frameworkContentElement.Parent;
                 }
                 else
                 {
@@ -401,15 +405,15 @@ namespace Gu.Wpf.NumericInput
                     Visual3D visual3D;
                     ContentElement ce;
 
-                    if ((visual = this._do as Visual) != null)
+                    if ((visual = this.dependencyObject as Visual) != null)
                     {
                         parent = VisualTreeHelper.GetParent(visual);
                     }
-                    else if ((ce = this._do as ContentElement) != null)
+                    else if ((ce = this.dependencyObject as ContentElement) != null)
                     {
                         parent = ContentOperations.GetParent(ce);
                     }
-                    else if ((visual3D = this._do as Visual3D) != null)
+                    else if ((visual3D = this.dependencyObject as Visual3D) != null)
                     {
                         parent = VisualTreeHelper.GetParent(visual3D);
                     }
@@ -419,7 +423,7 @@ namespace Gu.Wpf.NumericInput
                     }
                 }
 
-                if (parent == null && this._do != null)
+                if (parent == null && this.dependencyObject != null)
                 {
                     throw new NotImplementedException();
                     //parent = this._do.InheritanceContext;
@@ -450,24 +454,24 @@ namespace Gu.Wpf.NumericInput
         //    }
         //}
 
-        //internal bool IsInitialized
-        //{
-        //    get
-        //    {
-        //        if (this.IsFE)
-        //        {
-        //            return this._fe.IsInitialized;
-        //        }
-        //        else if (this.IsFCE)
-        //        {
-        //            return this._fce.IsInitialized;
-        //        }
-        //        else
-        //        {
-        //            return true;
-        //        }
-        //    }
-        //}
+        internal bool IsInitialized
+        {
+            get
+            {
+                if (this.IsFE)
+                {
+                    return this.frameworkElement.IsInitialized;
+                }
+                else if (this.IsFCE)
+                {
+                    return this.frameworkContentElement.IsInitialized;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
 
         //internal bool ThisHasLoadedChangeEventHandler
         //{
@@ -689,10 +693,10 @@ namespace Gu.Wpf.NumericInput
         internal static bool IsEffectiveAncestor(DependencyObject d1, DependencyObject d2)
         {
             for (FrameworkObject fo = new FrameworkObject(d2);
-                fo.DO != null;
+                fo.DependencyObject != null;
                 fo.Reset(fo.EffectiveParent))
             {
-                if (ReferenceEquals(fo.DO, d1))
+                if (ReferenceEquals(fo.DependencyObject, d1))
                 {
                     return true;
                 }
@@ -700,28 +704,6 @@ namespace Gu.Wpf.NumericInput
 
             return false;
         }
-
-#if TRACE_INHERITANCE_CONTEXT
-        static StreamWriter logFile;
-        internal static void Log(string format, params object[] args)
-        {
-            if (logFile == null)
-            {
-                logFile = File.AppendText("IClog.txt");
-                logFile.WriteLine();
-                logFile.WriteLine("Log for {0}", Environment.CommandLine);
-            }
-
-            logFile.WriteLine(format, args);
-            logFile.Flush();
-        }
-
-        internal static string LogIC(DependencyObject d1, DependencyProperty dp, DependencyObject d2)
-        {
-            string name = (dp == null) ? "[null]" : dp.Name;
-            return String.Format("{0}.{1} = {2}", d1.GetType().Name, name, d2.GetType().Name);
-        }
-#endif
 
         //internal void ChangeLogicalParent(DependencyObject newParent)
         //{
@@ -902,17 +884,17 @@ namespace Gu.Wpf.NumericInput
         //    return new FrameworkObject(this._do.InheritanceContext);
         //}
 
-        //internal void RaiseEvent(RoutedEventArgs args)
-        //{
-        //    if (this.IsFE)
-        //    {
-        //        this._fe.RaiseEvent(args);
-        //    }
-        //    else if (this.IsFCE)
-        //    {
-        //        this._fce.RaiseEvent(args);
-        //    }
-        //}
+        internal void RaiseEvent(RoutedEventArgs args)
+        {
+            if (this.IsFE)
+            {
+                this.frameworkElement.RaiseEvent(args);
+            }
+            else if (this.IsFCE)
+            {
+                this.frameworkContentElement.RaiseEvent(args);
+            }
+        }
 
         //internal void OnLoaded(RoutedEventArgs args)
         //{
@@ -1114,25 +1096,21 @@ namespace Gu.Wpf.NumericInput
 
         //void UnexpectedCall()
         //{
-        //    Invariant.Assert(false, "Call to FrameworkObject expects either FE or FCE");
+        //    Invariant.Assert(false, "Call to FrameworkObject expects either frameworkElement or frameworkContentElement");
         //}
 
         public override string ToString()
         {
             if (this.IsFE)
             {
-                return this._fe.ToString();
+                return this.frameworkElement.ToString();
             }
             else if (this.IsFCE)
             {
-                return this._fce.ToString();
+                return this.frameworkContentElement.ToString();
             }
 
             return "Null";
         }
-
-        private FrameworkElement _fe;
-        private FrameworkContentElement _fce;
-        private DependencyObject _do;
     }
 }
