@@ -46,9 +46,7 @@
             typeof(BaseBox),
             new PropertyMetadata(string.Empty, OnStringFormatChanged));
 
-        public static readonly DependencyProperty CultureProperty = DependencyProperty.Register(
-            "Culture",
-            typeof(IFormatProvider),
+        public static readonly DependencyProperty CultureProperty = NumericBox.CultureProperty.AddOwner(
             typeof(BaseBox),
             new FrameworkPropertyMetadata(
                 Thread.CurrentThread.CurrentUICulture,

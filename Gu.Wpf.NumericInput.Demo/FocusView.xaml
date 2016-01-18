@@ -9,7 +9,11 @@
     <UserControl.DataContext>
         <demo:FocusVm />
     </UserControl.DataContext>
-    <UniformGrid Rows="1">
+    <UniformGrid Rows="1"
+                 numeric:NumericBox.SelectAllOnClick="{Binding IsChecked,
+                                                               ElementName=SelectAllOnClick}"
+                 numeric:NumericBox.SelectAllOnGotKeyboardFocus="{Binding IsChecked,
+                                                                          ElementName=SelectAllOnFocus}">
         <GroupBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBoxes}" Header="TextBoxes">
             <UniformGrid Columns="1" KeyboardNavigation.TabNavigation="Cycle">
                 <TextBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBox1}" Text="{Binding Value1}" />
@@ -43,6 +47,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -58,6 +64,26 @@
                           VerticalAlignment="Center"
                           AutomationProperties.AutomationId="{x:Static demo:AutomationIds.AllowSpinnersBox}"
                           IsChecked="True" />
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="SelectAllOnFocus" />
+                <CheckBox x:Name="SelectAllOnFocus"
+                          Grid.Row="1"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          AutomationProperties.AutomationId="{x:Static demo:AutomationIds.SelectAllOnFocusBox}"
+                          IsChecked="False" />
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Text="SelectAllOnClick" />
+                <CheckBox x:Name="SelectAllOnClick"
+                          Grid.Row="2"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          AutomationProperties.AutomationId="{x:Static demo:AutomationIds.SelectAllOnClickBox}"
+                          IsChecked="False" />
             </Grid>
         </GroupBox>
     </UniformGrid>

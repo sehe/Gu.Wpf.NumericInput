@@ -42,6 +42,10 @@
         public static readonly string AllowThousandsBox = Create();
         public static readonly string AllowExponentBox = Create();
 
+
+        public static readonly string SelectAllOnFocusBox = Create();
+        public static readonly string SelectAllOnClickBox = Create();
+        
         private static string Create([CallerMemberName] string name = null)
         {
             return name;

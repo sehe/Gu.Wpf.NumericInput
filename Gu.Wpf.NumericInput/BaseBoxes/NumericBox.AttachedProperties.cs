@@ -8,23 +8,35 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
     using System.Windows.Media;
+    using System.Windows.Threading;
 
     public static partial class NumericBox
     {
+        public static readonly DependencyProperty SelectAllOnGotKeyboardFocusProperty = DependencyProperty.RegisterAttached(
+            "SelectAllOnGotKeyboardFocus",
+            typeof(bool),
+            typeof(NumericBox),
+            new FrameworkPropertyMetadata(
+                BooleanBoxes.False,
+                FrameworkPropertyMetadataOptions.Inherits,
+                OnSelectAllOnGotKeyboardFocusChanged));
+
         public static readonly DependencyProperty SelectAllOnClickProperty = DependencyProperty.RegisterAttached(
             "SelectAllOnClick",
             typeof(bool),
             typeof(NumericBox),
-            new PropertyMetadata(
+            new FrameworkPropertyMetadata(
                 BooleanBoxes.False,
+                FrameworkPropertyMetadataOptions.Inherits,
                 OnSelectAllOnClickChanged));
 
         public static readonly DependencyProperty SelectAllOnDoubleClickProperty = DependencyProperty.RegisterAttached(
             "SelectAllOnDoubleClick",
             typeof(bool),
             typeof(NumericBox),
-            new PropertyMetadata(
+            new FrameworkPropertyMetadata(
                 BooleanBoxes.False,
+                FrameworkPropertyMetadataOptions.Inherits,
                 OnSelectAllOnDoubleClickChanged));
 
         public static readonly DependencyProperty CultureProperty = DependencyProperty.RegisterAttached(
@@ -33,39 +45,68 @@
             typeof(NumericBox),
             new FrameworkPropertyMetadata(
                 Thread.CurrentThread.CurrentUICulture,
-                FrameworkPropertyMetadataOptions.Inherits,
-                OnCultureChanged));
+                FrameworkPropertyMetadataOptions.Inherits));
+
+        public static void SetSelectAllOnGotKeyboardFocus(this UIElement element, bool value)
+        {
+            element.SetValue(SelectAllOnGotKeyboardFocusProperty, BooleanBoxes.Box(value));
+        }
+
+        [AttachedPropertyBrowsableForChildren(IncludeDescendants = false)]
+        [AttachedPropertyBrowsableForType(typeof(UIElement))]
+        public static bool GetSelectAllOnGotKeyboardFocus(this UIElement element)
+        {
+            return (bool)element.GetValue(SelectAllOnGotKeyboardFocusProperty);
+        }
+
+        public static void SetSelectAllOnClick(this UIElement o, bool value)
+        {
+            o.SetValue(SelectAllOnClickProperty, BooleanBoxes.Box(value));
+        }
 
         [AttachedPropertyBrowsableForChildrenAttribute(IncludeDescendants = false)]
-        [AttachedPropertyBrowsableForType(typeof(TextBoxBase))]
-        public static bool GetSelectAllOnClick(this TextBoxBase o)
+        [AttachedPropertyBrowsableForType(typeof(UIElement))]
+        public static bool GetSelectAllOnClick(this UIElement o)
         {
             return (bool)o.GetValue(SelectAllOnClickProperty);
         }
 
-        public static void SetSelectAllOnClick(this TextBoxBase o, bool value)
+        public static void SetSelectAllOnDoubleClick(this UIElement element, bool value)
         {
-            o.SetValue(SelectAllOnClickProperty, value);
+            element.SetValue(SelectAllOnDoubleClickProperty, BooleanBoxes.Box(value));
         }
 
-        public static void SetSelectAllOnDoubleClick(this TextBoxBase element, bool value)
-        {
-            element.SetValue(SelectAllOnDoubleClickProperty, value);
-        }
-
-        public static bool GetSelectAllOnDoubleClick(this TextBoxBase element)
+        [AttachedPropertyBrowsableForChildren(IncludeDescendants = false)]
+        [AttachedPropertyBrowsableForType(typeof(UIElement))]
+        public static bool GetSelectAllOnDoubleClick(this UIElement element)
         {
             return (bool)element.GetValue(SelectAllOnDoubleClickProperty);
         }
 
-        public static void SetCulture(this FrameworkElement element, CultureInfo value)
+        public static void SetCulture(this UIElement element, CultureInfo value)
         {
             element.SetValue(CultureProperty, value);
         }
 
-        public static CultureInfo GetCulture(this FrameworkElement element)
+        public static CultureInfo GetCulture(this UIElement element)
         {
             return (CultureInfo)element.GetValue(CultureProperty);
+        }
+
+        private static void OnSelectAllOnGotKeyboardFocusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var box = d as TextBoxBase;
+            if (box != null)
+            {
+                if (Equals(e.NewValue, BooleanBoxes.True))
+                {
+                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.AddHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
+                }
+                else
+                {
+                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.RemoveHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
+                }
+            }
         }
 
         private static void OnSelectAllOnClickChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -73,8 +114,7 @@
             var box = d as TextBoxBase;
             if (box != null)
             {
-                var isSelecting = Equals(e.NewValue, BooleanBoxes.True);
-                if (isSelecting)
+                if (Equals(e.NewValue, BooleanBoxes.True))
                 {
                     WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.AddHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
                     WeakEventManager<TextBoxBase, MouseButtonEventArgs>.AddHandler(box, nameof(box.PreviewMouseLeftButtonDown), OnMouseLeftButtonDown);
@@ -92,8 +132,7 @@
             var box = d as TextBoxBase;
             if (box != null)
             {
-                var isSelecting = Equals(e.NewValue, BooleanBoxes.True);
-                if (isSelecting)
+                if (Equals(e.NewValue, BooleanBoxes.True))
                 {
                     WeakEventManager<TextBoxBase, MouseButtonEventArgs>.AddHandler(box, nameof(box.MouseDoubleClick), OnMouseDoubleClick);
                 }
@@ -139,16 +178,9 @@
 
         private static void OnKeyboardFocusSelectText(object sender, KeyboardFocusChangedEventArgs e)
         {
-            var box = e.OriginalSource as TextBox;
-            box?.SelectAll();
-        }
-
-        private static void OnCultureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var baseBox = d as BaseBox;
-            if (baseBox != null)
+            if (ReferenceEquals(e.NewFocus, sender))
             {
-                baseBox.Culture = (IFormatProvider)e.NewValue;
+                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(() => (sender as TextBox)?.SelectAll()));
             }
         }
     }
