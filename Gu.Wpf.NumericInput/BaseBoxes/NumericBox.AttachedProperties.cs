@@ -47,6 +47,12 @@
                 Thread.CurrentThread.CurrentUICulture,
                 FrameworkPropertyMetadataOptions.Inherits));
 
+        private static readonly DependencyProperty IsSelectingProperty = DependencyProperty.RegisterAttached(
+            "IsSelecting",
+            typeof(bool),
+            typeof(NumericBox),
+            new PropertyMetadata(BooleanBoxes.False));
+
         public static void SetSelectAllOnGotKeyboardFocus(this UIElement element, bool value)
         {
             element.SetValue(SelectAllOnGotKeyboardFocusProperty, BooleanBoxes.Box(value));
@@ -93,6 +99,16 @@
             return (CultureInfo)element.GetValue(CultureProperty);
         }
 
+        private static void SetIsSelecting(this DependencyObject element, bool value)
+        {
+            element.SetValue(IsSelectingProperty, BooleanBoxes.Box(value));
+        }
+
+        private static bool GetIsSelecting(this DependencyObject element)
+        {
+            return (bool)element.GetValue(IsSelectingProperty);
+        }
+
         private static void OnSelectAllOnGotKeyboardFocusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = d as TextBoxBase;
@@ -101,10 +117,12 @@
                 if (Equals(e.NewValue, BooleanBoxes.True))
                 {
                     WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.AddHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
+                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.AddHandler(box, nameof(box.MouseUp), OnMouseUp);
                 }
                 else
                 {
                     WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.RemoveHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
+                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.RemoveHandler(box, nameof(box.MouseUp), OnMouseUp);
                 }
             }
         }
@@ -180,7 +198,26 @@
         {
             if (ReferenceEquals(e.NewFocus, sender))
             {
-                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(() => (sender as TextBox)?.SelectAll()));
+                var textBoxBase = (TextBoxBase)sender;
+                if (Mouse.LeftButton == MouseButtonState.Pressed ||
+                    Mouse.RightButton == MouseButtonState.Pressed)
+                {
+                    textBoxBase.SetIsSelecting(true);
+                }
+                else
+                {
+                    textBoxBase.SelectAll();
+                }
+            }
+        }
+
+        private static void OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var textBoxBase = (TextBoxBase)sender;
+            if (textBoxBase.GetIsSelecting())
+            {
+                textBoxBase.SelectAll();
+                textBoxBase.SetIsSelecting(false);
             }
         }
     }
