@@ -79,8 +79,7 @@
                     Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox2.IsFocussed);
-                    var increaseButton = doubleBox2.IncreaseButton();
-                    window.Mouse.Click(increaseButton.ClickablePoint);
+                    doubleBox2.IncreaseButton().Click();
                     Assert.AreEqual("4.456", doubleBox2.EditText());
                     Assert.AreEqual("3.456", textBoxes.Get<TextBox>(AutomationIds.TextBox3).Text);
 

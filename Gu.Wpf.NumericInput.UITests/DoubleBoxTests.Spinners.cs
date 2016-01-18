@@ -289,6 +289,7 @@
                     keyboard.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
                     keyboard.Enter("z");
                     keyboard.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
+                    vmValueBox.Click();
                     Assert.AreEqual("0", inputBox.EditText());
                     Assert.AreEqual("0", inputBox.FormattedText());
                     Assert.AreEqual(false, inputBox.HasValidationError());

@@ -207,6 +207,7 @@
                 {
                     return;
                 }
+
                 this.max = value;
                 this.OnPropertyChanged();
             }

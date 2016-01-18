@@ -41,7 +41,9 @@
         {
             var canUndo = this.CanUndo;
             this.TextSource = TextSource.UserInput;
+            this.BeginChange();
             this.SetCurrentValue(TextProperty, text);
+            this.EndChange();
             Debug.WriteLine(canUndo, this.CanUndo);
         }
 
