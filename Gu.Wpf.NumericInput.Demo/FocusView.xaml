@@ -22,7 +22,7 @@
             <UniformGrid Columns="1" KeyboardNavigation.TabNavigation="Cycle">
                 <TextBox AutomationProperties.AutomationId="{x:Static demo:AutomationIds.TextBox1}" Text="{Binding Value1}" />
 
-                <numeric:SpinnerDecorator>
+                <numeric:SpinnerDecorator AutomationProperties.AutomationId="{x:Static demo:AutomationIds.Spinners1}">
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                                ElementName=AllowSpinners}"
                                        AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox1}"
@@ -31,7 +31,7 @@
                                        Value="{Binding Value2}" />
                 </numeric:SpinnerDecorator>
 
-                <numeric:SpinnerDecorator>
+                <numeric:SpinnerDecorator AutomationProperties.AutomationId="{x:Static demo:AutomationIds.Spinners2}">
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                                ElementName=AllowSpinners}"
                                        AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox2}"

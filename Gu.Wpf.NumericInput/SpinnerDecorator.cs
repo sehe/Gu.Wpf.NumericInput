@@ -3,7 +3,6 @@
     using System;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Input;
     using System.Windows.Markup;
 
     [ContentProperty(nameof(Child))]
@@ -65,6 +64,14 @@
 
             // Add the new content child
             this.AddLogicalChild(newChild);
+        }
+
+        /// <summary>
+        /// Creates AutomationPeer (<see cref="UIElement.OnCreateAutomationPeer"/>)
+        /// </summary>
+        protected override System.Windows.Automation.Peers.AutomationPeer OnCreateAutomationPeer()
+        {
+            return new SpinnerDecoratorAutomationPeer(this);
         }
 
         private static void OnChildChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

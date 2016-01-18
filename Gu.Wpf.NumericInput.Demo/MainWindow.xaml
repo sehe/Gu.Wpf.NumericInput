@@ -32,7 +32,7 @@
                 </GroupBox>
 
                 <GroupBox VerticalAlignment="Top" Header="ShortBox">
-                    <demo:ShortBoxView HorizontalAlignment="Left"  />
+                    <demo:ShortBoxView HorizontalAlignment="Left" />
                 </GroupBox>
             </UniformGrid>
         </TabItem>

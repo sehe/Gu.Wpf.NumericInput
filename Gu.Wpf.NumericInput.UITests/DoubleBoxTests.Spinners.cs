@@ -175,6 +175,7 @@
                     var vmValueBox = groupBox.Get<TextBox>(AutomationIds.VmValueBox);
                     vmValueBox.Click();
                     inputBox.Enter("5");
+                    vmValueBox.Click();
                     Assert.AreEqual("5", inputBox.EditText());
                     Assert.AreEqual("5", inputBox.FormattedText());
                     Assert.AreEqual(true, inputBox.HasValidationError());
@@ -251,7 +252,7 @@
                     Assert.AreEqual("-3", inputBox.EditText());
                     Assert.AreEqual("-3", inputBox.FormattedText());
                     Assert.AreEqual(false, inputBox.HasValidationError());
-                    Assert.AreEqual("-3", vmValueBox.Text);
+                    Assert.AreEqual("0", vmValueBox.Text);
                     Assert.AreEqual("-3", groupBox.Get<Label>(AutomationIds.ValueBlock).Text);
                     Assert.AreEqual(Gu.Wpf.NumericInput.TextSource.UserInput, groupBox.TextSource());
                     Assert.AreEqual(Gu.Wpf.NumericInput.Status.Idle, groupBox.Status());

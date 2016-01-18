@@ -5,6 +5,7 @@
     using TestStack.White;
     using TestStack.White.Factory;
     using TestStack.White.UIItems;
+    using TestStack.White.UIItems.Custom;
     using TestStack.White.UIItems.TabItems;
     using TestStack.White.UIItems.WPFUIItems;
     using TestStack.White.WindowsAPI;
@@ -32,10 +33,10 @@
                     Assert.AreEqual(true, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
                     doubleBox1.Enter("2");
-                    Assert.AreEqual("1.234", textBoxes.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual("2.345", textBoxes.Get<TextBox>(AutomationIds.TextBox2).Text);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
-                    Assert.AreEqual("2", textBoxes.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual("2", textBoxes.Get<TextBox>(AutomationIds.TextBox2).Text);
                     Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox2.IsFocussed);
@@ -71,20 +72,21 @@
                     Assert.AreEqual(true, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);
                     doubleBox1.Enter("2");
-                    Assert.AreEqual("1.234", textBoxes.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual("2.345", textBoxes.Get<TextBox>(AutomationIds.TextBox2).Text);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
-                    Assert.AreEqual("2", page.Get<TextBox>(AutomationIds.TextBox1).Text);
+                    Assert.AreEqual("2", textBoxes.Get<TextBox>(AutomationIds.TextBox2).Text);
                     Assert.AreEqual(false, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(true, doubleBox2.IsFocussed);
-                    doubleBox2.Get<Button>(BaseBox.IncreaseButtonName).Click();
-                    Assert.AreEqual("1.345", doubleBox1.Text);
-                    Assert.AreEqual("2.345", page.Get<TextBox>(AutomationIds.TextBox2).Text);
+                    var increaseButton = doubleBox2.IncreaseButton();
+                    window.Mouse.Click(increaseButton.ClickablePoint);
+                    Assert.AreEqual("4.456", doubleBox2.EditText());
+                    Assert.AreEqual("3.456", textBoxes.Get<TextBox>(AutomationIds.TextBox3).Text);
 
                     window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.TAB);
-                    Assert.AreEqual("1.345", doubleBox1.Text);
-                    Assert.AreEqual("1.345", textBoxes.Get<TextBox>(AutomationIds.TextBox2).Text);
+                    Assert.AreEqual("4.456", doubleBox2.EditText());
+                    Assert.AreEqual("4.456", textBoxes.Get<TextBox>(AutomationIds.TextBox3).Text);
                     Assert.AreEqual(true, textBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox1.IsFocussed);
                     Assert.AreEqual(false, doubleBox2.IsFocussed);

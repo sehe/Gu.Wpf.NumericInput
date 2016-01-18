@@ -1,6 +1,7 @@
 ﻿namespace Gu.Wpf.NumericInput.UITests
 {
     using System;
+    using System.Runtime.CompilerServices;
     using Gu.Wpf.NumericInput.Demo;
     using TestStack.White.UIItems;
     using TestStack.White.UIItems.Custom;
@@ -8,6 +9,8 @@
 
     public static class UiItemExt
     {
+        private static readonly ConditionalWeakTable<TextBox, Label> FormattedTextCache = new ConditionalWeakTable<TextBox, Label>();
+
         public static string ItemStatus(this IUIItem item)
         {
             return (string)item.AutomationElement.Current.ItemStatus;
@@ -55,20 +58,25 @@
 
         internal static string EditText(this TextBox textBox)
         {
-            //var groupBox = textBox.GetParent<CustomUIItem>().GetParent<GroupBox>();
-            //var alowSpinnersBox = groupBox.Get<CheckBox>(AutomationIds.AllowSpinnersBox);
-            //var suffixBox = groupBox.Get<TextBox>(AutomationIds.SuffixBox);
-            //if (alowSpinnersBox.Checked || !string.IsNullOrEmpty(suffixBox.Text))
-            //{
-            //    return textBox.Get<TextBox>(BaseBox.EditBoxName).Text;
-            //}
-
             return textBox.Text;
+        }
+
+        internal static Button IncreaseButton(this TextBox textBox)
+        {
+            var parent = textBox.GetParent<CustomUIItem>();
+            return parent.Get<Button>(BaseBox.IncreaseButtonName);
+        }
+
+        internal static Button DecreaseButton(this TextBox textBox)
+        {
+            var parent = textBox.GetParent<CustomUIItem>();
+            return parent.Get<Button>(BaseBox.DecreaseButtonName);
         }
 
         internal static string FormattedText(this TextBox textBox)
         {
-            return textBox.Get<Label>(BaseBox.FormattedName).Text;
+            var label = FormattedTextCache.GetValue(textBox, x => x.Get<Label>(BaseBox.FormattedName));
+            return label.Text;
         }
     }
 }
