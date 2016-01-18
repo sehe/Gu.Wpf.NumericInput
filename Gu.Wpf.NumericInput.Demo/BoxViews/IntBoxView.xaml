@@ -24,7 +24,6 @@
                         MaxValue="{Binding Max}"
                         MinValue="{Binding Min}"
                         RegexPattern="{Binding RegexPattern}"
-                        Suffix="{Binding Suffix}"
                         Value="{Binding Value}" />
 
         <ItemsControl Grid.Row="1" Style="{StaticResource {x:Static propertyGrid:Keys.PropertyGridStyleKey}}">
@@ -69,14 +68,6 @@
                           ItemsSource="{Binding Cultures}"
                           SelectedItem="{Binding Culture}" />
             </HeaderedContentControl>
-
-            <HeaderedContentControl Header="Suffix">
-                <TextBox Text="{Binding Suffix}" />
-            </HeaderedContentControl>
-
-            <!--<HeaderedContentControl Header="Decimals">
-                <TextBox Text="{Binding DecimalDigits, TargetNullValue=''}" />
-            </HeaderedContentControl>-->
 
             <HeaderedContentControl Header="Max">
                 <TextBox Text="{Binding Max, TargetNullValue=''}" />

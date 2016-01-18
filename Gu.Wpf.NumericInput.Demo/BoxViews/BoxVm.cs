@@ -20,7 +20,6 @@
         private int? decimalDigits;
         private bool allowSpinners;
         private bool isReadOnly;
-        private string suffix;
         private string regexPattern;
         private TValue increment;
         private bool canValueBeNull;
@@ -37,7 +36,6 @@
             this.allowSpinners = DefaultValue(x => x.AllowSpinners);
             this.isReadOnly = DefaultValue(x => x.IsReadOnly);
             this.increment = DefaultValue(x => x.Increment);
-            this.suffix = DefaultValue(x => x.Suffix);
             this.regexPattern = DefaultValue(x => x.RegexPattern);
         }
 
@@ -315,23 +313,6 @@
                     return;
                 }
                 this.isReadOnly = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public string Suffix
-        {
-            get
-            {
-                return this.suffix;
-            }
-            set
-            {
-                if (value == this.suffix)
-                {
-                    return;
-                }
-                this.suffix = value;
                 this.OnPropertyChanged();
             }
         }

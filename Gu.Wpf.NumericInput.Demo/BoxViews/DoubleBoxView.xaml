@@ -32,7 +32,6 @@
                                RegexPattern="{Binding RegexPattern}"
                                StringFormat="{Binding StringFormat,
                                                       Mode=TwoWay}"
-                               Suffix="{Binding Suffix}"
                                Value="{Binding Value,
                                                ValidatesOnNotifyDataErrors=True}" />
         </numeric:SpinnerDecorator>
@@ -123,10 +122,6 @@
 
             <HeaderedContentControl Header="AllowExponent">
                 <CheckBox AutomationProperties.AutomationId="{x:Static local:AutomationIds.AllowExponentBox}" IsChecked="{Binding AllowExponent}" />
-            </HeaderedContentControl>
-
-            <HeaderedContentControl Header="Suffix">
-                <TextBox AutomationProperties.AutomationId="{x:Static local:AutomationIds.SuffixBox}" Text="{Binding Suffix}" />
             </HeaderedContentControl>
 
             <HeaderedContentControl Header="Max">

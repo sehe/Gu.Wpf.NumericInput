@@ -16,7 +16,6 @@
         public static readonly string HasErrorsBox = Create();
         public static readonly string CanBeNullBox = Create();
         public static readonly string CultureBox = Create();
-        public static readonly string SuffixBox = Create();
         public static readonly string DigitsBox = Create();
         public static readonly string StringFormatBox = Create();
         public static readonly string MaxBox = Create();

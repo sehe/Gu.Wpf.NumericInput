@@ -102,7 +102,7 @@
 
         protected void UpdateView()
         {
-            var scrollViewer = this.NestedChildren().OfType<ScrollViewer>().SingleOrDefault(x => x.Name == "PART_ContentHost");
+            var scrollViewer = this.GetTemplateChild("PART_ContentHost") as ScrollViewer;
             var whenFocused = scrollViewer?.NestedChildren().OfType<ScrollContentPresenter>().SingleOrDefault();
             var grid = whenFocused?.Parent as Grid;
             if (scrollViewer == null || whenFocused == null || grid == null)
@@ -137,7 +137,8 @@
                 }
             }
 
-            if (grid.Children.OfType<TextBlock>().All(x => x.Name != FormattedName))
+            var formattedBox = (TextBlock)grid.FindName(FormattedName);
+            if (formattedBox == null)
             {
                 var whenNotFocused = new TextBlock
                 {
@@ -146,18 +147,18 @@
                 };
 
                 whenNotFocused.Bind(TextBlock.TextProperty)
-                              .OneWayTo(this, FormattedTextProperty);
+                    .OneWayTo(this, FormattedTextProperty);
 
                 whenNotFocused.Bind(MarginProperty)
-                              .OneWayTo(whenFocused, MarginProperty, FormattedTextBlockMarginConverter.Default, whenFocused);
+                    .OneWayTo(whenFocused, MarginProperty, FormattedTextBlockMarginConverter.Default, whenFocused);
 
                 whenNotFocused.Bind(VisibilityProperty)
-                              .OneWayTo(this, IsKeyboardFocusWithinProperty, HiddenWhenTrueConverter.Default);
+                    .OneWayTo(this, IsKeyboardFocusWithinProperty, HiddenWhenTrueConverter.Default);
 
                 grid.Children.Add(whenNotFocused);
 
                 whenFocused.Bind(VisibilityProperty)
-                           .OneWayTo(this, IsKeyboardFocusWithinProperty, VisibleWhenTrueConverter.Default);
+                    .OneWayTo(this, IsKeyboardFocusWithinProperty, VisibleWhenTrueConverter.Default);
             }
         }
 

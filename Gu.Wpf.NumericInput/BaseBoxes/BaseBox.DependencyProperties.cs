@@ -40,24 +40,6 @@
 
         public static readonly DependencyProperty IsFormattingDirtyProperty = IsFormattingDirtyPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty SuffixProperty = DependencyProperty.Register(
-            "Suffix",
-            typeof(string),
-            typeof(BaseBox),
-            new FrameworkPropertyMetadata(
-                null,
-                FrameworkPropertyMetadataOptions.AffectsMeasure,
-                OnSuffixChanged,
-                OnSuffixCoerce));
-
-        private static readonly DependencyPropertyKey HasSuffixPropertyKey = DependencyProperty.RegisterReadOnly(
-            "HasSuffix",
-            typeof(bool),
-            typeof(BaseBox),
-            new PropertyMetadata(false));
-
-        public static readonly DependencyProperty HasSuffixProperty = HasSuffixPropertyKey.DependencyProperty;
-
         public static readonly DependencyProperty StringFormatProperty = DependencyProperty.Register(
             "StringFormat",
             typeof(string),
@@ -155,22 +137,6 @@
         {
             get { return (bool)this.GetValue(IsValidationDirtyProperty); }
             protected set { this.SetValue(IsValidationDirtyPropertyKey, value ? BooleanBoxes.True : BooleanBoxes.False); }
-        }
-
-        [Category(nameof(NumericBox))]
-        [Browsable(true)]
-        public string Suffix
-        {
-            get { return (string)this.GetValue(SuffixProperty); }
-            set { this.SetValue(SuffixProperty, value); }
-        }
-
-        [Category(nameof(NumericBox))]
-        [Browsable(true)]
-        public bool HasSuffix
-        {
-            get { return (bool)this.GetValue(HasSuffixProperty); }
-            private set { this.SetValue(HasSuffixPropertyKey, value); }
         }
 
         /// <summary>
@@ -291,22 +257,6 @@
             var box = (BaseBox)d;
             (box.IncreaseCommand as ManualRelayCommand)?.RaiseCanExecuteChanged();
             (box.DecreaseCommand as ManualRelayCommand)?.RaiseCanExecuteChanged();
-        }
-
-        private static void OnSuffixChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((BaseBox)d).HasSuffix = !string.IsNullOrEmpty(e.NewValue as string);
-        }
-
-        private static object OnSuffixCoerce(DependencyObject dependencyObject, object baseValue)
-        {
-            var value = (string)baseValue;
-            if (string.IsNullOrEmpty(value))
-            {
-                return null;
-            }
-
-            return baseValue;
         }
 
         private static void OnTextProxyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

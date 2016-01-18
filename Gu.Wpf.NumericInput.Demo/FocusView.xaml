@@ -26,8 +26,6 @@
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                                ElementName=AllowSpinners}"
                                        AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox1}"
-                                       Suffix="{Binding Text,
-                                                        ElementName=SuffixBox}"
                                        Value="{Binding Value2}" />
                 </numeric:SpinnerDecorator>
 
@@ -35,8 +33,6 @@
                     <numeric:DoubleBox AllowSpinners="{Binding IsChecked,
                                                                ElementName=AllowSpinners}"
                                        AutomationProperties.AutomationId="{x:Static demo:AutomationIds.DoubleBox2}"
-                                       Suffix="{Binding Text,
-                                                        ElementName=SuffixBox}"
                                        Value="{Binding Value3}" />
                 </numeric:SpinnerDecorator>
             </UniformGrid>
@@ -62,16 +58,6 @@
                           VerticalAlignment="Center"
                           AutomationProperties.AutomationId="{x:Static demo:AutomationIds.AllowSpinnersBox}"
                           IsChecked="True" />
-
-                <TextBlock Grid.Row="1"
-                           Grid.Column="0"
-                           Text="Suffix" />
-                <TextBox x:Name="SuffixBox"
-                         Grid.Row="1"
-                         Grid.Column="1"
-                         MinWidth="30"
-                         VerticalAlignment="Center"
-                         AutomationProperties.AutomationId="{x:Static demo:AutomationIds.SuffixBox}" />
             </Grid>
         </GroupBox>
     </UniformGrid>
