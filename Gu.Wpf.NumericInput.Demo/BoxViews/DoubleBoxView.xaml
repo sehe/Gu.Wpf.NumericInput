@@ -33,7 +33,8 @@
                                StringFormat="{Binding StringFormat,
                                                       Mode=TwoWay}"
                                Suffix="{Binding Suffix}"
-                               Value="{Binding Value}" />
+                               Value="{Binding Value,
+                                               ValidatesOnNotifyDataErrors=True}" />
         </numeric:SpinnerDecorator>
 
         <ItemsControl Grid.Row="1" Style="{StaticResource {x:Static propertyGrid:Keys.PropertyGridStyleKey}}">
@@ -64,17 +65,21 @@
             <TextBlock Style="{StaticResource {x:Static propertyGrid:Keys.HeaderTextBlockStyleKey}}" Text="ViewModel:" />
 
             <HeaderedContentControl Header="CurrentValue">
-                <TextBlock Text="{Binding Value}" />
+                <TextBlock Text="{Binding Value, ValidatesOnNotifyDataErrors=False}" />
             </HeaderedContentControl>
 
             <HeaderedContentControl Header="Edit Value">
-                <TextBox AutomationProperties.AutomationId="{x:Static local:AutomationIds.VmValueBox}" Text="{Binding Value}" />
+                <TextBox AutomationProperties.AutomationId="{x:Static local:AutomationIds.VmValueBox}" Text="{Binding Value, ValidatesOnNotifyDataErrors=False}" />
             </HeaderedContentControl>
 
             <TextBlock Style="{StaticResource {x:Static propertyGrid:Keys.HeaderTextBlockStyleKey}}" Text="Settings:" />
 
             <HeaderedContentControl Header="IsReadOnly">
                 <CheckBox AutomationProperties.AutomationId="{x:Static local:AutomationIds.IsReadonlyBox}" IsChecked="{Binding IsReadOnly}" />
+            </HeaderedContentControl>
+
+            <HeaderedContentControl Header="HasErrors">
+                <CheckBox AutomationProperties.AutomationId="{x:Static local:AutomationIds.HasErrorsBox}" IsChecked="{Binding HasErrors}" />
             </HeaderedContentControl>
 
             <HeaderedContentControl Header="CanValueBeNull">

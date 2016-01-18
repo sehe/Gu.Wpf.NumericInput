@@ -13,6 +13,7 @@
         public static readonly string StatusBlock = Create();
         public static readonly string VmValueBox = Create();
         public static readonly string IsReadonlyBox = Create();
+        public static readonly string HasErrorsBox = Create();
         public static readonly string CanBeNullBox = Create();
         public static readonly string CultureBox = Create();
         public static readonly string SuffixBox = Create();
