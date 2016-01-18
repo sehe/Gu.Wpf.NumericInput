@@ -1,6 +1,7 @@
 ﻿namespace Gu.Wpf.NumericInput
 {
     using System;
+    using System.Collections;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
@@ -28,6 +29,22 @@
         }
 
         /// <summary>
+        /// Gets enumerator to logical children.
+        /// </summary>
+        protected override IEnumerator LogicalChildren
+        {
+            get
+            {
+                if (this.Child == null)
+                {
+                    return EmptyEnumerator.Instance;
+                }
+
+                return new SingleChildEnumerator(this.Child);
+            }
+        }
+
+        /// <summary>
         /// This method is used by TypeDescriptor to determine if this property should
         /// be serialized.
         /// http://referencesource.microsoft.com/#PresentationFramework/src/Framework/System/Windows/Controls/ContentControl.cs,164
@@ -40,7 +57,7 @@
         }
 
         /// <summary>
-        ///     This method is invoked when the Child property changes.
+        /// This method is invoked when the Child property changes.
         /// http://referencesource.microsoft.com/#PresentationFramework/src/Framework/System/Windows/Controls/ContentControl.cs,262
         /// </summary>
         /// <param name="oldChild">The old value of the Child property.</param>
