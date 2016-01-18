@@ -116,13 +116,11 @@
         public void ValueUpdatedOnFewerDecimalDigitsFromUser(string text1, string expected1, string text2, string expected2)
         {
             this.Sut.SetValue(DecimalDigitsBox<T>.DecimalDigitsProperty, 5);
-
             this.Sut.Text = text1;
-            var actual = this.Sut.Value.Value.ToString(CultureInfo.InvariantCulture);
+            var actual = this.Sut.Value.ToString();
             Assert.AreEqual(expected1, actual);
-
             this.Sut.Text = text2;
-            var actual2 = this.Sut.Value.Value.ToString(CultureInfo.InvariantCulture);
+            var actual2 = this.Sut.Value.ToString();
             Assert.AreEqual(expected2, actual2);
         }
 
