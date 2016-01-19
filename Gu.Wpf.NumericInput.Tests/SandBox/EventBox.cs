@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gu.Wpf.NumericInput.Tests.SandBox
+﻿namespace Gu.Wpf.NumericInput.Tests.SandBox
 {
+    using System;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using NUnit.Framework;
@@ -15,9 +11,14 @@ namespace Gu.Wpf.NumericInput.Tests.SandBox
         [Test]
         public void TestName()
         {
-            var routedEvent = Control.MouseDoubleClickEvent;
-            var gotKeyboardFocusEvent = UIElement.GotKeyboardFocusEvent;
-            var handlerType = routedEvent.HandlerType;
+            var propertyInfos = typeof (FrameworkPropertyMetadata).GetProperties().Where(x => x.PropertyType == typeof (bool));
+            foreach (var propertyInfo in propertyInfos)
+            {
+                Console.WriteLine($"if (fpm.{propertyInfo.Name})");
+                Console.WriteLine("{");
+                Console.WriteLine($"    flags |= FrameworkPropertyMetadataOptions.{propertyInfo.Name};");
+                Console.WriteLine("}");
+            }
         }
     }
 }
