@@ -86,6 +86,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WeakRoutedEventManager.tt</DependentUpon>
     </Compile>
+    <Compile Include="Select\TextBox.cs" />
     <Compile Include="SpinnerDecorator.cs" />
     <Compile Include="Internals\TextBoxExt.cs" />
     <Compile Include="Internals\VisualTreeHelperExt.cs" />
