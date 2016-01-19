@@ -81,6 +81,11 @@
     <Compile Include="FloatBox.cs" />
     <Compile Include="IntBox.cs" />
     <Compile Include="Internals\SingleChildEnumerator.cs" />
+    <Compile Include="Internals\WeakRoutedEventManager.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WeakRoutedEventManager.tt</DependentUpon>
+    </Compile>
     <Compile Include="SpinnerDecorator.cs" />
     <Compile Include="Internals\TextBoxExt.cs" />
     <Compile Include="Internals\VisualTreeHelperExt.cs" />
@@ -143,14 +148,9 @@
     <Folder Include="Contracts\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Internals\WeakRoutedEventManager.generated.txt">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WeakRoutedEventManager.tt</DependentUpon>
-    </Resource>
     <Content Include="Internals\WeakRoutedEventManager.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>WeakRoutedEventManager.generated.txt</LastGenOutput>
+      <LastGenOutput>WeakRoutedEventManager.generated.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

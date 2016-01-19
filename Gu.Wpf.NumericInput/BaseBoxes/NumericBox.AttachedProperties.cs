@@ -7,8 +7,6 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Threading;
 
     public static partial class NumericBox
     {
@@ -52,6 +50,11 @@
             typeof(bool),
             typeof(NumericBox),
             new PropertyMetadata(BooleanBoxes.False));
+
+        static NumericBox()
+        {
+            EventManager.RegisterClassHandler(typeof(TextBox), UIElement.KeyDownEvent, new KeyEventHandler(OnMoveFocusOnEnter));
+        }
 
         public static void SetSelectAllOnGotKeyboardFocus(this UIElement element, bool value)
         {
@@ -114,16 +117,16 @@
             var box = d as TextBoxBase;
             if (box != null)
             {
-                //if (Equals(e.NewValue, BooleanBoxes.True))
-                //{
-                //    box.AddWeakHandler(UIElement.GotKeyboardFocusEvent, OnKeyboardFocusSelectAllText);
-                //    box.AddWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler, true);
-                //}
-                //else
-                //{
-                //    box.RemoveWeakHandler(UIElement.GotKeyboardFocusEvent, OnKeyboardFocusSelectAllText);
-                //    box.RemoveWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler);
-                //}
+                if (Equals(e.NewValue, BooleanBoxes.True))
+                {
+                    box.AddWeakHandler(UIElement.GotKeyboardFocusEvent, OnKeyboardFocusSelectAllText);
+                    box.AddWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler, true);
+                }
+                else
+                {
+                    box.RemoveWeakHandler(UIElement.GotKeyboardFocusEvent, OnKeyboardFocusSelectAllText);
+                    box.RemoveWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler);
+                }
             }
         }
 
@@ -134,13 +137,14 @@
             {
                 if (Equals(e.NewValue, BooleanBoxes.True))
                 {
-                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.AddHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectAllText);
-                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.AddHandler(box, nameof(box.PreviewMouseLeftButtonDown), OnMouseLeftButtonDown);
+                    box.AddWeakHandler(UIElement.PreviewMouseLeftButtonDownEvent, OnMouseClickSelectAllText);
+                    box.AddWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler, true);
                 }
                 else
                 {
-                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.RemoveHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectAllText);
-                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.RemoveHandler(box, nameof(box.PreviewMouseLeftButtonDown), OnMouseLeftButtonDown);
+                    box.RemoveWeakHandler(UIElement.PreviewMouseLeftButtonDownEvent, OnMouseClickSelectAllText);
+                    box.RemoveWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler);
+
                 }
             }
         }
@@ -152,46 +156,43 @@
             {
                 if (Equals(e.NewValue, BooleanBoxes.True))
                 {
-                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.AddHandler(box, nameof(box.MouseDoubleClick), OnMouseDoubleClick);
+                    box.AddWeakHandler(Control.MouseDoubleClickEvent, OnMouseClickSelectAllText);
+                    box.AddWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler, true);
                 }
                 else
                 {
-                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.RemoveHandler(box, nameof(box.MouseDoubleClick), OnMouseDoubleClick);
+                    box.RemoveWeakHandler(Control.MouseDoubleClickEvent, OnMouseClickSelectAllText);
+                    box.RemoveWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler);
+
                 }
             }
         }
 
-        private static void OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private static void OnMoveFocusOnEnter(object sender, KeyEventArgs e)
         {
-            var textBoxBase = GetParentFromVisualTree(e.OriginalSource);
-            textBoxBase?.SelectAll();
+            if (e.Key == Key.Return || e.Key == Key.Enter)
+            {
+                // MoveFocus takes a TraversalRequest as its argument.
+                var request = new TraversalRequest(FocusNavigationDirection.Next);
+
+                // Gets the element with keyboard focus.
+                var elementWithFocus = Keyboard.FocusedElement as UIElement;
+
+                // Change keyboard focus.
+                if (elementWithFocus != null)
+                {
+                    if (elementWithFocus.MoveFocus(request))
+                    {
+                        e.Handled = true;
+                    }
+                }
+            }
         }
 
-        private static void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static void OnMouseClickSelectAllText(object sender, RoutedEventArgs e)
         {
-            var textBoxBase = GetParentFromVisualTree(e.OriginalSource);
-            if (textBoxBase == null)
-            {
-                return;
-            }
-
-            var box = textBoxBase;
-            if (!box.IsKeyboardFocusWithin)
-            {
-                box.Focus();
-                e.Handled = true;
-            }
-        }
-
-        private static TextBoxBase GetParentFromVisualTree(object source)
-        {
-            DependencyObject parent = source as UIElement;
-            while (parent != null && !(parent is TextBoxBase))
-            {
-                parent = VisualTreeHelper.GetParent(parent);
-            }
-
-            return parent as TextBoxBase;
+            var textBoxBase = (TextBoxBase)sender;
+            textBoxBase.SetIsSelecting(true);
         }
 
         private static void OnKeyboardFocusSelectAllText(object sender, RoutedEventArgs e)

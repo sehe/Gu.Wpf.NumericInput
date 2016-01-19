@@ -6,7 +6,7 @@
 <#@ assembly name="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" #>
 <#@ import namespace="System.Windows" #>
 <#@ import namespace="System.Windows.Controls" #>
-<#@ output extension=".generated.txt" #>
+<#@ output extension=".generated.cs" #>
 namespace Gu.Wpf.NumericInput
 {
     using System;
@@ -14,13 +14,13 @@ namespace Gu.Wpf.NumericInput
     using System.Windows.Controls;
     using System.Windows.Input;
 <#
-    var events = new []
+    var events = new[]
     {
-        UIElement.GotKeyboardFocusEvent, 
-		UIElement.MouseUpEvent,
-		UIElement.PreviewMouseLeftButtonDownEvent,
-		UIElement.MouseLeftButtonDownEvent,
-		Control.MouseDoubleClickEvent,
+        new Data(typeof(UIElement), UIElement.GotKeyboardFocusEvent), 
+		new Data(typeof(UIElement), UIElement.MouseUpEvent),
+		new Data(UIElement.PreviewMouseLeftButtonDownEvent),
+		new Data(UIElement.MouseLeftButtonDownEvent),
+		new Data(Control.MouseDoubleClickEvent),
     }; #>
 
     internal static class WeakRoutedEventManager
@@ -33,10 +33,10 @@ namespace Gu.Wpf.NumericInput
         {
             switch (routedEvent.Name)
             {
-<#  foreach (var routedEvent in events)
+<#  foreach (var data in events)
     { #>
-                case nameof(<#= routedEvent.OwnerType.Name #>.<#= routedEvent.Name #>):
-                    <#= routedEvent.Name #>EventManager.AddHandler(source, handler, handledEventsToo);
+                case nameof(<#= data.OwnerType.Name #>.<#= data.Event.Name #>):
+                    <#= data.Event.Name #>EventManager.AddHandler(source, handler, handledEventsToo);
                     break;
 <# } #>
                 default:
@@ -51,10 +51,10 @@ namespace Gu.Wpf.NumericInput
         {
             switch (routedEvent.Name)
             {
-<#  foreach (var routedEvent in events)
+<#  foreach (var data in events)
     { #>
-                case nameof(UIElement.<#= routedEvent.Name #>):
-                    <#= routedEvent.Name #>EventManager.RemoveHandler(source, handler);
+                case nameof(<#= data.OwnerType.Name #>.<#= data.Event.Name #>):
+                    <#= data.Event.Name #>EventManager.RemoveHandler(source, handler);
                     break;
 <# } #>
                 default:
@@ -62,31 +62,31 @@ namespace Gu.Wpf.NumericInput
             }
         }
     }
-<#  foreach (var routedEvent in events)
+<#  foreach (var data in events)
     { #>
 
-    internal class <#= routedEvent.Name #>EventManager : WeakEventManager
+    internal class <#= data.Event.Name #>EventManager : WeakEventManager
     {
         private readonly RoutedEventHandler handler;
         private bool handledEventsToo;
 
-        private <#= routedEvent.Name #>EventManager()
+        private <#= data.Event.Name #>EventManager()
         {
-            this.handler = new RoutedEventHandler(this.On<#= routedEvent.Name #>);
+            this.handler = new RoutedEventHandler(this.On<#= data.Event.Name #>);
         }
 
         // get the event manager for the current thread
-        private static <#= routedEvent.Name #>EventManager CurrentManager
+        private static <#= data.Event.Name #>EventManager CurrentManager
         {
             get
             {
-                var managerType = typeof(<#= routedEvent.Name #>EventManager);
-                var manager = (<#= routedEvent.Name #>EventManager)GetCurrentManager(managerType);
+                var managerType = typeof(<#= data.Event.Name #>EventManager);
+                var manager = (<#= data.Event.Name #>EventManager)GetCurrentManager(managerType);
 
                 // at first use, create and register a new manager
                 if (manager == null)
                 {
-                    manager = new <#= routedEvent.Name #>EventManager();
+                    manager = new <#= data.Event.Name #>EventManager();
                     SetCurrentManager(managerType, manager);
                 }
 
@@ -94,9 +94,6 @@ namespace Gu.Wpf.NumericInput
             }
         }
 
-        /// <summary>
-        /// Add a listener to the given source's event.
-        /// </summary>
         internal static void AddListener(UIElement source, IWeakEventListener listener, bool handledEventsToo)
         {
             if (source == null)
@@ -114,9 +111,6 @@ namespace Gu.Wpf.NumericInput
             manager.ProtectedAddListener(source, listener);
         }
 
-        /// <summary>
-        /// Remove a listener to the given source's event.
-        /// </summary>
         internal static void RemoveListener(UIElement source, IWeakEventListener listener)
         {
             if (source == null)
@@ -132,9 +126,6 @@ namespace Gu.Wpf.NumericInput
             CurrentManager.ProtectedRemoveListener(source, listener);
         }
 
-        /// <summary>
-        /// Add a handler for the given source's event.
-        /// </summary>
         internal static void AddHandler(UIElement source, EventHandler<RoutedEventArgs> handler, bool handledEventsToo)
         {
             if (handler == null)
@@ -147,9 +138,6 @@ namespace Gu.Wpf.NumericInput
             manager.ProtectedAddHandler(source, handler);
         }
 
-        /// <summary>
-        /// Remove a handler for the given source's event.
-        /// </summary>
         internal static void RemoveHandler(UIElement source, EventHandler<RoutedEventArgs> handler)
         {
             if (handler == null)
@@ -160,37 +148,48 @@ namespace Gu.Wpf.NumericInput
             CurrentManager.ProtectedRemoveHandler(source, handler);
         }
 
-        /// <summary>
-        /// Return a new list to hold listeners to the event.
-        /// </summary>
         protected override ListenerList NewListenerList()
         {
             return new ListenerList<RoutedEventArgs>();
         }
 
-        /// <summary>
-        /// Listen to the given source for the event.
-        /// </summary>
         protected override void StartListening(object source)
         {
             var uiElement = (UIElement)source;
-            uiElement.AddHandler(UIElement.<#= routedEvent.Name #>Event, this.handler, this.handledEventsToo);
+            uiElement.AddHandler(<#= data.OwnerType.Name #>.<#= data.Event.Name #>Event, this.handler, this.handledEventsToo);
         }
 
-        /// <summary>
-        /// Stop listening to the given source for the event.
-        /// </summary>
         protected override void StopListening(object source)
         {
             var uiElement = (UIElement)source;
-            uiElement.RemoveHandler(UIElement.<#= routedEvent.Name #>Event, this.handler);
+            uiElement.RemoveHandler(<#= data.OwnerType.Name #>.<#= data.Event.Name #>Event, this.handler);
         }
 
-        // event handler for <#= routedEvent.Name #> event
-        private void On<#= routedEvent.Name #>(object sender, RoutedEventArgs args)
+        // event handler for <#= data.Event.Name #> event
+        private void On<#= data.Event.Name #>(object sender, RoutedEventArgs args)
         {
             this.DeliverEvent(sender, args);
         }
     }
 <#    } #>
 }
+<#+
+
+    public class Data
+    {
+	    public Data(RoutedEvent @event)
+		    : this(@event.OwnerType, @event)
+        {
+        }
+
+        public Data(Type ownerType, RoutedEvent @event)
+        {
+            this.OwnerType = ownerType;
+            this.Event = @event;
+        }
+
+        public Type OwnerType { get; private set; }
+
+        public RoutedEvent Event { get; private set; }
+    }
+#>

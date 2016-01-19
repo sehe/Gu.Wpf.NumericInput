@@ -15,10 +15,10 @@
         {
             switch (routedEvent.Name)
             {
-                case nameof(Keyboard.GotKeyboardFocus):
+                case nameof(UIElement.GotKeyboardFocus):
                     GotKeyboardFocusEventManager.AddHandler(source, handler, handledEventsToo);
                     break;
-                case nameof(Mouse.MouseUp):
+                case nameof(UIElement.MouseUp):
                     MouseUpEventManager.AddHandler(source, handler, handledEventsToo);
                     break;
                 case nameof(UIElement.PreviewMouseLeftButtonDown):
@@ -54,7 +54,7 @@
                 case nameof(UIElement.MouseLeftButtonDown):
                     MouseLeftButtonDownEventManager.RemoveHandler(source, handler);
                     break;
-                case nameof(UIElement.MouseDoubleClick):
+                case nameof(Control.MouseDoubleClick):
                     MouseDoubleClickEventManager.RemoveHandler(source, handler);
                     break;
                 default:
@@ -92,9 +92,6 @@
             }
         }
 
-        /// <summary>
-        /// Add a listener to the given source's event.
-        /// </summary>
         internal static void AddListener(UIElement source, IWeakEventListener listener, bool handledEventsToo)
         {
             if (source == null)
@@ -112,9 +109,6 @@
             manager.ProtectedAddListener(source, listener);
         }
 
-        /// <summary>
-        /// Remove a listener to the given source's event.
-        /// </summary>
         internal static void RemoveListener(UIElement source, IWeakEventListener listener)
         {
             if (source == null)
@@ -130,9 +124,6 @@
             CurrentManager.ProtectedRemoveListener(source, listener);
         }
 
-        /// <summary>
-        /// Add a handler for the given source's event.
-        /// </summary>
         internal static void AddHandler(UIElement source, EventHandler<RoutedEventArgs> handler, bool handledEventsToo)
         {
             if (handler == null)
@@ -145,9 +136,6 @@
             manager.ProtectedAddHandler(source, handler);
         }
 
-        /// <summary>
-        /// Remove a handler for the given source's event.
-        /// </summary>
         internal static void RemoveHandler(UIElement source, EventHandler<RoutedEventArgs> handler)
         {
             if (handler == null)
@@ -158,26 +146,17 @@
             CurrentManager.ProtectedRemoveHandler(source, handler);
         }
 
-        /// <summary>
-        /// Return a new list to hold listeners to the event.
-        /// </summary>
         protected override ListenerList NewListenerList()
         {
             return new ListenerList<RoutedEventArgs>();
         }
 
-        /// <summary>
-        /// Listen to the given source for the event.
-        /// </summary>
         protected override void StartListening(object source)
         {
             var uiElement = (UIElement)source;
             uiElement.AddHandler(UIElement.GotKeyboardFocusEvent, this.handler, this.handledEventsToo);
         }
 
-        /// <summary>
-        /// Stop listening to the given source for the event.
-        /// </summary>
         protected override void StopListening(object source)
         {
             var uiElement = (UIElement)source;
@@ -220,9 +199,6 @@
             }
         }
 
-        /// <summary>
-        /// Add a listener to the given source's event.
-        /// </summary>
         internal static void AddListener(UIElement source, IWeakEventListener listener, bool handledEventsToo)
         {
             if (source == null)
@@ -240,9 +216,6 @@
             manager.ProtectedAddListener(source, listener);
         }
 
-        /// <summary>
-        /// Remove a listener to the given source's event.
-        /// </summary>
         internal static void RemoveListener(UIElement source, IWeakEventListener listener)
         {
             if (source == null)
@@ -258,9 +231,6 @@
             CurrentManager.ProtectedRemoveListener(source, listener);
         }
 
-        /// <summary>
-        /// Add a handler for the given source's event.
-        /// </summary>
         internal static void AddHandler(UIElement source, EventHandler<RoutedEventArgs> handler, bool handledEventsToo)
         {
             if (handler == null)
@@ -273,9 +243,6 @@
             manager.ProtectedAddHandler(source, handler);
         }
 
-        /// <summary>
-        /// Remove a handler for the given source's event.
-        /// </summary>
         internal static void RemoveHandler(UIElement source, EventHandler<RoutedEventArgs> handler)
         {
             if (handler == null)
@@ -286,26 +253,17 @@
             CurrentManager.ProtectedRemoveHandler(source, handler);
         }
 
-        /// <summary>
-        /// Return a new list to hold listeners to the event.
-        /// </summary>
         protected override ListenerList NewListenerList()
         {
             return new ListenerList<RoutedEventArgs>();
         }
 
-        /// <summary>
-        /// Listen to the given source for the event.
-        /// </summary>
         protected override void StartListening(object source)
         {
             var uiElement = (UIElement)source;
             uiElement.AddHandler(UIElement.MouseUpEvent, this.handler, this.handledEventsToo);
         }
 
-        /// <summary>
-        /// Stop listening to the given source for the event.
-        /// </summary>
         protected override void StopListening(object source)
         {
             var uiElement = (UIElement)source;
@@ -348,9 +306,6 @@
             }
         }
 
-        /// <summary>
-        /// Add a listener to the given source's event.
-        /// </summary>
         internal static void AddListener(UIElement source, IWeakEventListener listener, bool handledEventsToo)
         {
             if (source == null)
@@ -368,9 +323,6 @@
             manager.ProtectedAddListener(source, listener);
         }
 
-        /// <summary>
-        /// Remove a listener to the given source's event.
-        /// </summary>
         internal static void RemoveListener(UIElement source, IWeakEventListener listener)
         {
             if (source == null)
@@ -386,9 +338,6 @@
             CurrentManager.ProtectedRemoveListener(source, listener);
         }
 
-        /// <summary>
-        /// Add a handler for the given source's event.
-        /// </summary>
         internal static void AddHandler(UIElement source, EventHandler<RoutedEventArgs> handler, bool handledEventsToo)
         {
             if (handler == null)
@@ -401,9 +350,6 @@
             manager.ProtectedAddHandler(source, handler);
         }
 
-        /// <summary>
-        /// Remove a handler for the given source's event.
-        /// </summary>
         internal static void RemoveHandler(UIElement source, EventHandler<RoutedEventArgs> handler)
         {
             if (handler == null)
@@ -414,26 +360,17 @@
             CurrentManager.ProtectedRemoveHandler(source, handler);
         }
 
-        /// <summary>
-        /// Return a new list to hold listeners to the event.
-        /// </summary>
         protected override ListenerList NewListenerList()
         {
             return new ListenerList<RoutedEventArgs>();
         }
 
-        /// <summary>
-        /// Listen to the given source for the event.
-        /// </summary>
         protected override void StartListening(object source)
         {
             var uiElement = (UIElement)source;
             uiElement.AddHandler(UIElement.PreviewMouseLeftButtonDownEvent, this.handler, this.handledEventsToo);
         }
 
-        /// <summary>
-        /// Stop listening to the given source for the event.
-        /// </summary>
         protected override void StopListening(object source)
         {
             var uiElement = (UIElement)source;
@@ -476,9 +413,6 @@
             }
         }
 
-        /// <summary>
-        /// Add a listener to the given source's event.
-        /// </summary>
         internal static void AddListener(UIElement source, IWeakEventListener listener, bool handledEventsToo)
         {
             if (source == null)
@@ -496,9 +430,6 @@
             manager.ProtectedAddListener(source, listener);
         }
 
-        /// <summary>
-        /// Remove a listener to the given source's event.
-        /// </summary>
         internal static void RemoveListener(UIElement source, IWeakEventListener listener)
         {
             if (source == null)
@@ -514,9 +445,6 @@
             CurrentManager.ProtectedRemoveListener(source, listener);
         }
 
-        /// <summary>
-        /// Add a handler for the given source's event.
-        /// </summary>
         internal static void AddHandler(UIElement source, EventHandler<RoutedEventArgs> handler, bool handledEventsToo)
         {
             if (handler == null)
@@ -529,9 +457,6 @@
             manager.ProtectedAddHandler(source, handler);
         }
 
-        /// <summary>
-        /// Remove a handler for the given source's event.
-        /// </summary>
         internal static void RemoveHandler(UIElement source, EventHandler<RoutedEventArgs> handler)
         {
             if (handler == null)
@@ -542,26 +467,17 @@
             CurrentManager.ProtectedRemoveHandler(source, handler);
         }
 
-        /// <summary>
-        /// Return a new list to hold listeners to the event.
-        /// </summary>
         protected override ListenerList NewListenerList()
         {
             return new ListenerList<RoutedEventArgs>();
         }
 
-        /// <summary>
-        /// Listen to the given source for the event.
-        /// </summary>
         protected override void StartListening(object source)
         {
             var uiElement = (UIElement)source;
             uiElement.AddHandler(UIElement.MouseLeftButtonDownEvent, this.handler, this.handledEventsToo);
         }
 
-        /// <summary>
-        /// Stop listening to the given source for the event.
-        /// </summary>
         protected override void StopListening(object source)
         {
             var uiElement = (UIElement)source;
@@ -604,9 +520,6 @@
             }
         }
 
-        /// <summary>
-        /// Add a listener to the given source's event.
-        /// </summary>
         internal static void AddListener(UIElement source, IWeakEventListener listener, bool handledEventsToo)
         {
             if (source == null)
@@ -624,9 +537,6 @@
             manager.ProtectedAddListener(source, listener);
         }
 
-        /// <summary>
-        /// Remove a listener to the given source's event.
-        /// </summary>
         internal static void RemoveListener(UIElement source, IWeakEventListener listener)
         {
             if (source == null)
@@ -642,9 +552,6 @@
             CurrentManager.ProtectedRemoveListener(source, listener);
         }
 
-        /// <summary>
-        /// Add a handler for the given source's event.
-        /// </summary>
         internal static void AddHandler(UIElement source, EventHandler<RoutedEventArgs> handler, bool handledEventsToo)
         {
             if (handler == null)
@@ -657,9 +564,6 @@
             manager.ProtectedAddHandler(source, handler);
         }
 
-        /// <summary>
-        /// Remove a handler for the given source's event.
-        /// </summary>
         internal static void RemoveHandler(UIElement source, EventHandler<RoutedEventArgs> handler)
         {
             if (handler == null)
@@ -670,30 +574,21 @@
             CurrentManager.ProtectedRemoveHandler(source, handler);
         }
 
-        /// <summary>
-        /// Return a new list to hold listeners to the event.
-        /// </summary>
         protected override ListenerList NewListenerList()
         {
             return new ListenerList<RoutedEventArgs>();
         }
 
-        /// <summary>
-        /// Listen to the given source for the event.
-        /// </summary>
         protected override void StartListening(object source)
         {
             var uiElement = (UIElement)source;
-            uiElement.AddHandler(UIElement.MouseDoubleClickEvent, this.handler, this.handledEventsToo);
+            uiElement.AddHandler(Control.MouseDoubleClickEvent, this.handler, this.handledEventsToo);
         }
 
-        /// <summary>
-        /// Stop listening to the given source for the event.
-        /// </summary>
         protected override void StopListening(object source)
         {
             var uiElement = (UIElement)source;
-            uiElement.RemoveHandler(UIElement.MouseDoubleClickEvent, this.handler);
+            uiElement.RemoveHandler(Control.MouseDoubleClickEvent, this.handler);
         }
 
         // event handler for MouseDoubleClick event
