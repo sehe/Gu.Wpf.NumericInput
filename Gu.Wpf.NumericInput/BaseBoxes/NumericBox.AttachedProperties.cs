@@ -114,16 +114,16 @@
             var box = d as TextBoxBase;
             if (box != null)
             {
-                if (Equals(e.NewValue, BooleanBoxes.True))
-                {
-                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.AddHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
-                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.AddHandler(box, nameof(box.MouseUp), OnMouseUp);
-                }
-                else
-                {
-                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.RemoveHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
-                    WeakEventManager<TextBoxBase, MouseButtonEventArgs>.RemoveHandler(box, nameof(box.MouseUp), OnMouseUp);
-                }
+                //if (Equals(e.NewValue, BooleanBoxes.True))
+                //{
+                //    box.AddWeakHandler(UIElement.GotKeyboardFocusEvent, OnKeyboardFocusSelectAllText);
+                //    box.AddWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler, true);
+                //}
+                //else
+                //{
+                //    box.RemoveWeakHandler(UIElement.GotKeyboardFocusEvent, OnKeyboardFocusSelectAllText);
+                //    box.RemoveWeakHandler(UIElement.MouseUpEvent, OnMouseUpSelectAllTextHandler);
+                //}
             }
         }
 
@@ -134,12 +134,12 @@
             {
                 if (Equals(e.NewValue, BooleanBoxes.True))
                 {
-                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.AddHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
+                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.AddHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectAllText);
                     WeakEventManager<TextBoxBase, MouseButtonEventArgs>.AddHandler(box, nameof(box.PreviewMouseLeftButtonDown), OnMouseLeftButtonDown);
                 }
                 else
                 {
-                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.RemoveHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectText);
+                    WeakEventManager<TextBoxBase, KeyboardFocusChangedEventArgs>.RemoveHandler(box, nameof(box.GotKeyboardFocus), OnKeyboardFocusSelectAllText);
                     WeakEventManager<TextBoxBase, MouseButtonEventArgs>.RemoveHandler(box, nameof(box.PreviewMouseLeftButtonDown), OnMouseLeftButtonDown);
                 }
             }
@@ -194,9 +194,9 @@
             return parent as TextBoxBase;
         }
 
-        private static void OnKeyboardFocusSelectText(object sender, KeyboardFocusChangedEventArgs e)
+        private static void OnKeyboardFocusSelectAllText(object sender, RoutedEventArgs e)
         {
-            if (ReferenceEquals(e.NewFocus, sender))
+            if (ReferenceEquals(Keyboard.FocusedElement, sender))
             {
                 var textBoxBase = (TextBoxBase)sender;
                 if (Mouse.LeftButton == MouseButtonState.Pressed ||
@@ -211,7 +211,7 @@
             }
         }
 
-        private static void OnMouseUp(object sender, MouseButtonEventArgs e)
+        private static void OnMouseUpSelectAllTextHandler(object sender, RoutedEventArgs e)
         {
             var textBoxBase = (TextBoxBase)sender;
             if (textBoxBase.GetIsSelecting())

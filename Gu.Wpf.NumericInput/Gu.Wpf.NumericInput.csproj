@@ -142,4 +142,18 @@
   <ItemGroup>
     <Folder Include="Contracts\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Internals\WeakRoutedEventManager.generated.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WeakRoutedEventManager.tt</DependentUpon>
+    </Resource>
+    <Content Include="Internals\WeakRoutedEventManager.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>WeakRoutedEventManager.generated.txt</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
 </Project>
